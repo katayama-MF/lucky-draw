@@ -1,0 +1,27 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Dev: Run app",
+      "type": "shell",
+      "command": "npm run dev",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": true
+      },
+      "problemMatcher": [],
+      "isBackground": true,
+      "runOptions": { "instanceLimit": 1 }
+    },
+    {
+      "label": "Open app (ブラウザで開く)",
+      "type": "shell",
+      "command": "sleep 2 && open http://localhost:3000",
+      "windows": { "command": "timeout /t 2 /nobreak >nul && start http://localhost:3000" },
+      "presentation": { "reveal": "silent" },
+      "problemMatcher": []
+    }
+  ]
+}

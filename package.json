@@ -1,0 +1,15 @@
+{
+  "name": "lucky-draw",
+  "version": "1.0.14",
+  "scripts": {
+    "start": "npx serve .",
+    "serve": "npx serve .",
+    "dev": "npx serve . -l 3000",
+    "download-pics": "node scripts/download-prize-pics.js",
+    "test": "node scripts/debug-reel.test.js",
+    "test:reel": "node scripts/reel-disappear.test.js"
+  },
+  "devDependencies": {
+    "puppeteer": "^24.37.2"
+  }
+}

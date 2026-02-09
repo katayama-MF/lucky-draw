@@ -1,0 +1,13 @@
+# ダウンロードした景品画像
+prize_pics/
+
+# Node
+node_modules/
+
+# macOS
+.DS_Store
+
+# 環境依存・秘密情報（OAuthクライアントシークレット等）
+client_secret*.json
+.env
+*.config.local.json

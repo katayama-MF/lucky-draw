@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LUCKY DRAW - パチスロ風抽選</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Zen+Maru+Gothic:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+  <!-- 3D Cosmic Space Background -->
+  <div class="bg-space">
+    <div class="star-layer far" id="starsFar"></div>
+    <div class="star-layer mid" id="starsMid"></div>
+    <div class="star-layer near" id="starsNear"></div>
+  </div>
+  <div class="nebula n1"></div>
+  <div class="nebula n2"></div>
+  <div class="nebula n3"></div>
+  <div class="nebula n4"></div>
+  <div class="bg-grid-3d"></div>
+  <div class="cosmic-dust" id="cosmicDust"></div>
+  <div id="shootingStarPool"></div>
+  <div class="rush-vignette" id="rushVignette"></div>
+  <div class="warp-container" id="warpContainer"></div>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="header-brand-event">
+        <div class="brand" id="headerBrand">マグナとふしぎの少女 presents</div>
+        <div class="event" id="headerEvent">マグナ eスポーツ英単語バトル 2026</div>
+      </div>
+      <span class="app-version" id="appVersion" aria-label="コード版">ver. ---</span>
+      <div class="draw-counter" id="drawCounter">#1</div>
+    </div>
+    <div class="header-right">
+      <button class="tb-btn" id="tbHistory" onclick="toggleHistory()" title="抽選履歴"><span class="tb-icon">📋</span><span class="tb-label">履歴</span></button>
+      <button class="tb-btn on" id="tbSound" onclick="toggleSoundAll()" title="SE ON/OFF"><span class="tb-label">SE</span></button>
+      <button class="tb-btn" id="tbBGM" onclick="toggleBGM()" title="BGM ON/OFF"><span class="tb-label">BGM</span></button>
+      <button class="tb-btn" id="tbConsole" onclick="toggleConsole()" title="ログ表示（F12でブラウザConsoleも確認可）"><span class="tb-icon">▶</span><span class="tb-label">LOG</span></button>
+      <button class="tb-btn" id="tbSettings" onclick="toggleSettings()" title="設定"><span class="tb-icon">⚙</span><span class="tb-label">設定</span></button>
+    </div>
+  </div>
+
+  <div class="main-area">
+    <!-- Reel glow aura -->
+    <div class="reel-aura"></div>
+    <!-- Reel wrapper (for nav arrow positioning) -->
+    <div class="reel-wrapper">
+      <div class="reel-nav left" id="reelNavLeft" onclick="reelStep(-1)">◀</div>
+      <!-- Reel (always visible) -->
+      <div class="reel-frame" id="reelFrame">
+        <input type="file" accept="image/*" id="reelUploadInput" style="display:none">
+        <div class="hit-zone" id="hitZone">
+          <div class="hit-zone-glow"></div>
+          <div class="hit-marker top"><div class="tri"></div></div>
+          <div class="hit-marker bottom"><div class="tri"></div></div>
+        </div>
+        <div class="reel-strip" id="reelStrip"></div>
+        <div class="speed-lines" id="speedLines">
+          <div class="speed-line" style="left:8%"></div><div class="speed-line" style="left:20%"></div>
+          <div class="speed-line" style="left:32%"></div><div class="speed-line" style="left:44%"></div>
+          <div class="speed-line" style="left:56%"></div><div class="speed-line" style="left:68%"></div>
+          <div class="speed-line" style="left:80%"></div><div class="speed-line" style="left:92%"></div>
+        </div>
+        <div class="reel-fade-left"></div>
+        <div class="reel-fade-right"></div>
+        <div class="reel-speed-display" id="reelSpeedDisplay" aria-hidden="true">0</div>
+      </div>
+      <div class="reel-nav right" id="reelNavRight" onclick="reelStep(1)">▶</div>
+    </div>
+
+    <!-- Control area (below reel) -->
+    <div class="control-area">
+      <div class="control-row">
+        <div class="console-panel" id="consolePanel">
+          <div class="console-header" id="consoleHeader">📋 ログ — リールが消えたときは「⚠リールが消えました」と次の「直前に:」の行をそのまま共有してください</div>
+          <div class="console-inner" id="consoleInner"></div>
+        </div>
+        <!-- Spin controls: START / STOP / 演出中 -->
+        <div class="spin-control" id="spinControl">
+          <button class="big-btn" id="bigBtn" onclick="onBtnClick()" onmouseenter="SE.buttonHover()">START</button>
+          <div class="btn-label" id="btnLabel">PRESS TO START</div>
+        </div>
+      </div>
+
+      <!-- Winner display (hidden until win) -->
+      <div class="winner-display" id="winnerDisplay" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- Winner showcase overlay -->
+  <div class="winner-overlay" id="winnerOverlay">
+    <div class="winner-ring"></div>
+    <div class="winner-ring"></div>
+    <div class="winner-rank-label" id="winnerRankLabel"></div>
+    <div class="winner-stage">
+      <div class="winner-visual" id="winnerVisual">
+        <div class="wv-emoji">🎉</div>
+      </div>
+      <div class="winner-text-side">
+        <div class="winner-badge" id="winnerBadge">No.1</div>
+        <div class="winner-name-area">
+          <div class="wn-name" id="winnerName">景品 1</div>
+          <div class="wn-congrats">🎊 おめでとうございます！</div>
+          <div class="wn-stock" id="winnerStock" style="font-size:min(2vh,16px);color:var(--text-dim);letter-spacing:1px;margin-top:4px;"></div>
+        </div>
+      </div>
+    </div>
+    <button class="next-btn" onclick="nextDraw()" onmouseenter="SE.buttonHover()">次の抽選へ →</button>
+  </div>
+
+  <!-- History Panel (slide-out from left) -->
+  <div class="history-panel" id="historyPanel">
+    <div class="history-panel-inner">
+      <div class="history-header">
+        <div class="history-title">📋 HISTORY</div>
+        <div class="history-header-right">
+          <span class="history-count" id="historyCount">0 / 75</span>
+          <button class="history-clear-btn" onclick="resetHistory()" title="履歴をすべてクリア">オールクリア</button>
+        </div>
+      </div>
+      <div id="historyContent">
+        <div class="history-empty" id="historyEmpty">まだ抽選結果がありません</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">�MINTFLAG INC.</div>
+
+  <!-- Image zoom overlay (tap reel image to enlarge) -->
+  <div class="image-zoom-overlay" id="imageZoomOverlay" onclick="hideImageZoom()">
+    <div class="image-zoom-content" onclick="event.stopPropagation()">
+      <img id="imageZoomImg" src="" alt="">
+      <div class="image-zoom-name" id="imageZoomName"></div>
+      <button class="image-zoom-close" onclick="hideImageZoom()">✕ 閉じる</button>
+    </div>
+  </div>
+
+  <!-- Flash (brief white flash on win) -->
+  <div class="flash-overlay" id="flashOverlay"></div>
+
+  <!-- Confetti & Sparkles (float over everything, no block) -->
+  <div class="confetti-container" id="confetti"></div>
+  <div class="sparkle-container" id="sparkles"></div>
+
+  <!-- Settings -->
+  <div class="settings-overlay" id="settingsOverlay">
+    <div class="settings-card">
+      <div class="settings-title">⚙ SETTINGS</div>
+      <!-- Tabs -->
+      <div class="settings-tabs">
+        <button class="stab active" id="tabGeneral" onclick="switchTab('general')">一般</button>
+        <button class="stab" id="tabPrizes" onclick="switchTab('prizes')">賞品 一覧</button>
+        <button class="stab" id="tabSound" onclick="switchTab('sound')">🔊 音</button>
+      </div>
+      <!-- General Tab -->
+      <div id="panelGeneral">
+        <div class="setting-group"><div class="setting-label">ブランド名</div><input class="setting-input" id="setBrand" value="マグナとふしぎの少女 presents"></div>
+        <div class="setting-group"><div class="setting-label">イベント名</div><input class="setting-input" id="setEvent" value="マグナ eスポーツ英単語バトル 2026"></div>
+        <div class="setting-group">
+          <div class="setting-label">止まるマス数（ストップ後プラス何マスで止めるかの範囲）</div>
+          <div style="display:flex;gap:8px;align-items:center;margin-top:6px;">
+            <input type="number" min="1" max="999" class="setting-input" id="setReelStopMin" style="width:80px" placeholder="最小">
+            <span>〜</span>
+            <input type="number" min="1" max="999" class="setting-input" id="setReelStopMax" style="width:80px" placeholder="最大">
+          </div>
+        </div>
+      </div>
+      <!-- Prizes Tab -->
+      <div id="panelPrizes" style="display:none;">
+        <div class="setting-group">
+          <div class="setting-label">📊 賞品プール</div>
+          <p class="prize-desc">スプレッドシートに「レート,賞品名,本数,画像URL」で賞品を登録。在庫合計＝抽選No.数。確率に従いランダム配分。</p>
+          <div class="prize-action-row">
+            <a id="sheetLink" href="https://docs.google.com/spreadsheets/d/1muSX_EEJTbDW1DJs2y0NEFhHA9z5jRJL0UthQKzqNR8/edit" target="_blank" rel="noopener" class="speed-opt sheet-link" style="background:var(--purple);border-color:var(--purple);color:#fff;text-decoration:none;font-weight:600;">📊 スプシを開く</a>
+            <button class="speed-opt update-btn" onclick="loadPrizesFromSheet()" style="background:var(--cyan);border-color:var(--cyan);color:var(--bg);font-weight:700;">🔄 更新</button>
+            <button class="speed-opt" onclick="setAllImagesAsDefault()" title="各賞品の現在の画像を同一賞品の全スロットに適用">📌 画像を一括デフォルトに</button>
+          </div>
+          <div id="sheetStatus" class="sheet-status"></div>
+        </div>
+        <div class="prize-summary" id="prizeSummary"></div>
+        <div class="prize-list-scroll">
+          <div class="prize-grid" id="prizeGrid"></div>
+        </div>
+      </div>
+      <!-- Sound Tab -->
+      <div id="panelSound" style="display:none;">
+        <div class="setting-label" style="margin-bottom:8px;color:var(--cyan);">🔊 SE</div>
+        <div class="sound-grid" id="seGrid"></div>
+        <div class="setting-label" style="margin:12px 0 8px;color:var(--magenta);">🎺 ファンファーレ（ランク別）</div>
+        <div class="sound-grid" id="ffGrid"></div>
+        <div class="setting-label" style="margin:12px 0 8px;color:var(--gold);">🎵 BGM</div>
+        <div class="volume-row">
+          <span class="setting-label">音量</span>
+          <input type="range" id="bgmVolume" min="0" max="100" value="50" class="volume-slider" oninput="setBGMVolume(this.value)">
+          <span id="bgmVolumeLabel" class="volume-label">50%</span>
+        </div>
+        <div class="sound-grid" id="bgmGrid"></div>
+        <div style="margin-top:12px;display:flex;gap:8px;">
+          <button class="speed-opt" onclick="allSoundOn()" style="flex:1;">音ON</button>
+          <button class="speed-opt" onclick="allSoundOff()" style="flex:1;">音OFF</button>
+        </div>
+      </div>
+      <div class="settings-actions" style="flex-wrap:wrap;">
+        <button class="s-btn cancel" onclick="toggleSettings()">閉じる</button>
+        <button class="s-btn save" onclick="saveSettings()">保存 設定を保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
