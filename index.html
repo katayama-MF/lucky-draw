@@ -24,6 +24,8 @@
   <div id="shootingStarPool"></div>
   <div class="rush-vignette" id="rushVignette"></div>
   <div class="warp-container" id="warpContainer"></div>
+  <div class="lightning-container" id="lightningContainer"></div>
+  <div class="screen-shake" id="screenShake"></div>
 
   <!-- Header -->
   <div class="header">
@@ -31,12 +33,14 @@
       <div class="header-brand-event">
         <div class="brand" id="headerBrand">マグナとふしぎの少女 presents</div>
         <div class="event" id="headerEvent">マグナ eスポーツ英単語バトル 2026</div>
+        <div class="remaining-draws" id="remainingDraws">残り: --回</div>
       </div>
       <span class="app-version" id="appVersion" aria-label="コード版">ver. ---</span>
       <div class="draw-counter" id="drawCounter">#1</div>
     </div>
     <div class="header-right">
       <button class="tb-btn" id="tbHistory" onclick="toggleHistory()" title="抽選履歴"><span class="tb-icon">📋</span><span class="tb-label">履歴</span></button>
+      <button class="tb-btn" id="tbSpeedMode" onclick="toggleSpeedMode()" title="標準⇔サクサク切り替え"><span class="tb-label" id="tbSpeedModeLabel">標準</span></button>
       <button class="tb-btn on" id="tbSound" onclick="toggleSoundAll()" title="SE ON/OFF"><span class="tb-label">SE</span></button>
       <button class="tb-btn" id="tbBGM" onclick="toggleBGM()" title="BGM ON/OFF"><span class="tb-label">BGM</span></button>
       <button class="tb-btn" id="tbConsole" onclick="toggleConsole()" title="ログ表示（F12でブラウザConsoleも確認可）"><span class="tb-icon">▶</span><span class="tb-label">LOG</span></button>
@@ -76,7 +80,11 @@
     <div class="control-area">
       <div class="control-row">
         <div class="console-panel" id="consolePanel">
-          <div class="console-header" id="consoleHeader">📋 LOG</div>
+          <div class="console-header" id="consoleHeader">
+            <span>📋 LOG</span>
+            <span class="console-speed" id="consoleSpeed">速度: 0.0</span>
+            <button class="console-clear-btn" id="consoleClearBtn" onclick="clearConsole()" title="全クリア">🗑️</button>
+          </div>
           <div class="console-inner" id="consoleInner"></div>
         </div>
         <!-- Spin controls: START / STOP / 演出中 -->
@@ -109,7 +117,7 @@
         </div>
       </div>
     </div>
-    <button class="next-btn" onclick="nextDraw()" onmouseenter="SE.buttonHover()">次の抽選へ →</button>
+    <button class="next-btn" onclick="nextDraw()" onmouseenter="SE.buttonHover()">次の抽選へ →<br>NEXT →</button>
   </div>
 
   <!-- History Panel (slide-out from left) -->
@@ -145,6 +153,8 @@
   <!-- Confetti & Sparkles (float over everything, no block) -->
   <div class="confetti-container" id="confetti"></div>
   <div class="sparkle-container" id="sparkles"></div>
+  <div class="petals-container" id="petals"></div>
+  <div class="petals-container" id="petals"></div>
 
   <!-- Settings -->
   <div class="settings-overlay" id="settingsOverlay">
@@ -161,7 +171,15 @@
         <div class="setting-group"><div class="setting-label">ブランド名</div><input class="setting-input" id="setBrand" value="マグナとふしぎの少女 presents"></div>
         <div class="setting-group"><div class="setting-label">イベント名</div><input class="setting-input" id="setEvent" value="マグナ eスポーツ英単語バトル 2026"></div>
         <div class="setting-group">
-          <div class="setting-label">止まるマス数（ストップ後プラス何マスで止めるかの範囲）</div>
+          <div class="setting-label">モード</div>
+          <div style="display:flex;gap:8px;align-items:center;margin-top:6px;flex-wrap:wrap;">
+            <button type="button" class="speed-opt" id="btnModeNormal" onclick="setSpeedMode('normal')">標準</button>
+            <button type="button" class="speed-opt" id="btnModeFast" onclick="setSpeedMode('fast')">サクサク</button>
+            <span id="speedModeDesc" class="setting-label" style="margin-left:8px;"></span>
+          </div>
+        </div>
+        <div class="setting-group">
+          <div class="setting-label">止まるマス数（ストップ後プラス何マスで止めるかの範囲）<span id="reelStopNote" style="color:var(--text-dim);font-size:11px;"></span></div>
           <div style="display:flex;gap:8px;align-items:center;margin-top:6px;">
             <input type="number" min="1" max="999" class="setting-input" id="setReelStopMin" style="width:80px" placeholder="最小">
             <span>〜</span>
