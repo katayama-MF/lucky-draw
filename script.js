@@ -706,7 +706,7 @@ let config={
   reelStopMin:50, reelStopMax:100  // ストップ後「プラス何マスで止めるか」の範囲（設定で変更可）
 };
 const EMOJIS=['🎁','🏆','⭐','🎉','🌟','✨','🎀','🎈','🎊','🍀','💎','🎪','🎯','🎲','🔮','💫','🌈','🦋','🌸','🍭'];
-const ITEM_W=184;
+const ITEM_W=256;
 const FRAME_MS=1000/60;     // 60fps基準。これで「速度60」がリフレッシュレートに依存しない
 
 // ===== App State (賞品プール型) =====
@@ -789,7 +789,7 @@ function reelItemHTML(slot){
   const slotIdx=slotNo-1;
   const nameAttr=(name||'賞品').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const pinClass=hasRealImg?'reel-item-upload'+(isPrizeDefaulted(slot.name,slot.rank)?' pin-defaulted':''):'';
-  return `${rankBadgeHTML(r)}<div class="reel-item-btns"><button type="button" class="reel-item-upload" onclick="triggerReelSlotUpload(${slotIdx})" title="No.${slotNo}の画像をアップロード">📷</button><button type="button" class="reel-item-upload" onclick="triggerReelSlotUrl(${slotIdx})" title="No.${slotNo}の画像URLを貼り付け">🔗</button>${hasRealImg?`<button type="button" class="${pinClass}" onclick="setReelSlotImageAsDefault(${slotIdx})" title="この画像をデフォルトに設定">📌</button>`:''}</div><div class="item-no">No.${slotNo}</div><div class="reel-item-img-wrap" title="タップで拡大" data-name="${nameAttr}"><img src="${dispImg}" onerror="typeof reelImgFallback==='function'&&reelImgFallback(this)" style="width:56px;height:56px;object-fit:cover;border-radius:10px;"></div><div class="item-name">${formatNameForDisplay(name)||'賞品'}</div>`;
+  return `${rankBadgeHTML(r)}<div class="reel-item-btns"><button type="button" class="reel-item-upload" onclick="triggerReelSlotUpload(${slotIdx})" title="No.${slotNo}の画像をアップロード">📷</button><button type="button" class="reel-item-upload" onclick="triggerReelSlotUrl(${slotIdx})" title="No.${slotNo}の画像URLを貼り付け">🔗</button>${hasRealImg?`<button type="button" class="${pinClass}" onclick="setReelSlotImageAsDefault(${slotIdx})" title="この画像をデフォルトに設定">📌</button>`:''}</div><div class="item-no">No.${slotNo}</div><div class="reel-item-img-wrap" title="タップで拡大" data-name="${nameAttr}"><img src="${dispImg}" onerror="typeof reelImgFallback==='function'&&reelImgFallback(this)" style="width:80px;height:80px;object-fit:cover;border-radius:12px;"></div><div class="item-name">${formatNameForDisplay(name)||'賞品'}</div>`;
 }
 function buildReel(){
   const strip=document.getElementById('reelStrip');
@@ -890,7 +890,7 @@ function buildReel(){
   }
   logPanel('  buildReel 完了 strip.children='+strip.children.length, false);
   const fw=document.getElementById('reelFrame').offsetWidth;
-  reelPos=-(fw/2 - ITEM_W/2) + 12;
+  reelPos=-(fw/2 - ITEM_W/2) + 16;
   strip.style.transform=`translateX(${reelPos}px)`;
   updateHistoryCount();
   if(state==='idle') showReelNav(true);
