@@ -1,5 +1,5 @@
 // ===== アプリ版（左上に表示。更新のたびに 1.0.2 → 1.0.3 のように上げる） =====
-const SCRIPT_VERSION='1.0.92';
+const SCRIPT_VERSION='1.1.02';
 
 // ===== Audio System =====
 let audioCtx=null;
@@ -825,7 +825,7 @@ let config={
   brand:'マグナとふしぎの少女 presents',event:'マグナ eスポーツ英単語バトル 2026',
   prizePool:[],           // [{rank, name, count, imageUrl}, ...]
   slotAssignments:[],     // 自動配分結果 [{rank, name, imageUrl, slotNo}, ...] slotNo=1..N
-  speedMode:'normal',reelOrder:'sequential',bgmFile:'',bgmVolume:50,
+  speedMode:'normal',reelOrder:'sequential',bgmFile:'',bgmVolume:50,showRemainingDraws:true,
   spreadsheetId:'',sheetRange:'A2:D',
   predictionEffectsEnabled:false,  // 流星・ワープ演出（未使用）
   reelStopMin:100, reelStopMax:200  // ストップ後「プラス何マスで止めるか」の範囲
@@ -1482,7 +1482,6 @@ function nextDraw(){
   state='idle';
   drawCount++;
   SE.next();
-  document.getElementById('drawCounter').textContent=`#${drawCount}`;
   updateRemainingDraws();
   document.getElementById('confetti').innerHTML='';
   document.getElementById('sparkles').innerHTML='';
@@ -2242,10 +2241,23 @@ function toggleSettings(){
     switchTab('general');
     document.getElementById('setBrand').value=config.brand;
     document.getElementById('setEvent').value=config.event;
-    const minEl=document.getElementById('setReelStopMin'); const maxEl=document.getElementById('setReelStopMax');
-    if(minEl) minEl.value=config.reelStopMin??100; if(maxEl) maxEl.value=config.reelStopMax??200;
-    setSpeedMode(config.speedMode);
-    syncSheetLink();
+  const minEl=document.getElementById('setReelStopMin'); const maxEl=document.getElementById('setReelStopMax');
+  if(minEl) minEl.value=config.reelStopMin??100; if(maxEl) maxEl.value=config.reelStopMax??200;
+  setSpeedMode(config.speedMode);
+  // 残り抽選回数カウンターのボタン状態を更新
+  const btnOn=document.getElementById('btnRemainingDrawsOn'), btnOff=document.getElementById('btnRemainingDrawsOff');
+  if(btnOn) btnOn.classList.toggle('active',config.showRemainingDraws!==false);
+  if(btnOff) btnOff.classList.toggle('active',config.showRemainingDraws===false);
+  // ツールバーのボタンも更新（高さを強制的に固定）
+  const tbBtn=document.getElementById('tbRemainingDraws');
+  if(tbBtn){
+    tbBtn.classList.toggle('on',config.showRemainingDraws!==false);
+    tbBtn.style.height='30px';
+    tbBtn.style.minHeight='30px';
+    tbBtn.style.maxHeight='30px';
+    tbBtn.style.lineHeight='30px';
+  }
+  syncSheetLink();
   }
 }
 function saveSettings(){
@@ -2258,6 +2270,7 @@ function saveSettings(){
   // 設定を更新
   let b=document.getElementById('setBrand').value; if(b==='マグナと女神の少女 presents') b='マグナとふしぎの少女 presents'; config.brand=b;
   config.event=document.getElementById('setEvent').value;
+  // 残り抽選回数カウンターの設定を保存（saveSettings内で処理）
   const minEl=document.getElementById('setReelStopMin'); const maxEl=document.getElementById('setReelStopMax');
   if(minEl){ const v=parseInt(minEl.value,10); if(!isNaN(v)&&v>=1) config.reelStopMin=v; }
   if(maxEl){ const v=parseInt(maxEl.value,10); if(!isNaN(v)&&v>=1) config.reelStopMax=v; }
@@ -2330,7 +2343,7 @@ function saveToStorage(suppressLog){
       defaultedPrizeKeys:Array.from(defaultedPrizeKeys)
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    if(!suppressLog) logPanel('💾 設定を保存しました');
+    // suppressLogがfalseでも、詳細なログは各関数で表示されるため、ここでは表示しない
   }catch(e){ logPanel('⚠ 読み込みエラー: '+e.message); }
 }
 /** prize_pics のローカルURLを空にする（ファイルが無くて404になるのを防ぐ）。表示はプレースホルダーになる */
@@ -2394,7 +2407,6 @@ function resetHistory(){
   drawnSlotIndices=new Set();
   historyEntries=[];
   localStorage.removeItem(PROGRESS_KEY);
-  document.getElementById('drawCounter').textContent='#1';
   updateRemainingDraws();
   rebuildHistoryDOM();
   buildReel();
@@ -2556,7 +2568,10 @@ function importConfig(){
     // Refresh settings UI
     document.getElementById('setBrand').value=config.brand;
     document.getElementById('setEvent').value=config.event;
-    document.getElementById('drawCounter').textContent=`#${drawCount}`;
+    // 残り抽選回数カウンターのボタン状態を更新
+    const btnOn=document.getElementById('btnRemainingDrawsOn'), btnOff=document.getElementById('btnRemainingDrawsOff');
+    if(btnOn) btnOn.classList.toggle('active',config.showRemainingDraws!==false);
+    if(btnOff) btnOff.classList.toggle('active',config.showRemainingDraws===false);
     rebuildHistoryDOM();
     buildReel();
     updateRemainingDraws();
@@ -2589,12 +2604,64 @@ const MAX_LOG_HISTORY=1000;
 function updateRemainingDraws(){
   const remainingEl=document.getElementById('remainingDraws');
   if(!remainingEl) return;
+  // 設定で非表示の場合は何もしない
+  if(config.showRemainingDraws===false){
+    remainingEl.style.display='none';
+    return;
+  }
+  remainingEl.style.display='';
+  const numberEl=remainingEl.querySelector('.remaining-number');
+  if(!numberEl) return;
+  
   if(!config.slotAssignments || config.slotAssignments.length===0){
-    remainingEl.textContent='残り: --回';
+    numberEl.textContent='--';
+    numberEl.classList.remove('updating');
     return;
   }
   const remaining=config.slotAssignments.length-drawnSlotIndices.size;
-  remainingEl.textContent=`残り: ${remaining}回`;
+  const currentText=numberEl.textContent.trim();
+  
+  // カウンター風のアニメーション
+  if(currentText!==String(remaining) && currentText!=='--'){
+    numberEl.classList.add('updating');
+    setTimeout(()=>{
+      numberEl.textContent=remaining;
+      setTimeout(()=>{
+        numberEl.classList.remove('updating');
+      }, 300);
+    }, 150);
+  } else {
+    numberEl.textContent=remaining;
+    numberEl.classList.remove('updating');
+  }
+}
+
+// 残り抽選回数カウンターの表示/非表示を設定
+function setRemainingDrawsDisplay(show){
+  config.showRemainingDraws=show;
+  const btnOn=document.getElementById('btnRemainingDrawsOn'), btnOff=document.getElementById('btnRemainingDrawsOff');
+  if(btnOn) btnOn.classList.toggle('active',show);
+  if(btnOff) btnOff.classList.toggle('active',!show);
+  // ツールバーのボタンも更新（高さを強制的に固定）
+  const tbBtn=document.getElementById('tbRemainingDraws');
+  if(tbBtn){
+    tbBtn.classList.toggle('on',show);
+    // 高さを強制的に30pxに固定
+    tbBtn.style.height='30px';
+    tbBtn.style.minHeight='30px';
+    tbBtn.style.maxHeight='30px';
+    tbBtn.style.lineHeight='30px';
+  }
+  updateRemainingDraws();
+  saveToStorage();
+  logPanel(`💾 設定を保存しました: 残り抽選回数カウンター: ${show?'ON':'OFF'}`);
+}
+
+// ツールバーから残り抽選回数カウンターをトグル
+function toggleRemainingDraws(){
+  const newState=config.showRemainingDraws!==false;
+  setRemainingDrawsDisplay(!newState);
+  SE.buttonClick();
 }
 
 function logPanel(msg, highlight){
@@ -2804,7 +2871,6 @@ setTimeout(()=>{
 const _hadProgress=loadProgress();
 if(_hadProgress && historyEntries.length>0){
   rebuildHistoryDOM();
-  document.getElementById('drawCounter').textContent=`#${drawCount}`;
   updateRemainingDraws();
   logPanel(`📋 履歴を復元 (${historyEntries.length}件)`);
 }
@@ -2866,6 +2932,15 @@ const _tbConsole=document.getElementById('tbConsole');
 const _consolePanel=document.getElementById('consolePanel');
 if(_tbConsole) _tbConsole.classList.add('on');
 if(_consolePanel) _consolePanel.classList.add('show');
+// 残り抽選回数カウンターのツールバーボタン状態を初期化（高さを強制的に固定）
+const _tbRemainingDraws=document.getElementById('tbRemainingDraws');
+if(_tbRemainingDraws){
+  _tbRemainingDraws.classList.toggle('on',config.showRemainingDraws!==false);
+  _tbRemainingDraws.style.height='30px';
+  _tbRemainingDraws.style.minHeight='30px';
+  _tbRemainingDraws.style.maxHeight='30px';
+  _tbRemainingDraws.style.lineHeight='30px';
+}
 // バージョン番号はsetAppVersion()関数で設定（複数のタイミングで確実に実行）
 setAppVersion();
 logPanel('🔇 画面をクリックでSE ON');

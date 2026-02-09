@@ -33,10 +33,8 @@
       <div class="header-brand-event">
         <div class="brand" id="headerBrand">マグナとふしぎの少女 presents</div>
         <div class="event" id="headerEvent">マグナ eスポーツ英単語バトル 2026</div>
-        <div class="remaining-draws" id="remainingDraws">残り: --回</div>
+        <div class="remaining-draws" id="remainingDraws">残り: <span class="remaining-number">--</span>回</div>
       </div>
-      <span class="app-version" id="appVersion" aria-label="コード版">ver. ---</span>
-      <div class="draw-counter" id="drawCounter">#1</div>
     </div>
     <div class="header-right">
       <button class="tb-btn" id="tbHistory" onclick="toggleHistory()" title="抽選履歴"><span class="tb-icon">📋</span><span class="tb-label">履歴</span></button>
@@ -44,6 +42,7 @@
       <button class="tb-btn on" id="tbSound" onclick="toggleSoundAll()" title="SE ON/OFF"><span class="tb-label">SE</span></button>
       <button class="tb-btn" id="tbBGM" onclick="toggleBGM()" title="BGM ON/OFF"><span class="tb-label">BGM</span></button>
       <button class="tb-btn" id="tbConsole" onclick="toggleConsole()" title="ログ表示（F12でブラウザConsoleも確認可）"><span class="tb-icon">▶</span><span class="tb-label">LOG</span></button>
+      <button class="tb-btn" id="tbRemainingDraws" onclick="toggleRemainingDraws()" title="残り抽選回数カウンター"><span class="tb-label">COUNT</span></button>
       <button class="tb-btn" id="tbSettings" onclick="toggleSettings()" title="設定"><span class="tb-icon">⚙</span><span class="tb-label">設定</span></button>
     </div>
   </div>
@@ -83,6 +82,7 @@
           <div class="console-header" id="consoleHeader">
             <span>📋 LOG</span>
             <span class="console-speed" id="consoleSpeed">速度: 0.0</span>
+            <span class="app-version" id="appVersion" aria-label="コード版">ver. ---</span>
             <button class="console-clear-btn" id="consoleClearBtn" onclick="clearConsole()" title="全クリア">🗑️</button>
           </div>
           <div class="console-inner" id="consoleInner"></div>
@@ -184,6 +184,13 @@
             <input type="number" min="1" max="999" class="setting-input" id="setReelStopMin" style="width:80px" placeholder="最小">
             <span>〜</span>
             <input type="number" min="1" max="999" class="setting-input" id="setReelStopMax" style="width:80px" placeholder="最大">
+          </div>
+        </div>
+        <div class="setting-group">
+          <div class="setting-label">残り抽選回数カウンター</div>
+          <div style="display:flex;gap:8px;align-items:center;margin-top:6px;">
+            <button type="button" class="speed-opt" id="btnRemainingDrawsOn" onclick="setRemainingDrawsDisplay(true)">ON</button>
+            <button type="button" class="speed-opt" id="btnRemainingDrawsOff" onclick="setRemainingDrawsDisplay(false)">OFF</button>
           </div>
         </div>
       </div>

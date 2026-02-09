@@ -167,9 +167,9 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ze
 .header-brand-event{display:flex;flex-direction:column;gap:2px;}
 .brand{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;color:var(--cyan);letter-spacing:1px;}
 .event{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;color:var(--cyan);letter-spacing:1px;}
-.remaining-draws{font-family:'Orbitron',sans-serif;font-size:11px;font-weight:500;color:var(--text-dim);letter-spacing:0.5px;margin-top:4px;}
-.app-version{font-size:10px;color:var(--text-dim);opacity:0.85;font-family:'Orbitron',sans-serif;letter-spacing:0.5px;white-space:nowrap;}
-.draw-counter{font-size:12px;color:var(--text-dim);font-family:'Orbitron',sans-serif;letter-spacing:1px;}
+.remaining-draws{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;color:var(--cyan);letter-spacing:1px;margin-top:4px;}
+.remaining-number{display:inline-block;font-family:'Orbitron',sans-serif;font-weight:900;color:var(--gold);min-width:4ch;text-align:right;transition:all 0.3s ease;}
+.remaining-number.updating{transform:scale(1.2);color:var(--magenta);}
 
 /* Main layout */
 .main-area{
@@ -627,20 +627,36 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ze
 .prize-card .pc-name-input::placeholder{color:var(--text-dim);opacity:0.6;}
 
 /* Header toolbar (flat design) */
-.header-right{display:flex;align-items:center;gap:2px;}
+.header-right{display:flex;align-items:stretch;gap:2px;height:30px;}
 .tb-btn{
-  height:30px;padding:0 10px;border:none;
+  height:30px !important;min-height:30px !important;max-height:30px !important;
+  padding:0 10px !important;border:none !important;margin:0 !important;
   background:rgba(255,255,255,0.06);color:var(--text-dim);cursor:pointer;
-  display:flex;align-items:center;justify-content:center;gap:5px;
+  display:flex !important;align-items:center !important;justify-content:center !important;gap:5px;
   font-size:11px;font-family:'Orbitron',sans-serif;font-weight:600;letter-spacing:0.5px;
-  transition:all 0.2s;white-space:nowrap;
+  transition:background 0.2s, color 0.2s !important;white-space:nowrap;box-sizing:border-box !important;
+  overflow:hidden;vertical-align:top;flex-shrink:0;
 }
 .tb-btn:first-child{border-radius:6px 0 0 6px;}
 .tb-btn:last-child{border-radius:0 6px 6px 0;}
 .tb-btn:hover{background:rgba(255,255,255,0.12);color:var(--text);}
-.tb-btn.on{background:rgba(0,229,255,0.12);color:var(--cyan);}
-.tb-btn .tb-icon{font-size:13px;line-height:1;}
-.tb-btn .tb-label{font-size:9px;opacity:0.8;}
+.tb-btn.on{
+  background:rgba(0,229,255,0.12) !important;color:var(--cyan) !important;
+  height:30px !important;min-height:30px !important;max-height:30px !important;
+  padding:0 10px !important;border:none !important;margin:0 !important;
+}
+.tb-btn .tb-icon{
+  font-size:13px !important;line-height:1 !important;
+  display:flex !important;align-items:center !important;justify-content:center !important;
+  height:auto !important;flex-shrink:0;margin:0 !important;padding:0 !important;
+}
+.tb-btn .tb-label{
+  font-size:9px !important;opacity:0.8;display:inline-block !important;
+  line-height:1em !important;height:1em !important;
+  min-height:1em !important;max-height:1em !important;
+  overflow:hidden;vertical-align:middle;margin:0 !important;padding:0 !important;
+  box-sizing:border-box !important;
+}
 
 /* Console panel (beside start button, absolutely positioned) */
 .control-row{
@@ -680,6 +696,11 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ze
   font-family:'Orbitron',sans-serif;font-size:10px;font-weight:700;
   color:var(--cyan);opacity:1;letter-spacing:0.5px;
   min-width:60px;text-align:left;  /* 固定幅で左寄せ */
+}
+.console-header .app-version{
+  font-size:10px;color:var(--text-dim);opacity:0.85;
+  font-family:'Orbitron',sans-serif;letter-spacing:0.5px;white-space:nowrap;
+  margin-left:8px;margin-right:8px;
 }
 .console-clear-btn{
   margin-left:auto;  /* 右側に配置 */
