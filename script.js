@@ -828,7 +828,7 @@ let config={
   speedMode:'normal',reelOrder:'sequential',bgmFile:'',bgmVolume:50,showRemainingDraws:true,
   spreadsheetId:'',sheetRange:'A2:D',
   predictionEffectsEnabled:false,  // 流星・ワープ演出（未使用）
-  reelStopMin:100, reelStopMax:200  // ストップ後「プラス何マスで止めるか」の範囲
+  reelStopMin:50, reelStopMax:100   // ストップ後「プラス何マスで止めるか」の範囲（B案: 既定を半分で短く）
 };
 const EMOJIS=['🎁','🏆','⭐','🎉','🌟','✨','🎀','🎈','🎊','🍀','💎','🎪','🎯','🎲','🔮','💫','🌈','🦋','🌸','🍭'];
 const ITEM_W=256;
@@ -1268,9 +1268,9 @@ function stopSpin(){
   // 現在のセンター位置とストリップインデックス
   const currentCenter=-reelPos+fw/2;
   const currentStripIdx=Math.round((currentCenter-ITEM_W/2)/ITEM_W);
-  // 標準・サクサク共通: 設定の範囲（既定100〜200）
-  const minM=Math.max(1, Math.floor(config.reelStopMin)||100);
-  const maxM=Math.max(minM, Math.floor(config.reelStopMax)||200);
+  // 標準・サクサク共通: 設定の範囲（既定50〜100）
+  const minM=Math.max(1, Math.floor(config.reelStopMin)||50);
+  const maxM=Math.max(minM, Math.floor(config.reelStopMax)||100);
   const N=minM+Math.floor(Math.random()*(maxM-minM+1));
   let displayIdx=(currentStripIdx+N)%totalItems;
   if(displayIdx<0) displayIdx+=totalItems;
@@ -1329,15 +1329,11 @@ function stopSpin(){
       setReelSpeedDisplay(0);
       currentReelSpeed=0;
       // 完全に止まってから確定（confirmedクラス追加）
-      // 標準・サクサク共通: 0.5秒
-      const confirmDelay=500;
-      // レートに応じた当選表示待ち時間
-      const showWinnerDelayByRank={
-        mega:800,     // MSB: 800ms
-        super:800,    // SB: 800ms
-        big:800,      // B: 800ms
-        normal:500    // H: 500ms
-      };
+      // サクサク: 短縮 / 標準: 0.5秒
+      const confirmDelay=config.speedMode==='fast' ? 200 : 500;
+      const showWinnerDelayByRank=config.speedMode==='fast'
+        ? { mega:300, super:300, big:300, normal:200 }
+        : { mega:800, super:800, big:800, normal:500 };
       const showWinnerDelay=showWinnerDelayByRank[currentWinRank]||showWinnerDelayByRank.normal;
       setTimeout(()=>{
         document.getElementById('reelFrame').classList.add('confirmed');
@@ -1368,15 +1364,11 @@ function stopSpin(){
         currentReelSpeed=0;
         isAligning=false;
         // 完全に止まってから確定（confirmedクラス追加）
-        // 標準・サクサク共通: 1.0秒
-        const confirmDelay=1000;
-        // レートに応じた当選表示待ち時間
-        const showWinnerDelayByRank={
-          mega:800,     // MSB: 800ms
-          super:800,    // SB: 800ms
-          big:800,      // B: 800ms
-          normal:500    // H: 500ms
-        };
+        // サクサク: 短縮 / 標準: 1.0秒
+        const confirmDelay=config.speedMode==='fast' ? 400 : 1000;
+        const showWinnerDelayByRank=config.speedMode==='fast'
+          ? { mega:300, super:300, big:300, normal:200 }
+          : { mega:800, super:800, big:800, normal:500 };
         const showWinnerDelay=showWinnerDelayByRank[currentWinRank]||showWinnerDelayByRank.normal;
         setTimeout(()=>{
           document.getElementById('reelFrame').classList.add('confirmed');
@@ -1415,18 +1407,11 @@ function stopSpin(){
     }
     // 等減速: v²=v0²-2as より speed=v0*sqrt(1-moved/moveTotal)
     const ratio=Math.min(1, moved/moveTotal);
-    let speed;
-    if(config.speedMode==='fast'){
-      // サクサクモード: 緩やかな減速 speed = v0 * (1-ratio)^0.7
-      speed=v0*Math.pow(Math.max(0,1-ratio), 0.7);
-    } else {
-      // 標準モード: 緩やかな減速 speed = v0 * (1-ratio)^0.7（sqrtより緩やか）
-      speed=v0*Math.pow(Math.max(0,1-ratio), 0.7);
-    }
-    // 残りが少ない時も最小速度を保つ（完全停止まで移動を続ける）
-    if(remaining<=SNAP_THRESHOLD){
-      speed=Math.max(speed, MIN_SPEED); // 最小速度を保つ（残り100px以下で適用）
-    }
+    // 標準: (1-ratio)^0.7 ／ サクサク: (1-ratio)^0.5（キレよく止まる）
+    const exp=config.speedMode==='fast' ? 0.5 : 0.7;
+    let speed=v0*Math.pow(Math.max(0,1-ratio), exp);
+    // 終盤で速度が極端に落ちて抽選が終わらないのを防ぐ：残りがある間は常に最低速度を保つ
+    if(remaining>0) speed=Math.max(speed, MIN_SPEED);
     const move=Math.min(speed*(dt/FRAME_MS), remaining);
     reelPos-=move;
     moved+=move;
@@ -2242,7 +2227,7 @@ function toggleSettings(){
     document.getElementById('setBrand').value=config.brand;
     document.getElementById('setEvent').value=config.event;
   const minEl=document.getElementById('setReelStopMin'); const maxEl=document.getElementById('setReelStopMax');
-  if(minEl) minEl.value=config.reelStopMin??100; if(maxEl) maxEl.value=config.reelStopMax??200;
+  if(minEl) minEl.value=config.reelStopMin??50; if(maxEl) maxEl.value=config.reelStopMax??100;
   setSpeedMode(config.speedMode);
   // 残り抽選回数カウンターのボタン状態を更新
   const btnOn=document.getElementById('btnRemainingDrawsOn'), btnOff=document.getElementById('btnRemainingDrawsOff');
@@ -2369,6 +2354,8 @@ function loadFromStorage(){
     if(data.reelOrder) config.reelOrder=data.reelOrder;
     if(data.reelStopMin!==undefined) config.reelStopMin=data.reelStopMin;
     if(data.reelStopMax!==undefined) config.reelStopMax=data.reelStopMax;
+    // B案移行: 旧既定 100/200 で保存されていた場合は 50/100 に更新（体感が短くなる）
+    if(config.reelStopMin===100&&config.reelStopMax===200){ config.reelStopMin=50; config.reelStopMax=100; saveToStorage(); }
     if(data.bgmFile!==undefined) config.bgmFile=data.bgmFile||'';
     if(data.bgmVolume!==undefined) config.bgmVolume=data.bgmVolume;
     if(data.spreadsheetId!==undefined) config.spreadsheetId=data.spreadsheetId||'';
@@ -2555,6 +2542,8 @@ function importConfig(){
     if(data.reelOrder) config.reelOrder=data.reelOrder;
     if(data.reelStopMin!==undefined) config.reelStopMin=data.reelStopMin;
     if(data.reelStopMax!==undefined) config.reelStopMax=data.reelStopMax;
+    // B案移行: 旧既定 100/200 で保存されていた場合は 50/100 に更新（体感が短くなる）
+    if(config.reelStopMin===100&&config.reelStopMax===200){ config.reelStopMin=50; config.reelStopMax=100; }
     if(data.bgmFile!==undefined) config.bgmFile=data.bgmFile||'';
     if(data.bgmVolume!==undefined) config.bgmVolume=data.bgmVolume;
     if(data.spreadsheetId!==undefined) config.spreadsheetId=data.spreadsheetId||'';

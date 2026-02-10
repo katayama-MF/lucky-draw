@@ -447,6 +447,10 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Ze
   line-height:1.4;
 }
 .winner-overlay.show .next-btn{opacity:1;transform:translateY(0);transition-delay:0.8s;}
+/* サクサクモード: 当選オーバーレイの表示テンポを短縮 */
+.fast-mode .winner-overlay.show .winner-stage{transition-delay:0.05s;}
+.fast-mode .winner-overlay.show .winner-rank-label{transition-delay:0.1s;}
+.fast-mode .winner-overlay.show .next-btn{transition-delay:0.3s;}
 .next-btn:hover{background:rgba(255,217,61,0.15);box-shadow:0 0 30px rgba(255,217,61,0.15);transform:scale(1.03);}
 .next-btn:active{transform:scale(0.97);}
 
