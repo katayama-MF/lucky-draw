@@ -32,7 +32,10 @@
     <div class="header-left">
       <div class="header-brand-event">
         <div class="brand" id="headerBrand">マグナとふしぎの少女 presents</div>
-        <div class="event" id="headerEvent">マグナ eスポーツ英単語バトル 2026</div>
+        <div class="header-event-row">
+          <div class="event" id="headerEvent">マグナ eスポーツ英単語バトル 2026</div>
+          <span class="header-version" id="headerVersion">ver.1.1.03</span>
+        </div>
         <div class="remaining-draws" id="remainingDraws">残り: <span class="remaining-number">--</span>回</div>
       </div>
     </div>
@@ -78,7 +81,7 @@
     <!-- Control area (below reel) -->
     <div class="control-area">
       <div class="control-row">
-        <div class="console-panel" id="consolePanel">
+        <div class="console-panel" id="consolePanel" title="エラー時は F12 → Console タブで詳細スタックを確認できます">
           <div class="console-header" id="consoleHeader">
             <span>📋 LOG</span>
             <span class="console-speed" id="consoleSpeed">速度: 0.0</span>
@@ -154,7 +157,6 @@
   <div class="confetti-container" id="confetti"></div>
   <div class="sparkle-container" id="sparkles"></div>
   <div class="petals-container" id="petals"></div>
-  <div class="petals-container" id="petals"></div>
 
   <!-- Settings -->
   <div class="settings-overlay" id="settingsOverlay">
@@ -202,7 +204,9 @@
           <div class="prize-action-row">
             <a id="sheetLink" href="https://docs.google.com/spreadsheets/d/1muSX_EEJTbDW1DJs2y0NEFhHA9z5jRJL0UthQKzqNR8/edit" target="_blank" rel="noopener" class="speed-opt sheet-link" style="background:var(--purple);border-color:var(--purple);color:#fff;text-decoration:none;font-weight:600;">📊 スプシを開く</a>
             <button class="speed-opt update-btn" onclick="loadPrizesFromSheet()" style="background:var(--cyan);border-color:var(--cyan);color:var(--bg);font-weight:700;">🔄 更新</button>
+            <button class="speed-opt" onclick="loadImagesFromFolder()" title="画像フォルダを選択し、該当ファイル名（LD_0001.png等）の画像を賞品に一括適用">📁 画像フォルダから読み込み</button>
             <button class="speed-opt" onclick="setAllImagesAsDefault()" title="各賞品の現在の画像を同一賞品の全スロットに適用">📌 画像を一括デフォルトに</button>
+            <button class="speed-opt" onclick="exportPrizeRankJson()" title="賞品画像IDとレートの対応表をJSONでダウンロード（仮画像のレート色分け用）">📤 ID・レート一覧をエクスポート</button>
           </div>
           <div id="sheetStatus" class="sheet-status"></div>
         </div>

@@ -16,6 +16,20 @@ npm run dev  # http://localhost:3000 で起動
 ブラウザで **http://localhost:3000** を開いて利用します。  
 （`npm start` でも可。ポートを変える場合は `npx serve . -l 8080` など）
 
+### 外部PCで使う（配布用・npm 不要）
+
+フォルダごとコピーして別のPCで動かすときは、次のどれかで起動できます。
+
+| 方法 | 手順 |
+|------|------|
+| **Windows** | `start.bat` をダブルクリック |
+| **Mac/Linux** | ターミナルで `./start.sh`（初回のみ `chmod +x start.sh`） |
+| **Node のみ** | `node server.js` 実行後、ブラウザで http://localhost:8080 を開く |
+| **Python のみ** | `python -m http.server 8080`（または `python3`）後、同上 |
+
+配布に必要なファイルは **起動方法.txt** に一覧があります。  
+（`node_modules` と `.git` は不要です。）
+
 ---
 
 ## ブランチ（lucky-draw と lucky-draw-cloud）

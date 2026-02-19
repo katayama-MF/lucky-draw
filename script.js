@@ -1,5 +1,5 @@
 // ===== アプリ版（左上に表示。更新のたびに 1.0.2 → 1.0.3 のように上げる） =====
-const SCRIPT_VERSION='1.1.02';
+const SCRIPT_VERSION='1.1.03';
 
 // ===== Audio System =====
 let audioCtx=null;
@@ -825,6 +825,7 @@ let config={
   brand:'マグナとふしぎの少女 presents',event:'マグナ eスポーツ英単語バトル 2026',
   prizePool:[],           // [{rank, name, count, imageUrl}, ...]
   slotAssignments:[],     // 自動配分結果 [{rank, name, imageUrl, slotNo}, ...] slotNo=1..N
+  prizePicsDataUrls:{},    // id->dataUrl（重複を避け、画像を1枚分だけ保持）
   speedMode:'normal',reelOrder:'sequential',bgmFile:'',bgmVolume:50,showRemainingDraws:true,
   spreadsheetId:'',sheetRange:'A2:D',
   predictionEffectsEnabled:false,  // 流星・ワープ演出（未使用）
@@ -843,6 +844,8 @@ let reelDisplayIndices=[];      // リール表示用（数字順・全件表示
 let actualWinnerSlotIdx=-1;     // 実際の当選スロット（表示サブセット時用）
 let currentReelSpeed=0;        // 現在のリール速度（減速開始時に使用）
 let defaultedPrizeKeys=new Set(); // デフォルト指定済み賞品 (name+'\0'+rank)
+const missingPrizePicsIds=new Set();   // 404で存在しない画像ID（再取得をスキップ）
+const prizePicsDisplayCache=new Map(); // id->dataUrl 表示用キャッシュ（localStorageに保存しない）
 
 // リール現象の切り分け用：直近の操作・状態の履歴（最大15件）
 const REEL_EVENT_HISTORY_MAX=15;
@@ -892,7 +895,8 @@ function getPlaceholderImageUrl(name,rank){
     for(let i=0;i<ln.length;i+=maxLen) lines.push(ln.slice(i,i+maxLen));
   });
   if(lines.length>2) lines=[lines[0],lines[1]+'…'];
-  const colors={mega:'#9333ea',super:'#0ea5e9',big:'#f59e0b',normal:'#64748b'};
+  // MegaSuperBigHit / SuperBigHit / BigHit / Hit の4色（リールバッジと一致）
+  const colors={mega:'#a855f7',super:'#ff8c00',big:'#00E5FF',normal:'#64748b'};
   const bg=colors[rank]||colors.normal;
   const fs=lines.length>1?12:14;
   const y0=lines.length>1?92:100;
@@ -900,7 +904,59 @@ function getPlaceholderImageUrl(name,rank){
   const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><rect fill="${bg}" width="200" height="200"/><text x="100" y="${y0}" fill="white" font-size="${fs}" font-family="Zen Maru Gothic,sans-serif" text-anchor="middle">${ts}</text></svg>`;
   return 'data:image/svg+xml,'+encodeURIComponent(svg);
 }
-function getDisplayImageUrl(slot){ return (slot?.imageUrl||'')||getPlaceholderImageUrl(slot?.name,slot?.rank); }
+function isPlaceholderSvgDataUrl(dataUrl){
+  if(!dataUrl||!dataUrl.startsWith('data:image/svg')) return false;
+  try{
+    let text='';
+    if(dataUrl.includes('base64,')){
+      const bin=atob(dataUrl.split('base64,')[1]||'');
+      const bytes=new Uint8Array(bin.length);
+      for(let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
+      text=new TextDecoder().decode(bytes);
+    }else{
+      text=decodeURIComponent((dataUrl.split(',')[1]||'').replace(/\+/g,' '));
+    }
+    return text.includes('仮画像');
+  }catch(_){ return false; }
+}
+function isRealPhotoContent(dataUrl){
+  if(!dataUrl||typeof dataUrl!=='string') return false;
+  if(dataUrl.startsWith('data:image/')) return true;
+  if(!dataUrl.startsWith('data:')) return false;
+  try{
+    let text='';
+    if(dataUrl.includes('base64,')){
+      const bin=atob(dataUrl.split('base64,')[1]||'');
+      const bytes=new Uint8Array(bin.length);
+      for(let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
+      text=new TextDecoder().decode(bytes);
+    }else{
+      text=decodeURIComponent((dataUrl.split(',')[1]||'').replace(/\+/g,' '));
+    }
+    return text.includes('href="data:image/');
+  }catch(_){ return false; }
+}
+function resolveForDisplay(imageUrl,name,rank){
+  if(!imageUrl||typeof imageUrl!=='string') return '';
+  const r=rank||'normal';
+  if(imageUrl.startsWith('prize_pics:')){
+    const id=normalizePrizePicsId(imageUrl.slice(11));
+    const cached=prizePicsDisplayCache.get(id)||(config.prizePicsDataUrls&&config.prizePicsDataUrls[id]);
+    if(cached&&isRealPhotoContent(cached)) return cached;
+    return getPlaceholderImageUrl(name,r);
+  }
+  if(imageUrl.startsWith('data:')){
+    if(isRealPhotoContent(imageUrl)) return imageUrl;
+    return getPlaceholderImageUrl(name,r);
+  }
+  if(/\/prize_pics\/LD_\d+\.(svg|png|jpg|jpeg)/i.test(imageUrl)) return getPlaceholderImageUrl(name,r);
+  return imageUrl;
+}
+function getDisplayImageUrl(slot){
+  const url=slot?.imageUrl||'';
+  if(!url) return getPlaceholderImageUrl(slot?.name,slot?.rank);
+  return resolveForDisplay(url,slot?.name,slot?.rank)||getPlaceholderImageUrl(slot?.name,slot?.rank);
+}
 /** リール画像の読み込み失敗時（404等）にプレースホルダーに差し替える。img の onerror から呼ぶ */
 function reelImgFallback(imgEl){
   const item=imgEl&&imgEl.closest('.reel-item');
@@ -921,7 +977,48 @@ function reelItemHTML(slot){
   const pinClass=hasRealImg?'reel-item-upload'+(isPrizeDefaulted(slot.name,slot.rank)?' pin-defaulted':''):'';
   return `${rankBadgeHTML(r)}<div class="reel-item-btns"><button type="button" class="reel-item-upload" onclick="triggerReelSlotUpload(${slotIdx})" title="No.${slotNo}の画像をアップロード">📷</button><button type="button" class="reel-item-upload" onclick="triggerReelSlotUrl(${slotIdx})" title="No.${slotNo}の画像URLを貼り付け">🔗</button>${hasRealImg?`<button type="button" class="reel-item-pin ${pinClass}" onclick="setReelSlotImageAsDefault(${slotIdx})" title="この画像をデフォルトに設定">📌</button>`:''}</div><div class="item-no">No.${slotNo}</div><div class="reel-item-img-wrap" title="タップで拡大" data-name="${nameAttr}"><img src="${dispImg}" onerror="typeof reelImgFallback==='function'&&reelImgFallback(this)" style="width:130px;height:130px;object-fit:cover;border-radius:12px;"></div><div class="item-name">${formatNameForDisplay(name)||'賞品'}</div>`;
 }
+let _buildReelInProgress=false;
+let _showWinnerFallbackTimer=null;  // 停止→当選表示が何らかで抜けたときの安全網
+/** リールが空なのに賞品がある場合は必ず復元（1000人規模イベント用の致命対策）。
+ * 子要素が少なすぎる場合（視覚ズレでリールが消える原因）も復元する。 */
+function ensureReelVisible(){
+  const strip=document.getElementById('reelStrip');
+  if(!strip) return;
+  const childCount=strip.children.length;
+  const needFullReel=config.slotAssignments&&config.slotAssignments.length>0;
+  const expectedMin=needFullReel ? Math.min(20, Math.ceil(config.slotAssignments.length*0.4)) : 0;
+  const isEmpty=childCount===0;
+  const tooFew=needFullReel&&childCount>0&&childCount<expectedMin;
+  if(!isEmpty&&!tooFew) return;
+  if(!needFullReel) return;
+  if(_buildReelInProgress) return;
+  if(state==='spinning'||state==='stopping'){
+    setTimeout(ensureReelVisible,400);
+    return;
+  }
+  if(isEmpty) console.warn('[LUCKY-DRAW] ensureReelVisible: リールが空のため復元を実行');
+  else if(tooFew) console.warn('[LUCKY-DRAW] ensureReelVisible: リールの子が少なすぎるため復元を実行',{ childCount, expectedMin });
+  buildReel();
+}
+/** イベント運用用: コンソールで __reelHealth() で状態確認、__reelRecover() で強制復元 */
+window.__reelHealth=function(){
+  const s=document.getElementById('reelStrip');
+  const n=s?s.children.length:0;
+  const slotCount=config.slotAssignments?config.slotAssignments.length:0;
+  return {state,stripChildren:n,slotCount,ok:n>0,needRecover:n===0&&slotCount>0&&state!=='spinning'&&state!=='stopping'};
+};
+window.__reelRecover=function(){ ensureReelVisible(); };
+
+/** リールが消える原因（strip.children が 0 になる理由）:
+ * ・strip の子を変更するのは buildReel と buildReelChunked のみ。どちらも「先に append してから古い子を remove」なので、
+ *   正常系では strip が空になることはない。
+ * ・考えられる原因: (1) buildReelChunked の非同期処理中に state が変わり、最後の差し替えをスキップしたまま
+ *   別の buildReel がロックでスキップされ、誰も strip を更新しないタイミングが生じる (2) buildReel が state でスキップ
+ *   された直後に buildReelChunked が「差し替え」をスキップして return し、以前の何かで strip が空だった (3) append/remove
+ *   中の例外で catch に入り、strip が空になった場合の復元 setTimeout に依存。コンソールの __lastReelClearCaller で
+ *   最後に strip を触った呼び出し元を確認できる。 */
 function buildReel(){
+  if(_buildReelInProgress) return;
   const strip=document.getElementById('reelStrip');
   if(!strip){
     console.warn('buildReel: #reelStrip が見つかりません');
@@ -937,14 +1034,17 @@ function buildReel(){
   }
   window.__lastBuildReelCaller=_caller;
   window.__lastBuildReelState=state;
-  // strip を更新してよいのは idle か showing のときだけ（spinning/stopping では絶対に触らない）
   if(state!=='idle'&&state!=='showing'){
     pushReelEvent('buildReel_skip', state);
     console.warn('[LUCKY-DRAW] buildReel スキップ state='+state+' 呼び出し元='+_caller);
+    if(strip.children.length===0&&config.slotAssignments&&config.slotAssignments.length>0){
+      setTimeout(()=>{ if(strip.children.length===0) buildReel(); },0);
+    }
     return;
   }
+  _buildReelInProgress=true;
+  try {
   if(!config.slotAssignments||!Array.isArray(config.slotAssignments)||config.slotAssignments.length===0){
-    // prizePool があれば slotAssignments を再計算してリールを表示する（復元）
     if(config.prizePool&&Array.isArray(config.prizePool)&&config.prizePool.length>0){
       computeSlotAssignments();
     }
@@ -973,7 +1073,8 @@ function buildReel(){
     logPanel('⚠ リール: totalItems=0 のためスキップ', true);
     return;
   }
-  const repeats=totalItems>50?2:5;
+  // スロット数が多いときは重複を1回に抑えてDOMを軽く（例: 992→992要素、2回なら1984で重い）
+  const repeats=totalItems>80?1:totalItems>50?2:5;
   const frag=document.createDocumentFragment();
   try {
     for(let r=0;r<repeats;r++){
@@ -1000,30 +1101,152 @@ function buildReel(){
   // strip の子を差し替える直前に再チェック（idle/showing 以外では絶対に実行しない）
   if(state!=='idle'&&state!=='showing'){
     console.warn('[LUCKY-DRAW] buildReel: state='+state+' のため strip 更新をスキップ');
+    if(strip.children.length===0&&config.slotAssignments&&config.slotAssignments.length>0){
+      setTimeout(()=>{ if(strip.children.length===0) buildReel(); },0);
+    }
     return;
   }
+  const hadChildren=strip.children.length;
+  const newCount=frag.childNodes.length;
+  if(newCount===0){
+    console.warn('[LUCKY-DRAW] buildReel: newCount=0 のため strip 更新をスキップ（既存リールはそのまま）');
+    return;
+  }
+  if(window.__REEL_DEBUG){
+    console.log('[LUCKY-DRAW] buildReel 差し替え直前', {state, hadChildren, newCount, caller:_caller, stack:(new Error().stack||'').slice(0,500)});
+  }
   try {
-    const hadChildren=strip.children.length;
     pushReelEvent('buildReel_clear', 'state='+state+' had='+hadChildren);
     window.__lastReelClearCaller=window.__lastBuildReelCaller||_caller;
-    if(hadChildren>0){
-      const msg='buildReel: stripの子を入れ替え 既存='+hadChildren+' → 新規='+frag.childNodes.length+' state='+state;
-      console.log('[LUCKY-DRAW] '+msg);
-    }
-    while(strip.firstChild) strip.removeChild(strip.firstChild);
+    // 先に追加してから古い子を削除する（append が失敗しても strip が空にならない）
     while(frag.firstChild) strip.appendChild(frag.firstChild);
+    for(let i=0;i<hadChildren;i++){
+      if(strip.firstChild) strip.removeChild(strip.firstChild);
+    }
   } catch(e){
     console.error('buildReel 子要素の差し替えエラー', e);
     logPanel('⚠ リール 子要素の差し替えエラー: ' + (e&&e.message ? e.message : String(e)), true);
+    if(hadChildren>0 && strip.children.length===0){
+      logPanel('⚠ strip が空になりました。呼び出し元: '+_caller, true);
+      if(config.slotAssignments&&config.slotAssignments.length>0) setTimeout(()=>buildReel(),0);
+    }
     return;
   }
-  // buildReel完了ログはconsole.logのみ（ログパネルには表示しない）
+  if(strip.children.length===0&&config.slotAssignments&&config.slotAssignments.length>0){
+    console.warn('[LUCKY-DRAW] buildReel 完了直後に strip が空 → 復元を試行');
+    setTimeout(()=>buildReel(),0);
+    return;
+  }
   console.log('[LUCKY-DRAW] buildReel 完了 strip.children='+strip.children.length);
   const fw=document.getElementById('reelFrame').offsetWidth;
   reelPos=-(fw/2 - ITEM_W/2) + 16;
   strip.style.transform=`translateX(${reelPos}px)`;
   updateHistoryCount();
   if(state==='idle') showReelNav(true);
+  setTimeout(ensureReelVisible,150);
+  } finally {
+    _buildReelInProgress=false;
+  }
+}
+
+/** 次の抽選へ用: fragment にチャンクで構築し、完了後に一括で差し替え（リールが一瞬消えるのを防ぐ） */
+const REEL_CHUNK_SIZE=120;
+function buildReelChunked(savedReelPos){
+  if(_buildReelInProgress) return;
+  const strip=document.getElementById('reelStrip');
+  if(!strip||state!=='idle'&&state!=='showing') return;
+  _buildReelInProgress=true;
+  if(!config.slotAssignments||config.slotAssignments.length===0){
+    if(config.prizePool&&config.prizePool.length>0) computeSlotAssignments();
+    if(!config.slotAssignments||config.slotAssignments.length===0){ _buildReelInProgress=false; return; }
+  }
+  remainingSlotIndices=config.slotAssignments.map((_,i)=>i).filter(i=>!drawnSlotIndices.has(i));
+  const fullCount=remainingSlotIndices.length;
+  const allDrawn=fullCount===0;
+  reelDisplayIndices=allDrawn ? config.slotAssignments.map((_,i)=>i) : remainingSlotIndices.slice();
+  totalItems=reelDisplayIndices.length;
+  if(totalItems===0){ _buildReelInProgress=false; return; }
+  const repeats=totalItems>80?1:totalItems>50?2:5;
+  const totalNodes=totalItems*repeats;
+  const frag=document.createDocumentFragment();
+  let offset=0;
+  function addChunk(){
+    if(state!=='idle'&&state!=='showing'){ _buildReelInProgress=false; return; }
+    const end=Math.min(offset+REEL_CHUNK_SIZE,totalNodes);
+    for(let i=offset;i<end;i++){
+      const idx=i%totalItems;
+      const si=reelDisplayIndices[idx];
+      const raw=config.slotAssignments[si];
+      const slot=raw?{...raw,slotNo:si+1}:{rank:'normal',name:'賞品',slotNo:si+1};
+      const el=document.createElement('div');
+      el.className='reel-item';
+      el.innerHTML=reelItemHTML(slot);
+      frag.appendChild(el);
+    }
+    offset=end;
+    if(offset<totalNodes){
+      requestAnimationFrame(addChunk);
+      return;
+    }
+    if(state!=='idle'&&state!=='showing'){
+      _buildReelInProgress=false;
+      if(strip.children.length===0&&config.slotAssignments&&config.slotAssignments.length>0){
+        buildReel();
+      }
+      return;
+    }
+    const hadChildren=strip.children.length;
+    while(frag.firstChild) strip.appendChild(frag.firstChild);
+    for(let i=0;i<hadChildren;i++) if(strip.firstChild) strip.removeChild(strip.firstChild);
+    if(strip.children.length===0){
+      if(config.slotAssignments&&config.slotAssignments.length>0) setTimeout(()=>buildReel(),0);
+      _buildReelInProgress=false;
+      return;
+    }
+    const oneSet=totalItems*ITEM_W;
+    const frameEl=document.getElementById('reelFrame');
+    const fw=frameEl?frameEl.offsetWidth:0;
+    const opts=typeof savedReelPos==='object'&&savedReelPos!==null ? savedReelPos : null;
+    const startFromPrev=opts&&opts.startFromPrevWinnerMinus1;
+    if(startFromPrev&&actualWinnerSlotIdx>=0&&config.slotAssignments){
+      // 前回当選の1つ前の賞品を中央に（連続感を出す）
+      const totalSlots=config.slotAssignments.length;
+      const prevSlotIdx=actualWinnerSlotIdx===0 ? totalSlots-1 : actualWinnerSlotIdx-1;
+      let stripIdx=reelDisplayIndices.indexOf(prevSlotIdx);
+      if(stripIdx<0) stripIdx=totalItems-1;  // 既に抽選済みの場合は末尾から
+      let firstCenter=ITEM_W/2, centerStep=ITEM_W;
+      if(strip.children.length>=2&&fw>0){
+        const r0=strip.children[0].getBoundingClientRect();
+        const r1=strip.children[1].getBoundingClientRect();
+        const stripRect=strip.getBoundingClientRect();
+        firstCenter=(r0.left+r0.width/2)-stripRect.left;
+        const c0=r0.left+r0.width/2, c1=r1.left+r1.width/2;
+        centerStep=Math.abs(c1-c0)||ITEM_W;
+      }
+      reelPos=fw/2-firstCenter-stripIdx*centerStep;
+      while(reelPos>0) reelPos-=oneSet;
+      while(oneSet>0&&reelPos<-oneSet*3) reelPos+=oneSet;
+    } else if(savedReelPos==null){
+      // NEXT 後の「0番を中央に」: 初回や前回当選がない場合
+      if(strip.children.length>=1&&fw>0){
+        const r0=strip.children[0].getBoundingClientRect();
+        const stripRect=strip.getBoundingClientRect();
+        const firstCenter=(r0.left+r0.width/2)-stripRect.left;
+        reelPos=fw/2-firstCenter;
+      } else {
+        reelPos=-(fw/2-ITEM_W/2)+16;
+      }
+    } else if(typeof savedReelPos==='number'){
+      reelPos=savedReelPos-ITEM_W;
+      while(reelPos>0) reelPos-=oneSet;
+      while(oneSet>0&&reelPos<-oneSet*3) reelPos+=oneSet;
+    }
+    strip.style.transform=`translateX(${reelPos}px)`;
+    if(state==='idle') showReelNav(true);
+    setTimeout(ensureReelVisible,150);
+    _buildReelInProgress=false;
+  }
+  requestAnimationFrame(addChunk);
 }
 
 // ===== UI State =====
@@ -1170,10 +1393,27 @@ function setBtnState(s){
 // ①スタート: リール回転開始。約3秒で徐々に加速し最高速度80に達する。
 function startSpin(){
   pushReelEvent('startSpin', 'state='+state);
-  if(totalItems===0) return;
-  const strip=document.getElementById('reelStrip');
-  if(strip && strip.children.length===0 && config.slotAssignments && config.slotAssignments.length>0){
-    buildReel();
+  let strip=document.getElementById('reelStrip');
+  if(strip && strip.children.length===0){
+    if(config.prizePool&&config.prizePool.length>0 && (!config.slotAssignments||config.slotAssignments.length===0)){
+      computeSlotAssignments();
+    }
+    if(config.slotAssignments && config.slotAssignments.length>0){
+      buildReel();
+      if(!strip.children.length){
+        _buildReelInProgress=false;
+        buildReel();
+      }
+      strip=document.getElementById('reelStrip');
+    }
+    if(!strip.children.length){
+      logPanel('⚠ リールを復元できませんでした。賞品を読み込んでから START を押してください', true);
+      return;
+    }
+  }
+  if(totalItems===0){
+    logPanel('⚠ 抽選データがありません', true);
+    return;
   }
   state='spinning';
   showReelNav(false);
@@ -1183,14 +1423,15 @@ function startSpin(){
   SE.start();
   setReelSpeedDisplay(0);
   
-  // スタートボタンを押してから1.5秒間はストップボタンを無効化
+  // スタートボタンを押してからストップボタンを無効化（標準1.125秒／サクサク0.75秒）
   const btn=document.getElementById('bigBtn');
   if(btn) btn.disabled=true;
+  const stopEnableMs=config.speedMode==='fast' ? 750 : 1125;
   setTimeout(()=>{
     if(state==='spinning'&&btn){
       btn.disabled=false;
     }
-  }, 1500);
+  }, stopEnableMs);
 
   const totalItemsFixed=totalItems;
   const oneSetFixed=totalItemsFixed*ITEM_W;
@@ -1198,9 +1439,9 @@ function startSpin(){
     console.error('[LUCKY-DRAW] startSpin: oneSet<=0 totalItems='+totalItemsFixed);
     state='idle'; setBtnState('start'); return;
   }
-  // 標準・サクサク共通: 加速時間0.7秒、最大速度は標準60/サクサク80
-  const ACCEL_SEC=0.7;
-  const ACCEL_FRAMES=Math.max(60, Math.round(ACCEL_SEC*60));  // 約42フレーム
+  // 標準: 加速0.525秒（75%）／サクサク: 0.35秒、最大速度は標準60/サクサク80
+  const ACCEL_SEC=config.speedMode==='fast' ? 0.35 : 0.525;
+  const ACCEL_FRAMES=Math.max(60, Math.round(ACCEL_SEC*60));
   const MAX_SPEED=config.speedMode==='fast' ? 80 : REEL_SPEED_MAX;
   let frame=0;
   let lastTickIdx=Math.floor(-reelPos/ITEM_W);
@@ -1209,10 +1450,19 @@ function startSpin(){
   function animate(now){
     if(state!=='spinning') return;
     const stripEl=document.getElementById('reelStrip');
-    if(stripEl && stripEl.children.length===0){
+    if(stripEl && stripEl.children.length===0 && config.slotAssignments && config.slotAssignments.length>0){
       emptyCheckFrame++;
-      if(emptyCheckFrame%60===1){
-        logPanel('⚠ リールが消えました [回転中] state='+state, true);
+      if(emptyCheckFrame===1){
+        if(reelAnim!==null){ cancelAnimationFrame(reelAnim); reelAnim=null; }
+        state='idle';
+        setBtnState('start');
+        document.getElementById('speedLines').style.opacity='0';
+        setReelSpeedDisplay(0);
+        buildReel();
+        if(stripEl.children.length===0){ _buildReelInProgress=false; buildReel(); }
+        setTimeout(ensureReelVisible,150);
+        logPanel('⚠ リールが消えていたため復元しました。もう一度 START を押してください', true);
+        return;
       }
     }
     const dt=Math.min(now-lastTime, 50);
@@ -1234,7 +1484,8 @@ function startSpin(){
   reelAnim=requestAnimationFrame(animate);
 }
 
-// ②ストップ: 抽選（50〜150マスで停止）→減速開始→当選位置で停止
+// ②ストップ: 【設計】STOP押下時に当選番号を抽選で決定し、その番号がセンターで止まるアニメーションを行う
+// 流れ: 抽選(Nマス先で止める) → actualWinnerSlotIdx 確定 → targetReelPos に減速して停止 → showWinner で当選表示
 function stopSpin(){
   // ボタンが無効化されている場合は何もしない（連打防止）
   const btn=document.getElementById('bigBtn');
@@ -1245,6 +1496,11 @@ function stopSpin(){
   state='stopping';
   pushReelEvent('stopSpin', 'state='+state);
   setBtnState('stopping');
+  if(_showWinnerFallbackTimer!=null){ clearTimeout(_showWinnerFallbackTimer); _showWinnerFallbackTimer=null; }
+  _showWinnerFallbackTimer=setTimeout(()=>{
+    _showWinnerFallbackTimer=null;
+    if(state==='stopping'){ console.warn('[LUCKY-DRAW] 当選表示フォールバック（停止から一定時間経過）'); showWinner(); }
+  }, 9000);
   SE.stop();
   document.getElementById('reelFrame').classList.add('hot');
   document.getElementById('hitZone').classList.add('hot');
@@ -1260,21 +1516,36 @@ function stopSpin(){
   if(fullCount===0){ state='idle'; setBtnState('start'); return; }
 
   const fw=document.getElementById('reelFrame').offsetWidth;
-  const oneSet=totalItems*ITEM_W;
-  if(oneSet<=0){ state='idle'; setBtnState('start'); return; }
   strip=document.getElementById('reelStrip');
   const speedEl=document.getElementById('speedLines');
+  // 根本対策: 219で止まって220が当選になるズレは「マス幅(256)の半分で中央」にしていたため。
+  // 実際は .reel-item が width:224 + margin で、隣どうしの「中心」間隔は 240px。中心位置を実測して使う。
+  let itemW=ITEM_W;
+  let firstCenter=ITEM_W/2;   // 1マス目中央のストリップ座標（margin込みで128）
+  let centerStep=ITEM_W;      // 隣どうしの中心間隔（224+16=240だが既定は256でフォールバック）
+  if(strip&&strip.children.length>=2){
+    const r0=strip.children[0].getBoundingClientRect();
+    const r1=strip.children[1].getBoundingClientRect();
+    const step=Math.abs(r1.left-r0.left);
+    if(step>0) itemW=step;
+    const c0=r0.left+r0.width/2, c1=r1.left+r1.width/2;
+    centerStep=Math.abs(c1-c0);
+    if(centerStep<=0) centerStep=itemW;
+    const stripRect=strip.getBoundingClientRect();
+    firstCenter=(r0.left+r0.width/2)-stripRect.left;
+  }
+  const oneSet=totalItems*itemW;
+  if(oneSet<=0){ state='idle'; setBtnState('start'); return; }
 
-  // 現在のセンター位置とストリップインデックス
+  // ① 当選を抽選で決定: 現在センターのマス + N マス先に止める → その位置のスロットが当選
   const currentCenter=-reelPos+fw/2;
-  const currentStripIdx=Math.round((currentCenter-ITEM_W/2)/ITEM_W);
-  // 標準・サクサク共通: 設定の範囲（既定50〜100）
+  const currentStripIdx=Math.floor((currentCenter-firstCenter)/centerStep);
   const minM=Math.max(1, Math.floor(config.reelStopMin)||50);
   const maxM=Math.max(minM, Math.floor(config.reelStopMax)||100);
   const N=minM+Math.floor(Math.random()*(maxM-minM+1));
-  let displayIdx=(currentStripIdx+N)%totalItems;
-  if(displayIdx<0) displayIdx+=totalItems;
-  actualWinnerSlotIdx=reelDisplayIndices[displayIdx];
+  const targetStripIdx=currentStripIdx+N;
+  let displayIdx=(targetStripIdx%totalItems+totalItems)%totalItems;
+  actualWinnerSlotIdx=reelDisplayIndices[displayIdx];  // ここで当選確定。以降はこの番号が止まるアニメーション
   winnerIdx=remainingSlotIndices.indexOf(actualWinnerSlotIdx);
   if(winnerIdx<0) winnerIdx=0;
   const winSlotLog=config.slotAssignments[actualWinnerSlotIdx];
@@ -1298,15 +1569,17 @@ function stopSpin(){
   }
 
   const startPos=reelPos;
-  const moveTotal=N*ITEM_W;
-  const targetStripIdx=currentStripIdx+N;
-  const targetReelPos=-(targetStripIdx*ITEM_W+ITEM_W/2-fw/2);
+  const moveTotal=N*itemW;
+  const targetReelPos=-(firstCenter+targetStripIdx*centerStep-fw/2);  // ② 当選スロットの「中心」がフレーム中央に来る位置
+  if(window.__REEL_DEBUG){
+    console.log('[LUCKY-DRAW] stopSpin', { reelPos, fw, itemW, currentCenter, currentStripIdx, N, targetStripIdx, displayIdx, actualWinnerSlotIdx, totalItems, targetReelPos });
+  }
   // 減速開始時の速度（加速中の場合は現在速度、それ以外は標準60/サクサク80）
   const maxSpeedForDecel=config.speedMode==='fast' ? 80 : REEL_SPEED_MAX;
   let v0=Math.min(maxSpeedForDecel, Math.max(maxSpeedForDecel*0.2, currentReelSpeed));
   let moved=0;
   let lastTime=performance.now();
-  let lastTickIdx=Math.floor(-reelPos/ITEM_W);
+  let lastTickIdx=Math.floor(-reelPos/itemW);
 
   function setPos(x){ reelPos=x; const s=document.getElementById('reelStrip'); if(s) s.style.transform=`translateX(${x}px)`; }
   function wrapPos(){ if(reelPos<-oneSet*3) reelPos+=oneSet; while(reelPos>0) reelPos-=oneSet; }
@@ -1321,24 +1594,24 @@ function stopSpin(){
     if(isAligning) return;
     const diff=reelPos-targetReelPos;
     if(Math.abs(diff)<=ALIGN_SNAP_THRESHOLD){
-      // 既にセンターに合っている場合はスナップして確定演出へ
+      // 既にセンターに合っている場合はスナップして確定演出へ（wrapPos は呼ばない＝showWinner で reelPos から当選を算出するため）
       reelPos=targetReelPos;
-      wrapPos();
       setPos(reelPos);
       if(speedEl) speedEl.style.opacity='0';
       setReelSpeedDisplay(0);
       currentReelSpeed=0;
       // 完全に止まってから確定（confirmedクラス追加）
-      // サクサク: 短縮 / 標準: 0.5秒
-      const confirmDelay=config.speedMode==='fast' ? 200 : 500;
+      // 当選番号を目視できる時間を確保してから大画面へ遷移
+      const confirmDelay=config.speedMode==='fast' ? 100 : 300;
+      const REEL_VIEWING_MS=config.speedMode==='fast' ? 1200 : 1800;  // 止まった番号を目視できる最低時間
       const showWinnerDelayByRank=config.speedMode==='fast'
-        ? { mega:300, super:300, big:300, normal:200 }
-        : { mega:800, super:800, big:800, normal:500 };
-      const showWinnerDelay=showWinnerDelayByRank[currentWinRank]||showWinnerDelayByRank.normal;
+        ? { mega:1500, super:1500, big:1200, normal:1200 }
+        : { mega:2200, super:2200, big:1800, normal:1800 };
+      const showWinnerDelay=Math.max(REEL_VIEWING_MS, showWinnerDelayByRank[currentWinRank]||showWinnerDelayByRank.normal);
       setTimeout(()=>{
         document.getElementById('reelFrame').classList.add('confirmed');
         document.getElementById('hitZone').classList.add('confirmed');
-        // 確定後、適切なタイミングで当選表示（レートに応じた待ち時間）
+        // 確定後、当選番号を目視できてから大画面へ遷移
         requestAnimationFrame(()=>{
           requestAnimationFrame(()=>{
             setTimeout(()=> showWinner(), showWinnerDelay);
@@ -1351,29 +1624,41 @@ function stopSpin(){
     isAligning=true;
     const alignSpeed=MIN_SPEED;  // 減速の最小速度と同じ
     function runAlign(now){
+      const stripCheck=document.getElementById('reelStrip');
+      if(stripCheck&&stripCheck.children.length===0&&config.slotAssignments&&config.slotAssignments.length>0){
+        if(reelAnim!==null){ cancelAnimationFrame(reelAnim); reelAnim=null; }
+        if(speedEl) speedEl.style.opacity='0';
+        setReelSpeedDisplay(0);
+        buildReel();
+        if(stripCheck.children.length===0){ _buildReelInProgress=false; buildReel(); }
+        setTimeout(ensureReelVisible,150);
+        // 当選は確定済みなのでオーバーレイを必ず表示（ストレステストの winner_overlay_not_shown 対策）
+        setTimeout(()=> showWinner(), 200);
+        return;
+      }
       const dt=Math.min(now-lastTime, 50);
       lastTime=now;
       const diff=reelPos-targetReelPos;
       if(Math.abs(diff)<=ALIGN_SNAP_THRESHOLD){
-        // センターに到達したらスナップして停止
+        // センターに到達したらスナップして停止（wrapPos は呼ばない＝showWinner で reelPos から当選を算出するため）
         reelPos=targetReelPos;
-        wrapPos();
         setPos(reelPos);
         if(speedEl) speedEl.style.opacity='0';
         setReelSpeedDisplay(0);
         currentReelSpeed=0;
         isAligning=false;
         // 完全に止まってから確定（confirmedクラス追加）
-        // サクサク: 短縮 / 標準: 1.0秒
-        const confirmDelay=config.speedMode==='fast' ? 400 : 1000;
+        // 当選番号を目視できる時間を確保してから大画面へ遷移
+        const confirmDelay=config.speedMode==='fast' ? 200 : 400;
+        const REEL_VIEWING_MS=config.speedMode==='fast' ? 1200 : 1800;  // 止まった番号を目視できる最低時間
         const showWinnerDelayByRank=config.speedMode==='fast'
-          ? { mega:300, super:300, big:300, normal:200 }
-          : { mega:800, super:800, big:800, normal:500 };
-        const showWinnerDelay=showWinnerDelayByRank[currentWinRank]||showWinnerDelayByRank.normal;
+          ? { mega:1500, super:1500, big:1200, normal:1200 }
+          : { mega:2200, super:2200, big:1800, normal:1800 };
+        const showWinnerDelay=Math.max(REEL_VIEWING_MS, showWinnerDelayByRank[currentWinRank]||showWinnerDelayByRank.normal);
         setTimeout(()=>{
           document.getElementById('reelFrame').classList.add('confirmed');
           document.getElementById('hitZone').classList.add('confirmed');
-          // 確定後、適切なタイミングで当選表示（レートに応じた待ち時間）
+          // 確定後、当選番号を目視できてから大画面へ遷移
           requestAnimationFrame(()=>{
             requestAnimationFrame(()=>{
               setTimeout(()=> showWinner(), showWinnerDelay);
@@ -1394,6 +1679,18 @@ function stopSpin(){
     reelAnim=requestAnimationFrame(runAlign);
   }
   function runStop(now){
+    const stripCheck=document.getElementById('reelStrip');
+    if(stripCheck&&stripCheck.children.length===0&&config.slotAssignments&&config.slotAssignments.length>0){
+      if(reelAnim!==null){ cancelAnimationFrame(reelAnim); reelAnim=null; }
+      if(speedEl) speedEl.style.opacity='0';
+      setReelSpeedDisplay(0);
+      buildReel();
+      if(stripCheck.children.length===0){ _buildReelInProgress=false; buildReel(); }
+      setTimeout(ensureReelVisible,150);
+      // 当選は確定済みなのでオーバーレイを必ず表示（ストレステストの winner_overlay_not_shown 対策）
+      setTimeout(()=> showWinner(), 200);
+      return;
+    }
     const dt=Math.min(now-lastTime, 50);
     lastTime=now;
     const remaining=moveTotal-moved;
@@ -1407,8 +1704,8 @@ function stopSpin(){
     }
     // 等減速: v²=v0²-2as より speed=v0*sqrt(1-moved/moveTotal)
     const ratio=Math.min(1, moved/moveTotal);
-    // 標準: (1-ratio)^0.7 ／ サクサク: (1-ratio)^0.5（キレよく止まる）
-    const exp=config.speedMode==='fast' ? 0.5 : 0.7;
+    // 標準: (1-ratio)^0.6（75%程度で止まる）／ サクサク: (1-ratio)^0.35
+    const exp=config.speedMode==='fast' ? 0.35 : 0.6;
     let speed=v0*Math.pow(Math.max(0,1-ratio), exp);
     // 終盤で速度が極端に落ちて抽選が終わらないのを防ぐ：残りがある間は常に最低速度を保つ
     if(remaining>0) speed=Math.max(speed, MIN_SPEED);
@@ -1419,15 +1716,64 @@ function stopSpin(){
     setPos(reelPos);
     currentReelSpeed=speed;
     setReelSpeedDisplay(speed);
-    const curIdx=Math.floor(-reelPos/ITEM_W);
+    const curIdx=Math.floor(-reelPos/itemW);
     if(curIdx!==lastTickIdx){ SE.reelTick(); lastTickIdx=curIdx; }
     reelAnim=requestAnimationFrame(runStop);
   }
   reelAnim=requestAnimationFrame(runStop);
 }
 
+/** 現在の reelPos から「センターにあるスロット」を算出。stopSpin と同じ「中心」基準（firstCenter + k*centerStep）を使う */
+function getSlotIndexFromReelPos(pos){
+  if(!reelDisplayIndices.length||totalItems<=0) return -1;
+  const frameEl=document.getElementById('reelFrame');
+  const stripEl=document.getElementById('reelStrip');
+  const fw=frameEl?frameEl.offsetWidth:0;
+  let firstCenter=ITEM_W/2, centerStep=ITEM_W;
+  if(stripEl&&stripEl.children.length>=2){
+    const r0=stripEl.children[0].getBoundingClientRect();
+    const r1=stripEl.children[1].getBoundingClientRect();
+    const stripRect=stripEl.getBoundingClientRect();
+    firstCenter=(r0.left+r0.width/2)-stripRect.left;
+    const c0=r0.left+r0.width/2, c1=r1.left+r1.width/2;
+    centerStep=Math.abs(c1-c0);
+    if(centerStep<=0) centerStep=ITEM_W;
+  }
+  const currentCenter=-pos+fw/2;
+  const stripIdx=Math.floor((currentCenter-firstCenter)/centerStep);
+  const displayIdx=(stripIdx%totalItems+totalItems)%totalItems;
+  return reelDisplayIndices[displayIdx];
+}
+
+/** リールフレームの中央「を含む」ストリップ子要素のスロット番号をDOM計測で返す。計測失敗時は -1
+ * ズレ原因: (1)「中央に最も近い」だと境界で隣を選ぶことがある → ここでは「中央線が item の left〜right 内にある」で判定
+ * (2) ITEM_W=256 と実際のレンダ幅の差 (3) strip の transform と getBoundingClientRect のタイミング */
+function getVisualCenterSlotIndex(){
+  const frameEl=document.getElementById('reelFrame');
+  const stripEl=document.getElementById('reelStrip');
+  if(!frameEl||!stripEl||stripEl.children.length===0||!reelDisplayIndices.length||totalItems<=0) return -1;
+  const frameRect=frameEl.getBoundingClientRect();
+  const centerX=frameRect.left+frameRect.width/2;
+  let bestIdx=-1;
+  let bestDist=Infinity;
+  for(let i=0;i<stripEl.children.length;i++){
+    const r=stripEl.children[i].getBoundingClientRect();
+    if(centerX>=r.left&&centerX<=r.right){
+      bestIdx=i;
+      break;
+    }
+    const itemCenterX=r.left+r.width/2;
+    const dist=Math.abs(itemCenterX-centerX);
+    if(dist<bestDist){ bestDist=dist; bestIdx=i; }
+  }
+  if(bestIdx<0) return -1;
+  const displayIdx=(bestIdx%totalItems+totalItems)%totalItems;
+  return reelDisplayIndices[displayIdx];
+}
+
 // ===== Winner =====
 function showWinner(){
+  if(_showWinnerFallbackTimer!=null){ clearTimeout(_showWinnerFallbackTimer); _showWinnerFallbackTimer=null; }
   pushReelEvent('showWinner', '');
   state='showing';
   // リールが空のまま表示されるバグ対策: 当選表示の直前に必ずリールを復元
@@ -1435,8 +1781,36 @@ function showWinner(){
   if(stripEl && stripEl.children.length===0 && config.slotAssignments && config.slotAssignments.length>0){
     logPanel('🔄 リールを復元してから当選表示します…', true);
     buildReel();
+    if(stripEl.children.length===0){ _buildReelInProgress=false; buildReel(); }
   }
-  const slotIdx=actualWinnerSlotIdx;
+  // 当選表示は「止まったときに中央に見えている番号」に必ず合わせる（手動プレイでのズレ解消）。
+  // ストリップが十分あれば視覚／位置から取得した番号を優先し、取れないときだけ計算値（actualWinnerSlotIdx）を使う。
+  const computedSlot=actualWinnerSlotIdx;
+  const visualSlot=getVisualCenterSlotIndex();
+  const posSlot=getSlotIndexFromReelPos(reelPos);
+  const stripChildren=stripEl?stripEl.children.length:0;
+  const expectedMin=config.slotAssignments&&config.slotAssignments.length>0 ? Math.min(20,Math.ceil(config.slotAssignments.length*0.4)) : 0;
+  const stripHealthy=stripChildren>=expectedMin;
+  let slotIdx=computedSlot;
+  if(stripHealthy){
+    if(visualSlot>=0){
+      slotIdx=visualSlot;
+      actualWinnerSlotIdx=visualSlot;
+      if(visualSlot!==computedSlot && (typeof console!=='undefined'&&console.warn)){
+        console.warn('[LUCKY-DRAW] 停止位置と当選計算のズレを検出（視覚に合わせて表示）',{ computed:computedSlot, visual:visualSlot });
+      }
+    } else if(posSlot>=0){
+      slotIdx=posSlot;
+      actualWinnerSlotIdx=posSlot;
+      if(posSlot!==computedSlot && (typeof console!=='undefined'&&console.warn)){
+        console.warn('[LUCKY-DRAW] 停止位置と当選計算のズレを検出（位置から表示）',{ computed:computedSlot, posSlot });
+      }
+    }
+  }
+  // strip が少ない（異常）ときは computed のまま
+  if(window.__REEL_DEBUG){
+    console.log('[LUCKY-DRAW] showWinner', { computedSlot, visualSlot, used:slotIdx, reelPos, totalItems });
+  }
   const slot=config.slotAssignments[slotIdx];
   const slotNo=slotIdx+1;
   const name=slot?.name||'賞品';
@@ -1446,7 +1820,7 @@ function showWinner(){
   drawnSlotIndices.add(slotIdx);
   logPanel(`🎉 No.${slotNo} 当選: ${name}`);
 
-  const displayImg=imgUrl||getPlaceholderImageUrl(name,rank);
+  const displayImg=resolveForDisplay(imgUrl,name,rank)||getPlaceholderImageUrl(name,rank);
   addHistoryEntry(drawCount, slotNo, name, rank, displayImg);
 
   showWinnerDisplay(slotNo, name, rank, displayImg);
@@ -1459,12 +1833,20 @@ function showWinner(){
     spawnPetals(rank);
   }
   SE.winner(rank);
+  // 当選発表後にリールが消えたままにならないよう、表示後に必ず復元を試行
+  setTimeout(ensureReelVisible,80);
 }
 
 // ===== Next Draw =====
 function nextDraw(){
   pushReelEvent('nextDraw', '');
   state='idle';
+  // 次へボタン押下時にリールが消えていれば、即ここで強制復旧（押したら必ず表示されるようにする）
+  const stripEl=document.getElementById('reelStrip');
+  if(stripEl&&stripEl.children.length===0&&config.slotAssignments&&config.slotAssignments.length>0){
+    _buildReelInProgress=false;
+    buildReel();
+  }
   drawCount++;
   SE.next();
   updateRemainingDraws();
@@ -1475,26 +1857,13 @@ function nextDraw(){
   document.getElementById('speedLines').style.opacity='0';
   setReelSpeedDisplay(0);
   setBtnState('start');
-  // fast-modeクラスはnextDraw時には削除しない（設定で管理）
   showSpinControl();
-  // 当選で止まった位置の「1つ前」から再開（リールを初期位置に戻さない）
-  const savedReelPos=reelPos;
-  buildReel();
-  let strip=document.getElementById('reelStrip');
-  // リールが空のままになるバグ対策: 賞品があるのにstripが空なら1回だけ再構築
-  if(strip && strip.children.length===0 && config.slotAssignments && config.slotAssignments.length>0){
-    logPanel('⚠ リールが消えていた → 再構築しています…', true);
-    buildReel();
-    strip=document.getElementById('reelStrip');
-  }
-  if(strip && totalItems>0 && strip.children.length>0){
-    const oneSet=totalItems*ITEM_W;
-    reelPos=savedReelPos-ITEM_W;  // 当選の1つ前のカードがセンターに来る位置
-    while(reelPos>0) reelPos-=oneSet;
-    while(oneSet>0 && reelPos<-oneSet*3) reelPos+=oneSet;
-    strip.style.transform=`translateX(${reelPos}px)`;
-  }
   BGM.idle();
+  // 次の抽選ではリールを「前回当選の1つ前」を中央に揃える（初回は0番が中央）
+  requestAnimationFrame(()=>{
+    buildReelChunked({ startFromPrevWinnerMinus1: true });
+  });
+  setTimeout(ensureReelVisible,600);
 }
 
 
@@ -1609,22 +1978,34 @@ function buildPrizeGrid(){
     const card=document.createElement('div');
     card.className='prize-card'+(p.rank!=='normal'?' '+p.rank:'');
     const dispImg=getPlaceholderImageUrl(p.name,p.rank);
-    const imgSrc=p.imageUrl||dispImg;
+    const imgSrc=resolveForDisplay(p.imageUrl,p.name,p.rank)||dispImg;
+    const fileInput=document.createElement('input');
+    fileInput.type='file';
+    fileInput.accept='image/*';
+    fileInput.style.display='none';
+    fileInput.addEventListener('change',function(){
+      uploadPrizePoolImage(i,this);
+      this.value='';
+    });
     card.innerHTML=`
       <div class="pc-top">
         <div class="pc-img-wrap">
           <img class="pc-img" src="${imgSrc}">
         </div>
         <div class="pc-img-btns">
-          <label class="pc-ib" title="画像をアップロード">📷<input type="file" accept="image/*" onchange="uploadPrizePoolImage(${i},this)" style="display:none"></label>
+          <button class="pc-ib" type="button" title="画像をアップロード" data-pool-upload="${i}">📷</button>
           <button class="pc-ib" type="button" title="画像URLを貼り付け" onclick="triggerUrlPasteForPool(${i})">🔗</button>
           ${p.imageUrl?`<button class="pc-ib ${isPrizeDefaulted(p.name,p.rank)?'pin-defaulted':''}" type="button" title="この画像をデフォルトに設定（全スロットに適用）" onclick="setPrizeImageAsDefault(${i})">📌</button>`:''}
+          ${p.imageUrl?`<button class="pc-ib pc-trash" type="button" title="画像を消去" onclick="clearPrizePoolImage(${i})">🗑️</button>`:''}
         </div>
         <div class="pc-no">${RANK_LABELS[p.rank]||'HIT'}</div>
         <div class="pc-stock"><div class="pc-stock-label">${p.count}本</div></div>
       </div>
       <div class="pc-name-input" style="cursor:default;background:transparent;">${formatNameForDisplay(p.name)||'賞品'}</div>
     `;
+    card.appendChild(fileInput);
+    const uploadBtn=card.querySelector('[data-pool-upload]');
+    if(uploadBtn) uploadBtn.addEventListener('click',()=>fileInput.click());
     grid.appendChild(card);
   });
 }
@@ -1632,10 +2013,39 @@ function buildPrizeGrid(){
 // Set prize name
 function setPrizeName(){ /* 賞品プール型ではスプシで管理 */ }
 const MAX_IMAGE_BYTES=2*1024*1024;
-function resizeImageToMaxSize(file,maxBytes,cb){
+const MAX_IMAGE_BYTES_FOLDER=600*1024;
+const MAX_IMAGE_DIM=2048;
+const MAX_IMAGE_DIM_FOLDER=1200;
+function resizeImageToMaxSize(file,maxBytes,cb,opts){
+  const maxDim=(opts&&opts.maxDim)||MAX_IMAGE_DIM;
   if(file.size<=maxBytes){
     const r=new FileReader();
-    r.onload=()=>cb(r.result);
+    r.onload=()=>{
+      const dataUrl=r.result;
+      if(!dataUrl||typeof dataUrl!=='string'||!dataUrl.startsWith('data:image')){ cb(dataUrl); return; }
+      const img=new Image();
+      img.onload=()=>{
+        let w=img.width,h=img.height;
+        if(w<=maxDim&&h<=maxDim&&dataUrl.length<=maxBytes*1.2){ cb(dataUrl); return; }
+        const scale=Math.min(1,maxDim/Math.max(w,h));
+        w=Math.round(w*scale); h=Math.round(h*scale);
+        if(w<=0||h<=0){ cb(dataUrl); return; }
+        const c=document.createElement('canvas'); c.width=w; c.height=h;
+        const ctx=c.getContext('2d');
+        const doDraw=()=>{
+          try{
+            ctx.drawImage(img,0,0,w,h);
+            let q=0.88;
+            function tryQ(){ const s=c.toDataURL('image/jpeg',q); if(s.length*0.75<=maxBytes||q<=0.3){ cb(s); return; } q-=0.15; tryQ(); }
+            tryQ();
+          }catch(e){ cb(dataUrl); }
+        };
+        if(typeof requestIdleCallback!=='undefined') requestIdleCallback(doDraw,{timeout:3000});
+        else setTimeout(doDraw,0);
+      };
+      img.onerror=()=>cb(dataUrl);
+      img.src=dataUrl;
+    };
     r.readAsDataURL(file);
     return;
   }
@@ -1643,21 +2053,30 @@ function resizeImageToMaxSize(file,maxBytes,cb){
   const url=URL.createObjectURL(file);
   img.onload=()=>{
     URL.revokeObjectURL(url);
-    const c=document.createElement('canvas');
     let w=img.width,h=img.height;
-    const scale=Math.min(1,Math.sqrt(maxBytes*0.7/(w*h)));
+    const scaleDim=Math.min(1,maxDim/Math.max(w,h));
+    const scaleBytes=Math.min(1,Math.sqrt(maxBytes*0.7/(w*h)));
+    const scale=Math.min(scaleDim,scaleBytes);
     w=Math.round(w*scale); h=Math.round(h*scale);
+    if(w<=0||h<=0){ cb(null); return; }
+    const c=document.createElement('canvas');
     c.width=w; c.height=h;
     const ctx=c.getContext('2d');
-    ctx.drawImage(img,0,0,w,h);
-    let q=0.85;
-    function tryQuality(){
-      const data=c.toDataURL('image/jpeg',q);
-      if(data.length*0.75<=maxBytes || q<=0.3){ cb(data); return; }
-      q-=0.15;
-      tryQuality();
-    }
-    tryQuality();
+    const doDraw=()=>{
+      try{
+        ctx.drawImage(img,0,0,w,h);
+        let q=0.85;
+        function tryQuality(){
+          const data=c.toDataURL('image/jpeg',q);
+          if(data.length*0.75<=maxBytes || q<=0.3){ cb(data); return; }
+          q-=0.15;
+          tryQuality();
+        }
+        tryQuality();
+      }catch(e){ cb(null); }
+    };
+    if(typeof requestIdleCallback!=='undefined') requestIdleCallback(doDraw,{timeout:5000});
+    else setTimeout(doDraw,0);
   };
   img.onerror=()=>{ URL.revokeObjectURL(url); cb(null); };
   img.src=url;
@@ -1665,7 +2084,10 @@ function resizeImageToMaxSize(file,maxBytes,cb){
 function uploadPrizePoolImage(poolIdx,input){
   const file=input.files[0];
   if(!file){ input.value=''; return; }
+  const statusEl=document.getElementById('sheetStatus');
+  if(statusEl){ statusEl.textContent='画像を処理中...'; statusEl.style.color='var(--text-dim)'; }
   resizeImageToMaxSize(file,MAX_IMAGE_BYTES,(dataUrl)=>{
+    if(statusEl&&!dataUrl){ statusEl.textContent=''; }
     if(!dataUrl){ alert('画像の読み込みに失敗しました'); return; }
     const pool=config.prizePool||[];
     if(poolIdx<0||poolIdx>=pool.length) return;
@@ -1673,6 +2095,7 @@ function uploadPrizePoolImage(poolIdx,input){
     p.imageUrl=dataUrl;
     config.slotAssignments.forEach(s=>{ if(s.name===p.name&&s.rank===p.rank) s.imageUrl=dataUrl; });
     buildPrizeGrid(); buildReel(); rebuildHistoryDOM(); saveToStorage();
+    if(statusEl){ statusEl.textContent=''; }
     logPanel(`賞品「${p.name}」の画像をアップロードしました`+(file.size>MAX_IMAGE_BYTES?' (2MBにリサイズ済み)':''));
   });
   input.value='';
@@ -1688,6 +2111,84 @@ function triggerUrlPasteForPool(poolIdx){
   config.slotAssignments.forEach(s=>{ if(s.name===p.name&&s.rank===p.rank) s.imageUrl=p.imageUrl; });
   buildPrizeGrid(); buildReel(); rebuildHistoryDOM(); saveToStorage();
   logPanel(`賞品「${p.name}」の画像をURLから設定しました`);
+}
+function clearPrizePoolImage(poolIdx){
+  const pool=config.prizePool||[];
+  if(poolIdx<0||poolIdx>=pool.length) return;
+  const p=pool[poolIdx];
+  if(!p.imageUrl) return;
+  p.imageUrl='';
+  config.slotAssignments.forEach(s=>{ if(s.name===p.name&&s.rank===p.rank) s.imageUrl=''; });
+  defaultedPrizeKeys.delete((p.name||'')+'\0'+(p.rank||'normal'));
+  buildPrizeGrid(); buildReel(); rebuildHistoryDOM(); saveToStorage();
+  logPanel(`賞品「${p.name}」の画像を消去しました`);
+}
+async function loadImagesFromFolder(){
+  if(!('showDirectoryPicker' in window)){
+    logPanel('⚠ 画像フォルダの選択にはChrome/Edgeが必要です',true);
+    return;
+  }
+  if(!config.prizePool||config.prizePool.length===0){
+    logPanel('⚠ 先に賞品プールを読み込んでください（スプシ更新など）',true);
+    return;
+  }
+  try{
+    const dirHandle=await window.showDirectoryPicker({mode:'read'});
+    logPanel('🖼️ 画像フォルダを読み込み中…');
+    const idToDataUrl={};
+    const reLd=/^LD_?0*(\d+)(-[^.]*)?\.(png|jpg|jpeg|svg|webp)$/i;
+    const reNum=/^(\d+)(-[^.]*)?\.(png|jpg|jpeg|svg|webp)$/i;
+    for await(const entry of dirHandle.values()){
+      if(entry.kind!=='file') continue;
+      const name=entry.name||'';
+      let m=name.match(reLd); if(!m) m=name.match(reNum);
+      if(!m) continue;
+      const id='LD_'+String(parseInt(m[1],10)).padStart(4,'0');
+      const file=await entry.getFile();
+      if(!file.type.startsWith('image/')&&file.type!=='image/svg+xml') continue;
+      let dataUrl=null;
+      if(file.type==='image/svg+xml'){
+        const text=await file.text();
+        dataUrl='data:image/svg+xml,'+encodeURIComponent(text);
+      }else{
+        dataUrl=await new Promise((res,rej)=>{
+          resizeImageToMaxSize(file,MAX_IMAGE_BYTES_FOLDER,url=>url?res(url):rej(),{maxDim:MAX_IMAGE_DIM_FOLDER});
+        }).catch(()=>null);
+      }
+      if(dataUrl){ idToDataUrl[id]=dataUrl; }
+    }
+    if(Object.keys(idToDataUrl).length===0){
+      logPanel('該当する画像（LD_0001.png や LD_0030-任意.png 等）が見つかりませんでした',true);
+      return;
+    }
+    if(!config.prizePicsDataUrls) config.prizePicsDataUrls={};
+    Object.assign(config.prizePicsDataUrls,idToDataUrl);
+    Object.keys(idToDataUrl).forEach(id=>prizePicsDisplayCache.set(id,idToDataUrl[id]));
+    let poolCnt=0,slotCnt=0;
+    config.prizePool.forEach(p=>{
+      const v=String(p.imageUrl||'');
+      if(v.startsWith('prize_pics:')){
+        const id=normalizePrizePicsId(v.slice(11));
+        if(idToDataUrl[id]) poolCnt++;
+      }
+    });
+    config.slotAssignments.forEach(s=>{
+      const v=String(s.imageUrl||'');
+      if(v.startsWith('prize_pics:')){
+        const id=normalizePrizePicsId(v.slice(11));
+        if(idToDataUrl[id]) slotCnt++;
+      }
+    });
+    buildPrizeGrid(); buildReel(); rebuildHistoryDOM();
+    try{ saveToStorage(); }catch(e){
+      if(e&&e.name==='QuotaExceededError') logPanel('⚠ 保存容量超過のため、画像はこのセッションのみ有効です。枚数を減らすか、不要データを削除してください',true);
+      else throw e;
+    }
+    logPanel(`📁 フォルダから${Object.keys(idToDataUrl).length}枚を読み込み、賞品プール${poolCnt}種・スロット${slotCnt}件に適用しました（重い画像は約600KB・長辺1200px以内に圧縮）`);
+  }catch(e){
+    if(e.name==='AbortError') return;
+    logPanel('⚠ フォルダの読み込みに失敗しました: '+e.message,true);
+  }
 }
 function isPrizeDefaulted(name,rank){ return defaultedPrizeKeys.has((name||'')+'\0'+(rank||'normal')); }
 function setPrizeImageAsDefault(poolIdx){
@@ -1813,10 +2314,21 @@ function parseRank(v){
   const s=String(v||'').trim();
   const lower=s.toLowerCase();
   if(/megasuperbighit|mega|mbig|メガ/.test(lower)) return 'mega';
-  if(/superbighit|super|sbig|超/.test(lower)) return 'super';
-  if(/bighit|big|大/.test(lower)) return 'big';
-  if(/^hit$/i.test(s) || /当/.test(s)) return 'normal';
+  if(/superbighit|super|sbig|超|スーパー/.test(lower)) return 'super';
+  if(/bighit|big|大|ビッグ/.test(lower)) return 'big';
+  if(/^hit$/i.test(s) || /当|ヒット/.test(lower)) return 'normal';
   return 'normal';
+}
+/** 値がレート名っぽいか（SuperBigHit等） */
+function looksLikeRankValue(v){
+  const s=String(v||'').trim().toLowerCase();
+  if(!s || s.length>40) return false; // 空・長いテキストは商品名扱い
+  return /megasuperbighit|superbighit|bighit|^hit$|^mega$|^super$|sbig|^big$|賞品レート|^レート$|rank|メガ|超大|大当|当選|^大$/.test(s);
+}
+/** レートと商品名が逆になっている場合に交換 */
+function fixRankNameSwap(rankRaw,nameRaw){
+  if(looksLikeRankValue(nameRaw)&&!looksLikeRankValue(rankRaw)) return {rank:nameRaw,name:nameRaw};
+  return {rank:rankRaw,name:nameRaw};
 }
 function resolveImageUrl(val){
   const s=String(val||'').trim();
@@ -1836,7 +2348,12 @@ function toPrizePicsId(val){
   const m=s.match(/LD_?0*(\d+)/i)||s.match(/^(\d+)$/);
   return m?'LD_'+String(parseInt(m[1],10)).padStart(4,'0'):null;
 }
-const PRIZE_PICS_EXTS=['.png','.jpg','.jpeg','.PNG','.JPG','.JPEG'];
+/** LD_30 / LD_0030 / 30 を LD_0030 に統一（キャッシュ・フォルダ適用の照合用） */
+function normalizePrizePicsId(id){
+  const n=toPrizePicsId(id);
+  return n||String(id||'').trim()||'';
+}
+const PRIZE_PICS_EXTS=['.svg','.SVG','.png','.jpg','.jpeg','.webp'];
 async function resolvePrizePicsUrl(imgNo){
   const id=typeof imgNo==='string'?toPrizePicsId(imgNo):(imgNo!=null?'LD_'+String(imgNo).padStart(4,'0'):null);
   if(!id) return '';
@@ -1847,8 +2364,52 @@ async function resolvePrizePicsUrl(imgNo){
       if(r.ok) return base+ext;
     }catch(_){}
   }
-  // ファイルが存在しない場合は空を返し、表示時にプレースホルダー（SVG）が使われるようにする
   return '';
+}
+/** 1つのIDで試すファイル名の候補（LD_0030, LD_30, 30 など） */
+function _prizePicsTryIds(normalizedId,rawId){
+  const r=String(rawId||'').trim();
+  const list=[normalizedId];
+  if(r&&r!==normalizedId) list.push(r);
+  const numOnly=normalizedId.replace(/^LD_0*/i,'');
+  if(numOnly&&numOnly!==normalizedId&&list.indexOf(numOnly)===-1) list.push(numOnly);
+  return list;
+}
+async function populatePrizePicsCache(ids){
+  const base=(location.origin||'')+'/prize_pics/';
+  const seen=new Set();
+  for(const rawId of ids){
+    const id=normalizePrizePicsId(rawId);
+    if(!id) continue;
+    if(seen.has(id)) continue;
+    seen.add(id);
+    if(missingPrizePicsIds.has(id)){ prizePicsDisplayCache.set(id,''); continue; }
+    if(prizePicsDisplayCache.has(id)) continue;
+    let found=false;
+    const tryIds=_prizePicsTryIds(id,rawId);
+    for(const tryId of tryIds){
+      if(found) break;
+      for(const ext of PRIZE_PICS_EXTS){
+        try{
+          const r=await fetch(base+tryId+ext,{method:'GET',cache:'no-cache'});
+          if(r.ok){
+            const blob=await r.blob();
+            const dataUrl=await new Promise((res,rej)=>{
+              const rd=new FileReader();
+              rd.onload=()=>res(rd.result);
+              rd.onerror=rej;
+              rd.readAsDataURL(blob);
+            });
+            prizePicsDisplayCache.set(id,dataUrl);
+            if(config.prizePicsDataUrls) config.prizePicsDataUrls[id]=dataUrl;
+            found=true;
+            break;
+          }
+        }catch(_){}
+      }
+    }
+    if(!found){ missingPrizePicsIds.add(id); prizePicsDisplayCache.set(id,''); }
+  }
 }
 function parseCSVLine(line){
   const r=[]; let cur=''; let inQ=false;
@@ -1882,79 +2443,94 @@ function parseCSVFull(text){
   row.push(cur.replace(/^"|"$/g,'').trim()); if(row.length>0||cur.length>0) rows.push(row);
   return rows;
 }
-/** 賞品プール形式A: レート,賞品名,本数,画像URL */
+/** ヘッダー行から列インデックスを検出。賞品レートは「賞品レート」列を優先（他に「レート」等があると取り違えるため） */
+function detectPoolColumns(headerRow,format){
+  const h=headerRow||[];
+  const isB=format==='B';
+  let colRank=isB?1:0,colName=isB?2:1,colCount=isB?4:2,colImg=isB?5:3;
+  let foundPrizeRateCol=-1;
+  for(let j=0;j<h.length;j++){
+    const v=String(h[j]||'').trim().toLowerCase();
+    if(/賞品レート/.test(v)){ foundPrizeRateCol=j; break; }
+  }
+  if(foundPrizeRateCol>=0) colRank=foundPrizeRateCol;
+  else {
+    for(let j=0;j<h.length;j++){
+      const v=String(h[j]||'').trim().toLowerCase();
+      if(/^レート|^rank|ランク|^rate/.test(v)||/megasuperbighit|superbighit|bighit|hit/.test(v)){ colRank=j; break; }
+    }
+  }
+  for(let j=0;j<h.length;j++){
+    const v=String(h[j]||'').trim().toLowerCase();
+    if(/^賞品名|^商品名|^商品[^a-z]|^name/.test(v)){ colName=j; break; }
+  }
+  for(let j=0;j<h.length;j++){
+    const v=String(h[j]||'').trim().toLowerCase();
+    if(/^本数|^count|^当選|当選個数/.test(v)){ colCount=j; break; }
+  }
+  for(let j=0;j<h.length;j++){
+    const v=String(h[j]||'').trim().toLowerCase();
+    if(/^画像|image|url|画像no|画像no\./.test(v)){ colImg=j; break; }
+  }
+  return {colRank,colName,colCount,colImg};
+}
+/** 賞品プール形式A: レート,賞品名,本数,画像URL（列順はヘッダーで検出） */
 async function applySheetRowsPool(rows,spreadsheetId){
   let startRow=0;
-  if(rows[0]&&/^(レート|rank|賞品名|商品名|本数|count)/i.test(String(rows[0][0]||'').trim())) startRow=1;
+  const header=rows[0]||[];
+  if(rows[0]&&/^(レート|rank|賞品名|商品名|本数|count|管理No)/i.test(String(header[0]||'').trim())) startRow=1;
+  const cols=detectPoolColumns(header);
   const pool=[];
   for(let i=startRow;i<rows.length;i++){
     const row=rows[i]||[];
-    const rank=parseRank(String(row[0]||'').trim());
-    const name=String(row[1]||'').trim();
-    const count=Math.max(0,parseInt(row[2],10)||0);
+    let rankRaw=String((row[cols.colRank]??row[0])||'').trim();
+    let nameRaw=String((row[cols.colName]??row[1])||'').trim();
+    const fixed=fixRankNameSwap(rankRaw,nameRaw); rankRaw=fixed.rank; nameRaw=fixed.name;
+    const rank=parseRank(rankRaw);
+    const name=nameRaw||'賞品';
+    const count=Math.max(0,parseInt((row[cols.colCount]??row[2]),10)||0);
     if(!name&&count===0) continue;
-    let imageUrl=resolveImageUrl(row[3]||row[4]||'');
-    if(!imageUrl){
-      const pid=toPrizePicsId(row[3]||row[4]||'');
-      if(pid) imageUrl='prize_pics:'+pid;
-    }
-    pool.push({rank,name:name||'賞品',count,imageUrl});
+    const imgVal=row[cols.colImg]??row[3]??row[4]??'';
+    let imageUrl=resolveImageUrl(imgVal);
+    if(!imageUrl){ const pid=toPrizePicsId(imgVal); if(pid) imageUrl='prize_pics:'+pid; }
+    pool.push({rank,name,count,imageUrl});
   }
   return await applyPoolFinal(pool,spreadsheetId);
 }
-/** 形式B: 管理No.,賞品レート,商品名,文字数,当選個数,画像No (prize_list形式) */
+/** 形式B: 管理No.,賞品レート,商品名,文字数,当選個数,画像No（列はヘッダーで検出） */
 async function applySheetRowsPrizeList(rows,spreadsheetId){
   let startRow=0;
-  const h0=String((rows[0]||[])[0]||'').trim();
-  const h1=String((rows[0]||[])[1]||'').trim();
-  if(/管理No|賞品レート|商品名/i.test(h0)||/賞品レート|商品名/i.test(h1)) startRow=1;
+  const header=rows[0]||[];
+  if(/管理No|賞品レート|商品名/i.test(String(header[0]||''))||/賞品レート|商品名/i.test(String(header[1]||''))) startRow=1;
+  const cols=detectPoolColumns(header,'B'); // 形式B: 賞品レートはB列(1)
+  if(typeof console!=='undefined'&&console.log) console.log('[賞品読み込み] 形式B 検出列:',cols,'ヘッダー:',header.slice(0,12));
   const pool=[];
   for(let i=startRow;i<rows.length;i++){
     const row=rows[i]||[];
-    const rank=parseRank(String(row[1]||'').trim());
-    const name=String(row[2]||'').trim();
-    const count=Math.max(0,parseInt(row[4],10)||0);
+    let rankRaw=String((row[cols.colRank]??row[1])||'').trim();
+    let nameRaw=String((row[cols.colName]??row[2])||'').trim();
+    const fixed=fixRankNameSwap(rankRaw,nameRaw); rankRaw=fixed.rank; nameRaw=fixed.name;
+    const rank=parseRank(rankRaw);
+    const name=nameRaw||'賞品';
+    if(i<=startRow+2&&typeof console!=='undefined'&&console.log) console.log('[賞品読み込み] 行'+(i+1)+': row[colRank]='+JSON.stringify(row[cols.colRank])+' row[colName]='+JSON.stringify(row[cols.colName])+' → rank='+rank);
+    const count=Math.max(0,parseInt((row[cols.colCount]??row[4]),10)||0);
     if(!name&&count===0) continue;
-    let imageUrl=resolveImageUrl(row[5]||row[6]||'');
-    if(!imageUrl){
-      const pid=toPrizePicsId(row[5]||row[6]||'');
-      if(pid) imageUrl='prize_pics:'+pid;
-    }
-    pool.push({rank,name:name||'賞品',count,imageUrl});
+    const imgVal=row[cols.colImg]??row[5]??row[6]??'';
+    let imageUrl=resolveImageUrl(imgVal);
+    if(!imageUrl){ const pid=toPrizePicsId(imgVal); if(pid) imageUrl='prize_pics:'+pid; }
+    pool.push({rank,name,count,imageUrl});
   }
   return applyPoolFinal(pool,spreadsheetId);
 }
 async function applyPoolFinal(pool,spreadsheetId){
   if(pool.length===0){ logPanel('賞品プールが空です'); return 0; }
-  // prize_pics:形式の画像をDataURLに変換（デフォルトとして保存）
-  const convertPrizePicsToDataUrl=async (imageUrl)=>{
-    if(!imageUrl||!String(imageUrl).startsWith('prize_pics:')) return imageUrl;
-    const id=String(imageUrl).slice(11);
-    const base='/prize_pics/'+id;
-    for(const ext of PRIZE_PICS_EXTS){
-      try{
-        const response=await fetch(base+ext,{method:'GET',cache:'no-cache'});
-        if(response.ok){
-          const blob=await response.blob();
-          const reader=new FileReader();
-          const dataUrl=await new Promise((resolve,reject)=>{
-            reader.onload=()=>resolve(reader.result);
-            reader.onerror=reject;
-            reader.readAsDataURL(blob);
-          });
-          return dataUrl;
-        }
-      }catch(_){}
-    }
-    // ファイルが見つからない場合は従来通りURLを返す
-    return await resolvePrizePicsUrl(id);
-  };
-  await Promise.all(pool.map(async p=>{
+  const ids=[...new Set(pool.map(p=>{
     const v=String(p.imageUrl||'');
-    if(v.startsWith('prize_pics:')){
-      p.imageUrl=await convertPrizePicsToDataUrl(p.imageUrl);
-    }
-  }));
+    return v.startsWith('prize_pics:')?v.slice(11):null;
+  }).filter(Boolean))];
+  if(ids.length>0) logPanel('🖼️ 画像を読み込み中…');
+  await populatePrizePicsCache(ids);
+  if(ids.length>0) logPanel('🖼️ prize_pics フォルダから画像を自動で読み込みました');
   const existingByKey={};
   (config.prizePool||[]).forEach(p=>{ if(p.imageUrl){ const k=(p.name||'')+'\0'+(p.rank||'normal'); existingByKey[k]=p.imageUrl; } });
   (config.slotAssignments||[]).forEach(s=>{ if(s.imageUrl){ const k=(s.name||'')+'\0'+(s.rank||'normal'); if(!existingByKey[k]) existingByKey[k]=s.imageUrl; } });
@@ -1966,6 +2542,7 @@ async function applyPoolFinal(pool,spreadsheetId){
   });
   config.prizePool=pool;
   config.spreadsheetId=spreadsheetId;
+  try{ writeLoadedPrizeRates(pool); }catch(e){ console.warn('writeLoadedPrizeRates:',e); }
   computeSlotAssignments();
   buildPrizeGrid();
   rebuildHistoryDOM();
@@ -1976,6 +2553,17 @@ async function applyPoolFinal(pool,spreadsheetId){
   logPanel(`📊 賞品プール ${pool.length}種・合計${total}本を反映しました`);
   return total;
 }
+/** 読み込んだ賞品のレート一覧をコンソールに書き出す（スプシとの照合用） */
+function writeLoadedPrizeRates(pool){
+  const R={mega:'MBIG',super:'SBIG',big:'BIG',normal:'HIT'};
+  const lines=pool.map((p,i)=>`${i+1}. ${(p.name||'')} → ${R[p.rank]||'HIT'} (${p.count}本)`);
+  if(typeof console!=='undefined'&&console.log){
+    console.log('--- 読み込んだ賞品レート一覧 ---');
+    lines.forEach(l=>console.log(l));
+    console.log('--- ここまで ---');
+  }
+  logPanel('📋 読み込みレート一覧をコンソールに出力しました（F12→Consoleで確認）');
+}
 async function applySheetRows(rows,spreadsheetId){
   if(rows.length===0) return 0;
   const r0=rows[0]||[];
@@ -1985,7 +2573,7 @@ async function applySheetRows(rows,spreadsheetId){
     return await applySheetRowsPool(rows,spreadsheetId);
   }
   if(/管理No|賞品レート|商品名/i.test(h0)||/賞品レート|商品名/i.test(h1)){
-    return await applySheetRowsPrizeList(rows,spreadsheetId);
+    return await applySheetRowsPrizeList(rows,spreadsheetId); // 形式B: 管理No(A),賞品レート(B),商品名(C)...
   }
   const st=document.getElementById('sheetStatus');
   if(st){ st.textContent='⚠ スプシ形式が未対応です。管理No.,賞品レート,商品名,当選個数 または レート,賞品名,本数 の形式で'; st.style.color='#f87171'; }
@@ -2025,6 +2613,7 @@ async function loadPrizesFromSheet(){
   }
   const csvUrl=PRIZE_CSV_URL;
   el.textContent='読み込み中...'; el.style.color='var(--text-dim)';
+  logPanel('📊 賞品データを読み込み中…');
   const proxies=['https://corsproxy.io/?url='+encodeURIComponent(csvUrl),'https://api.allorigins.win/raw?url='+encodeURIComponent(csvUrl)];
   try{
     let r=null;
@@ -2036,7 +2625,10 @@ async function loadPrizesFromSheet(){
       text=text.replace(/^\uFEFF/,'');
       const rows=parseCSVFull(text);
       const n=await applySheetRows(rows,PRIZE_SHEET_ID);
-      if(n>0){ el.textContent=`✅ ${n}本の賞品を読み込みました`; el.style.color='#34D399'; logPanel('📊 スプレッドシートから賞品プールを読み込みました'); }
+      if(n>0){
+        el.textContent=`✅ ${n}本の賞品を読み込みました（画像は prize_pics から自動反映）`; el.style.color='#34D399'; logPanel('📊 スプレッドシートから賞品プールを読み込みました（画像は prize_pics フォルダから自動読み込み）');
+        setTimeout(()=>{ buildPrizeGrid(); buildReel(); },80);
+      }
       return;
     }
     if(r&&(r.status===403||r.status===401)){ el.textContent='スプレッドシートを「ウェブに公開」してください'; el.style.color='#f87171'; return; }
@@ -2219,8 +2811,10 @@ function toggleSpeedMode(){
 }
 function toggleSettings(){
   const el=document.getElementById('settingsOverlay');
+  if(!el) return;
   el.classList.toggle('show');
   if(el.classList.contains('show')){
+    el.scrollTop=0; // タブが隠れないよう常に上端から表示
     document.getElementById('historyPanel').classList.remove('show');
     document.getElementById('tbHistory').classList.remove('on');
     switchTab('general');
@@ -2271,7 +2865,8 @@ function saveSettings(){
   syncHeaderBrandEvent();
   saveToStorage(true);  // ログは後で表示するため抑制
   toggleSettings();
-  buildReel();
+  // 賞品があるときだけリールを再構築（空で buildReel するとリールが消えるのを防ぐ）
+  if(config.slotAssignments&&config.slotAssignments.length>0) buildReel();
   
   // 変更内容をログに表示
   if(changes.length>0){
@@ -2289,6 +2884,39 @@ const IDB_STORE='images';
 function _idb(){ return new Promise((res,rej)=>{ const r=indexedDB.open(IDB_NAME,1); r.onerror=()=>rej(r.error); r.onsuccess=()=>res(r.result); r.onupgradeneeded=e=>{ if(!e.target.result.objectStoreNames.contains(IDB_STORE)) e.target.result.createObjectStore(IDB_STORE); }; }); }
 function _saveToIDB(key,val){ return _idb().then(db=>new Promise((res,rej)=>{ const t=db.transaction(IDB_STORE,'readwrite'); t.objectStore(IDB_STORE).put(val,key); t.oncomplete=()=>{ db.close(); res(); }; t.onerror=()=>rej(t.error); })); }
 function _loadFromIDB(key){ return _idb().then(db=>new Promise((res,rej)=>{ const t=db.transaction(IDB_STORE,'readonly'); const r=t.objectStore(IDB_STORE).get(key); r.onsuccess=()=>{ db.close(); res(r.result); }; r.onerror=()=>rej(r.error); })); }
+/** 画像を1枚ずつIDBに保存（1キー＝1dataURLで Invalid string length を防ぐ） */
+const IDB_PRIZE_PICS_PREFIX='prizePics_';
+async function _savePrizePicsDataUrlsToIDB(urls){
+  const entries=Object.entries(urls||{}).filter(([,v])=>v&&String(v).startsWith('data:'));
+  if(entries.length===0) return;
+  const keys=[];
+  try{
+    for(const [id,url] of entries){
+      await _saveToIDB(IDB_PRIZE_PICS_PREFIX+id,url);
+      keys.push(id);
+    }
+    await _saveToIDB('prizePicsDataUrls_keys',keys);
+  }catch(e){ throw e; }
+}
+async function _loadPrizePicsDataUrlsFromIDB(){
+  try{
+    const keys=await _loadFromIDB('prizePicsDataUrls_keys');
+    if(Array.isArray(keys)&&keys.length>0){
+      const out={};
+      for(const id of keys){ const v=await _loadFromIDB(IDB_PRIZE_PICS_PREFIX+id); if(v) out[id]=v; }
+      return out;
+    }
+    const legacy=await _loadFromIDB('prizePicsDataUrls');
+    if(legacy&&typeof legacy==='object'&&Object.keys(legacy).length>0) return legacy;
+    const n=await _loadFromIDB('prizePicsDataUrls_count');
+    if(typeof n==='number'&&n>0){
+      const out={};
+      for(let i=0;i<n;i++){ const c=await _loadFromIDB('prizePicsDataUrls_'+i); if(c&&typeof c==='object') Object.assign(out,c); }
+      return out;
+    }
+    return {};
+  }catch(_){ return {}; }
+}
 function _splitUrls(urls){
   const dataUrls={}, externUrls={};
   if(!urls) return {dataUrls,externUrls};
@@ -2318,9 +2946,12 @@ async function applyDefaultImages(){
 }
 function saveToStorage(suppressLog){
   try{
+    // data: URL は localStorage に入れず IndexedDB のみ（JSON.stringify の Invalid string length を防ぐ）
+    const stripDataUrl=(arr)=>Array.isArray(arr)?arr.map(x=>{ const u=x&&x.imageUrl; return {...x, imageUrl:(u&&String(u).startsWith('data:'))?'':(u||'') }; }):[];
     const data={
       brand:config.brand, event:config.event,
-      prizePool:config.prizePool||[], slotAssignments:config.slotAssignments||[],
+      prizePool:stripDataUrl(config.prizePool||[]),
+      slotAssignments:stripDataUrl(config.slotAssignments||[]),
       speedMode:config.speedMode, reelOrder:config.reelOrder, reelStopMin:config.reelStopMin, reelStopMax:config.reelStopMax,
       bgmFile:config.bgmFile||'', bgmVolume:config.bgmVolume??50,
       spreadsheetId:config.spreadsheetId||'', sheetRange:config.sheetRange||'A2:D',
@@ -2328,15 +2959,29 @@ function saveToStorage(suppressLog){
       defaultedPrizeKeys:Array.from(defaultedPrizeKeys)
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    // suppressLogがfalseでも、詳細なログは各関数で表示されるため、ここでは表示しない
-  }catch(e){ logPanel('⚠ 読み込みエラー: '+e.message); }
+    const urls=config.prizePicsDataUrls||{};
+    if(Object.keys(urls).length>0) _savePrizePicsDataUrlsToIDB(urls).catch(()=>{});
+  }catch(e){
+    if(!suppressLog){
+      if(e&&(e.name==='QuotaExceededError'||String(e.message||'').toLowerCase().includes('quota'))){
+        logPanel('⚠ 保存容量超過: ブラウザの保存上限を超えました。画像フォルダの枚数を減らすか、画像を小さくしてください。このセッションでは画像は表示されますが、再読み込み後は「画像フォルダを選択」で再度読み込んでください。',true);
+      }else{
+        logPanel('⚠ 保存エラー: '+e.message);
+      }
+    }
+  }
 }
-/** prize_pics のローカルURLを空にする（ファイルが無くて404になるのを防ぐ）。表示はプレースホルダーになる */
+/** prize_pics のローカルURLのうち、データが無いものだけ空にする（404防止）。prize_pics:ID でキャッシュにある場合は残す */
 function clearBrokenPrizePicsUrls(){
-  const isPrizePicsUrl=(url)=>typeof url==='string'&&(url.includes('prize_pics')||/\/prize_pics\/LD_\d+\.(png|jpg|jpeg)/i.test(url));
+  const hasData=(url)=>{
+    if(typeof url!=='string'||!url.startsWith('prize_pics:')) return false;
+    const id=normalizePrizePicsId(url.slice(11));
+    return (config.prizePicsDataUrls&&config.prizePicsDataUrls[id])||prizePicsDisplayCache.has(id);
+  };
+  const isBroken=(url)=>typeof url==='string'&&(url.includes('prize_pics')||/\/prize_pics\/LD_\d+\.(svg|png|jpg|jpeg)/i.test(url))&&!hasData(url);
   let changed=false;
-  (config.prizePool||[]).forEach(p=>{ if(isPrizePicsUrl(p.imageUrl)){ p.imageUrl=''; changed=true; } });
-  (config.slotAssignments||[]).forEach(s=>{ if(isPrizePicsUrl(s.imageUrl)){ s.imageUrl=''; changed=true; } });
+  (config.prizePool||[]).forEach(p=>{ if(isBroken(p.imageUrl)){ p.imageUrl=''; changed=true; } });
+  (config.slotAssignments||[]).forEach(s=>{ if(isBroken(s.imageUrl)){ s.imageUrl=''; changed=true; } });
   if(changed) saveToStorage();
 }
 function loadFromStorage(){
@@ -2349,6 +2994,8 @@ function loadFromStorage(){
     if(data.prizePool?.length) config.prizePool=data.prizePool;
     if(data.slotAssignments?.length) config.slotAssignments=data.slotAssignments;
     else if(config.prizePool?.length) computeSlotAssignments();
+    // 画像データは IndexedDB から init 内で復元する（localStorage には保存しない）
+    config.prizePicsDataUrls=config.prizePicsDataUrls||{};
     clearBrokenPrizePicsUrls();
     if(data.speedMode==='fast'||data.speedMode==='normal') config.speedMode=data.speedMode;
     if(data.reelOrder) config.reelOrder=data.reelOrder;
@@ -2507,6 +3154,32 @@ function exportPrizePicsForDownload(){
   const st=document.getElementById('sheetStatus');
   if(st){ st.textContent=`✅ ${keys.length}件の画像URLをダウンロードしました。ファイルをmy-appフォルダに保存し、ターミナルで「npm run download-pics」を実行するとprize_picsに保存されます`; st.style.color='#34D399'; setTimeout(()=>{st.textContent='';},10000); }
 }
+const RANK_ORDER={mega:4,super:3,big:2,normal:1};
+function exportPrizeRankJson(){
+  const idToRank={};
+  function setRank(id,rank){
+    const r=rank||'normal';
+    const cur=idToRank[id];
+    if(!cur||(RANK_ORDER[r]||0)>(RANK_ORDER[cur]||0)) idToRank[id]=r;
+  }
+  (config.prizePool||[]).forEach(p=>{
+    const v=String(p.imageUrl||'');
+    if(v.startsWith('prize_pics:')) setRank(v.slice(11), p.rank);
+  });
+  (config.slotAssignments||[]).forEach(s=>{
+    const v=String(s.imageUrl||'');
+    if(v.startsWith('prize_pics:')) setRank(v.slice(11), s.rank);
+  });
+  const json=JSON.stringify(idToRank, null, 2);
+  const blob=new Blob([json],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='prize-id-rank.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  const st=document.getElementById('sheetStatus');
+  if(st){ st.textContent='✅ prize-id-rank.json をダウンロードしました。仮画像をレート色で再生成する場合: node scripts/generate-placeholder-pics.js 1 700 prize-id-rank.json'; st.style.color='#34D399'; setTimeout(()=>{st.textContent='';},8000); }
+}
 function exportConfig(){
   const data={
     brand:config.brand, event:config.event,
@@ -2654,7 +3327,7 @@ function toggleRemainingDraws(){
 }
 
 function logPanel(msg, highlight){
-  const str=String(msg);
+  const str=String(msg).slice(0,2000);
   const now=new Date();
   const ts=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0')+':'+String(now.getSeconds()).padStart(2,'0');
   
@@ -2682,19 +3355,33 @@ function escapeHtml(s){
   div.textContent=s;
   return div.innerHTML;
 }
-// ブラウザの console.error/warn を LOG パネルにも表示（Cursor 内でログ確認しやすくする）
+// ブラウザの console.error/warn を LOG パネルにも表示
 (function(){
   const _err=console.error;
   const _warn=console.warn;
   function toMsg(args){
     return args.map(a=>{
-      if(a instanceof Error) return a.message||String(a);
+      if(a instanceof Error) return (a.message||String(a))+(a.stack ? ' '+a.stack.split('\n')[1] : '');
       if(typeof a==='object') try{ return JSON.stringify(a).slice(0,200); }catch(e){ return String(a); }
       return String(a);
     }).join(' ');
   }
   console.error=function(...args){ _err.apply(console,args); try{ logPanel('🔴 '+toMsg(args), true); }catch(e){} };
   console.warn=function(...args){ _warn.apply(console,args); try{ logPanel('🟡 '+toMsg(args), true); }catch(e){} };
+})();
+
+// 未捕捉のエラー・Promise拒否を LOG パネルに表示（F12→Console で詳細スタックを確認可能）
+(function(){
+  window.onerror=function(msg, src, line, col, err){
+    const detail=err&&err.stack ? err.stack.split('\n').slice(0,3).join(' ') : msg+' L'+line;
+    try{ logPanel('🔴 未捕捉エラー: '+detail, true); }catch(e){}
+    return false;
+  };
+  window.onunhandledrejection=function(ev){
+    const r=ev.reason;
+    const msg=r instanceof Error ? r.message : String(r);
+    try{ logPanel('🔴 Promise拒否: '+msg, true); }catch(e){}
+  };
 })();
 
 // ===== Toolbar Toggles =====
@@ -2761,6 +3448,14 @@ const _hadSaved=loadFromStorage();
   } else {
     applyPrizeSeedData();
   }
+  // 画像データを IndexedDB から復元（チャンク保存対応）
+  try{
+    const idbUrls=await _loadPrizePicsDataUrlsFromIDB();
+    if(idbUrls&&typeof idbUrls==='object'&&Object.keys(idbUrls).length>0){
+      config.prizePicsDataUrls=idbUrls;
+      Object.keys(idbUrls).forEach(id=>prizePicsDisplayCache.set(id,idbUrls[id]));
+    }
+  }catch(_){}
   // BGM.oggをデフォルトとして読み込む（config.bgmFileが空の場合）
   if(!config.bgmFile){
     try{
@@ -2781,50 +3476,21 @@ const _hadSaved=loadFromStorage();
       console.warn('BGM.oggの読み込みに失敗:',e);
     }
   }
-  // prize_picsフォルダ内の画像をデフォルトとして読み込む（prize_pics:形式の画像をDataURLに変換）
-  let prizePicsConverted=0;
-  const convertPrizePicsToDataUrl=async (imageUrl)=>{
-    if(!imageUrl||!String(imageUrl).startsWith('prize_pics:')) return imageUrl;
-    const id=String(imageUrl).slice(11);
-    const base='/prize_pics/'+id;
-    for(const ext of PRIZE_PICS_EXTS){
-      try{
-        const response=await fetch(base+ext,{method:'GET',cache:'no-cache'});
-        if(response.ok){
-          const blob=await response.blob();
-          const reader=new FileReader();
-          const dataUrl=await new Promise((resolve,reject)=>{
-            reader.onload=()=>resolve(reader.result);
-            reader.onerror=reject;
-            reader.readAsDataURL(blob);
-          });
-          prizePicsConverted++;
-          return dataUrl;
-        }
-      }catch(_){}
-    }
-    return imageUrl;
-  };
-  // prizePool内の画像を変換
-  if(config.prizePool&&config.prizePool.length>0){
-    await Promise.all(config.prizePool.map(async p=>{
-      if(p.imageUrl&&String(p.imageUrl).startsWith('prize_pics:')){
-        p.imageUrl=await convertPrizePicsToDataUrl(p.imageUrl);
-      }
-    }));
-  }
-  // slotAssignments内の画像を変換
-  if(config.slotAssignments&&config.slotAssignments.length>0){
-    await Promise.all(config.slotAssignments.map(async s=>{
-      if(s.imageUrl&&String(s.imageUrl).startsWith('prize_pics:')){
-        s.imageUrl=await convertPrizePicsToDataUrl(s.imageUrl);
-      }
-    }));
-  }
-  if(prizePicsConverted>0){
-    saveToStorage();
-    logPanel(`🖼️ デフォルト画像（prize_pics）${prizePicsConverted}枚を読み込みました`);
-  }
+  // prize_picsフォルダ内の画像を表示用キャッシュに読み込む（localStorageには保存しない＝容量節約）
+  const ids=new Set();
+  (config.prizePool||[]).forEach(p=>{
+    const v=String(p.imageUrl||'');
+    if(v.startsWith('prize_pics:')) ids.add(v.slice(11));
+  });
+  (config.slotAssignments||[]).forEach(s=>{
+    const v=String(s.imageUrl||'');
+    if(v.startsWith('prize_pics:')) ids.add(v.slice(11));
+  });
+  const idList=[...ids];
+  if(idList.length>0) logPanel('🖼️ 画像を読み込み中…');
+  await populatePrizePicsCache(idList);
+  const hit=[...prizePicsDisplayCache.values()].filter(v=>v).length;
+  if(hit>0) logPanel(`🖼️ prize_picsから${hit}枚の画像を読み込みました（存在しない${ids.size-hit}件はスキップ）`);
   buildPrizeGrid();
   rebuildHistoryDOM();
   buildReel(); // 賞品反映後に必ずリールを構築（非同期でデータが揃ったタイミング）
@@ -2834,13 +3500,11 @@ const _hadSaved=loadFromStorage();
 
 // バージョン番号を設定（DOM読み込み後に確実に実行）
 function setAppVersion(){
-  const el=document.getElementById('appVersion');
-  if(el){
-    el.textContent='ver. '+SCRIPT_VERSION;
-    console.log('[LUCKY-DRAW] バージョン番号を設定:', SCRIPT_VERSION);
-  } else {
-    console.warn('[LUCKY-DRAW] appVersion要素が見つかりません');
-  }
+  const ver='ver.'+SCRIPT_VERSION;
+  const appEl=document.getElementById('appVersion');
+  if(appEl) appEl.textContent=ver;
+  const headerEl=document.getElementById('headerVersion');
+  if(headerEl) headerEl.textContent=ver;
 }
 
 // DOM読み込み後にバージョン番号を設定
@@ -2866,50 +3530,75 @@ if(_hadProgress && historyEntries.length>0){
 
 buildReel();
 
-// リールが空になった瞬間をログに出す（ミニログ・LOGパネルに表示）
+// リールが空になった瞬間にログを出し、賞品があれば即復元を試行（デバッグ用に詳細を保持）
 (function(){
   let lastEmptyLog=0;
   const strip=document.getElementById('reelStrip');
   if(!strip) return;
-  const obs=new MutationObserver(()=>{
+  const obs=new MutationObserver((mutations)=>{
     if(strip.children.length!==0) return;
     const now=Date.now();
-    if(now-lastEmptyLog<2000) return;
-    lastEmptyLog=now;
-    pushReelEvent('reelEmpty', state);
-    const cause=window.__lastReelClearCaller ? 'buildReel ← '+window.__lastReelClearCaller : '不明（buildReel以外の可能性）';
-    const seq=getReelEventHistorySummary(8);
-    logPanel('⚠ リールが消えました！ state='+state+' 原因: '+cause, true);
-    logPanel('  ↑ 直前に: '+seq, true);
-    console.warn('[LUCKY-DRAW] リールが空 state='+state+' strip.children=0 原因:', cause, '直前に:', seq);
+    window.__lastReelEmptyStack=new Error().stack||'(no stack)';
+    window.__lastReelEmptyState=state;
+    window.__lastReelEmptyTime=now;
+    window.__lastReelEmptyMutations=mutations.map(m=>({ added: m.addedNodes.length, removed: m.removedNodes.length }));
+    window.__lastReelEmptyHistory=typeof getReelEventHistorySummary==='function' ? getReelEventHistorySummary(12) : [];
+    if(now-lastEmptyLog>=2000){
+      lastEmptyLog=now;
+      pushReelEvent('reelEmpty', state);
+      const cause=window.__lastReelClearCaller ? 'buildReel ← '+window.__lastReelClearCaller : '不明';
+      const seq=window.__lastReelEmptyHistory;
+      logPanel('⚠ リールが消えました → 復元を試行しています… state='+state, true);
+      logPanel('  ↑ 原因: '+cause, true);
+      console.warn('[LUCKY-DRAW] リールが空 state='+state+' 原因:', cause, '直前に:', seq);
+      console.warn('[LUCKY-DRAW] デバッグ: __reelDebugDump() で状態を確認できます');
+    }
+    if(config.slotAssignments&&config.slotAssignments.length>0&&state!=='spinning'&&state!=='stopping'){
+      setTimeout(()=>{ if(strip.children.length===0) buildReel(); },0);
+    }
   });
   obs.observe(strip, {childList:true, subtree:false});
 })();
 
-// リール状態を定期的に確認。子が0のときはログにも出す（ミニログで確認しやすく）
+/** リールが消えた原因切り分け用: コンソールで __reelDebugDump() を実行すると現在の状態を表示 */
+window.__reelDebugDump=function(){
+  const s=document.getElementById('reelStrip');
+  const n=s?s.children.length:-1;
+  const out={
+    state,
+    stripChildren:n,
+    _buildReelInProgress,
+    lastReelClearCaller: window.__lastReelClearCaller,
+    lastReelClearState: window.__lastBuildReelState,
+    lastReelEmptyState: window.__lastReelEmptyState,
+    lastReelEmptyTime: window.__lastReelEmptyTime,
+    lastReelEmptyMutations: window.__lastReelEmptyMutations,
+    lastReelEmptyHistory: window.__lastReelEmptyHistory,
+    lastReelEmptyStack: (window.__lastReelEmptyStack||'').slice(0,800),
+    reelEventSummary: typeof getReelEventHistorySummary==='function' ? getReelEventHistorySummary(15) : [],
+  };
+  console.log('[LUCKY-DRAW] __reelDebugDump', out);
+  return out;
+};
+
+// リール状態を定期的に確認。空なら即復元（イベント運用の致命対策）
 let lastReelEmptyLog=0;
 setInterval(()=>{
   const s=document.getElementById('reelStrip');
-  if(!s){ console.warn('[LUCKY-DRAW] #reelStrip が存在しません'); return; }
+  if(!s) return;
   const n=s.children.length;
-  const rect=s.getBoundingClientRect();
-  const info={state, stripChildren:n, transform:s.style.transform||'(none)', inView:rect.width>0&&rect.height>0, rectW:rect.width, rectH:rect.height};
   if(n===0){
     const now=Date.now();
-    if(now-lastReelEmptyLog>2000){ lastReelEmptyLog=now; logPanel('⚠ リールが消えています（定期確認） state='+state, true); }
-    console.warn('[LUCKY-DRAW] リール状態（子0）', info);
-  } else if(state==='spinning'||state==='stopping') console.log('[LUCKY-DRAW] リール状態', info);
+    if(now-lastReelEmptyLog>=2000){ lastReelEmptyLog=now; logPanel('⚠ リールが空（定期確認）→ 復元を試行', true); }
+    ensureReelVisible();
+  }
 }, 2000);
 
-// 初期化のタイミングずれでリールが空になった場合の復元（100ms / 400ms 後に再試行）
-[100,400].forEach(ms=>setTimeout(()=>{
-  if(state==='spinning'||state==='stopping') return;
-  const s=document.getElementById('reelStrip');
-  if(s&&s.children.length===0&&config.slotAssignments&&config.slotAssignments.length>0){
-    logPanel('⚠ リールが消えていた → 復元しています…', true);
-    buildReel();
-  }
-}, ms));
+// 5秒ごとのセーフティネット（リールが消えたままにならないよう二重チェック）
+setInterval(()=>{ ensureReelVisible(); }, 5000);
+
+// 初期化のタイミングずれでリールが空になった場合の復元（100ms / 400ms / 800ms で再試行）
+[100,400,800].forEach(ms=>setTimeout(()=>{ ensureReelVisible(); }, ms));
 initReelImageZoom();
 syncHeaderBrandEvent();
 syncBGMVolumeSlider();

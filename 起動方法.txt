@@ -1,0 +1,73 @@
+========================================
+  LUCKY DRAW - 起動方法（外部PC用）
+========================================
+
+【簡単な起動】
+
+  ■ Windows
+    ・start.bat をダブルクリック
+    ・または コマンドプロンプトでこのフォルダを開き「start.bat」と入力
+
+  ■ Mac / Linux
+    ・ターミナルでこのフォルダに移動して:
+      chmod +x start.sh
+      ./start.sh
+    ・または「node server.js」実行後、ブラウザで http://localhost:8080 を開く
+
+  起動後、ブラウザで http://localhost:8080 が開かない場合は
+  手動で上記URLを開いてください。
+
+  ■ Chromebook
+    ・アプリは Chrome でそのまま動きます（音声・タッチ対応）。
+    ・起動方法は次のどちらかです。
+      A) Chromebook で Linux を有効にし、Node または Python を入れてから
+         ターミナルでこのフォルダを開き「node server.js」または
+         「python3 -m http.server 8080」を実行。Chrome で http://localhost:8080 を開く。
+      B) 別の PC でサーバーを起動し、同じ Wi‑Fi 内の Chromebook の Chrome で
+         http://＜そのPCのIP＞:8080 を開く（例: http://192.168.1.10:8080）。
+
+
+【必要なもの（どちらか一方）】
+
+  1) Node.js（推奨）
+     ・https://nodejs.org/ からインストール
+     ・このフォルダで: node server.js
+     ・ブラウザで http://localhost:8080 を開く
+
+  2) Python
+     ・Windows: python -m http.server 8080
+     ・Mac/Linux: python3 -m http.server 8080
+     ・ブラウザで http://localhost:8080 を開く
+
+
+【このフォルダを配布するとき】
+
+  次のファイル・フォルダがあれば動作します。
+  不要なものはコピーしなくてかまいません。
+
+  必要:
+    ・index.html
+    ・style.css
+    ・script.js
+    ・server.js
+    ・prize_pics フォルダ（中身一式）
+    ・start.bat（Windows用）
+    ・start.sh（Mac/Linux用）
+
+  不要（配布しなくてよい）:
+    ・node_modules フォルダ
+    ・.git フォルダ
+    ・package.json / package-lock.json（開発用）
+    ・scripts フォルダ（開発・テスト用）
+    ・docs フォルダ（説明用、あってもよい）
+
+  オプション:
+    ・起動方法.txt（このファイル）
+
+
+【終了】
+
+  サーバーを止めるときは、起動した黒い窓（ターミナル）で
+  Ctrl+C を押してください。
+
+========================================
