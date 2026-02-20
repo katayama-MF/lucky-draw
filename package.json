@@ -13,6 +13,9 @@
     "test:cycle:full": "node scripts/test-cycle-full.js",
     "test:cycle:mini": "node scripts/test-cycle-mini-full.js",
     "test:cycle:mini:full": "node scripts/test-cycle-mini-full-auto.js",
+    "startup-check": "node scripts/startup-check.js",
+    "startup-check:spawn": "node scripts/startup-check.js --spawn",
+    "startup-check:loop": "node scripts/startup-check.js --spawn --loop 5",
     "generate-placeholders": "node scripts/generate-placeholder-pics.js",
     "raster-to-svg": "node scripts/raster-to-svg.js"
   },

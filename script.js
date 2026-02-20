@@ -254,7 +254,7 @@ const SE={
     SE._marimba(440, 0.1, 0.25); // A4
   },
 
-  // ?????????: ?????????????????
+  // ホバー時（軽いクリック音）
   buttonHover(){
     const ctx=getAudioCtx(); if(!ctx) return; const now=ctx.currentTime;
     const o=ctx.createOscillator(), g=ctx.createGain();
@@ -263,6 +263,16 @@ const SE={
     g.gain.exponentialRampToValueAtTime(0.001,now+0.05);
     o.connect(g); g.connect(ctx.destination);
     o.start(now); o.stop(now+0.06);
+  },
+  // ボタン押下時（トグル等の短いクリック。se_button で ON/OFF）
+  buttonClick(){
+    const ctx=getAudioCtx(); if(!ctx) return; const now=ctx.currentTime;
+    const o=ctx.createOscillator(), g=ctx.createGain();
+    o.type='sine'; o.frequency.value=440;
+    g.gain.setValueAtTime(0.03,now);
+    g.gain.exponentialRampToValueAtTime(0.001,now+0.04);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(now); o.stop(now+0.05);
   },
 
   // ???????????????????????????????
@@ -381,8 +391,8 @@ const soundConfig={
 
 // Wrap SE calls to check enabled
 const _rawSE={};
-// start/stop use shared 'button' config
-['start','stop'].forEach(fn=>{
+// start/stop/buttonClick use shared 'button' config
+['start','stop','buttonClick'].forEach(fn=>{
   if(SE[fn]){ _rawSE[fn]=SE[fn].bind(SE); SE[fn]=(...args)=>{ if(soundConfig.se_button?.enabled) _rawSE[fn](...args); }; }
 });
 ['reelTick','confirm','tick','countdown','winner','next','buttonHover'].forEach(fn=>{
@@ -835,9 +845,20 @@ let config={
 const EMOJIS=['🎁','🏆','⭐','🎉','🌟','✨','🎀','🎈','🎊','🍀','💎','🎪','🎯','🎲','🔮','💫','🌈','🦋','🌸','🍭'];
 const ITEM_W=256;
 const FRAME_MS=1000/60;     // 60fps基準。これで「速度60」がリフレッシュレートに依存しない
+/** リール復旧処理を一括オフ（true で有効）。docs/REEL_RECOVERY_SPEC.md の全経路を無効にする */
+const REEL_RECOVERY_ENABLED=false;
+
+/** 窓付きリール: 表示する要素数（回転付近の前後この数だけDOMに乗せる）。totalItems>この値のときのみ有効 */
+const REEL_WINDOW_HALF=150;
+const REEL_WINDOW_SIZE=REEL_WINDOW_HALF*2;
+/** 窓切り替えの最小間隔（ms）。これより頻繁に shift すると回転がカクつく（特に8GB端末） */
+const REEL_WINDOW_SHIFT_THROTTLE_MS=180;
 
 // ===== App State (賞品プール型) =====
 let drawCount=1, state='idle', reelAnim=null, reelPos=0, winnerIdx=0, totalItems=0;
+/** 窓付きリール時の「先頭スロット」インデックス（0〜totalItems-1）。strip の子0が (reelWindowBase+i)%totalItems を表示 */
+let reelWindowBase=0;
+let _lastReelWindowShiftTime=0;
 let drawnSlotIndices=new Set();
 let historyEntries=[];
 let remainingSlotIndices=[];     // 未抽選のフルリスト（抽選確率用）
@@ -981,10 +1002,10 @@ function reelItemHTML(slot){
   return `${rankBadgeHTML(r)}<div class="reel-item-btns"><button type="button" class="reel-item-upload" onclick="triggerReelSlotUpload(${slotIdx})" title="No.${slotNo}の画像をアップロード">📷</button><button type="button" class="reel-item-upload" onclick="triggerReelSlotUrl(${slotIdx})" title="No.${slotNo}の画像URLを貼り付け">🔗</button>${hasRealImg?`<button type="button" class="reel-item-pin ${pinClass}" onclick="setReelSlotImageAsDefault(${slotIdx})" title="この画像をデフォルトに設定">📌</button>`:''}</div><div class="item-no">No.${slotNo}</div><div class="reel-item-img-wrap" title="タップで拡大" data-name="${nameAttr}"><img src="${dispImg}" onerror="typeof reelImgFallback==='function'&&reelImgFallback(this)" style="width:130px;height:130px;object-fit:cover;border-radius:12px;"></div><div class="item-name">${formatNameForDisplay(name)||'賞品'}</div>`;
 }
 let _buildReelInProgress=false;
-let _showWinnerFallbackTimer=null;  // 停止→当選表示が何らかで抜けたときの安全網
 /** リールが空なのに賞品がある場合は必ず復元（1000人規模イベント用の致命対策）。
  * 子要素が少なすぎる場合（視覚ズレでリールが消える原因）も復元する。 */
 function ensureReelVisible(){
+  if(!REEL_RECOVERY_ENABLED) return;
   const strip=document.getElementById('reelStrip');
   if(!strip) return;
   const childCount=strip.children.length;
@@ -1011,6 +1032,70 @@ window.__reelHealth=function(){
   return {state,stripChildren:n,slotCount,ok:n>0,needRecover:n===0&&slotCount>0&&state!=='spinning'&&state!=='stopping'};
 };
 window.__reelRecover=function(){ ensureReelVisible(); };
+
+/** 窓付きリール: base を先頭として REEL_WINDOW_SIZE 個のスロット用DOMを fragment に追加する。config/reelDisplayIndices 使用 */
+function buildReelWindowContent(base){
+  const frag=document.createDocumentFragment();
+  for(let i=0;i<REEL_WINDOW_SIZE;i++){
+    const displayIdx=(base+i)%totalItems;
+    const si=reelDisplayIndices[displayIdx];
+    const raw=config.slotAssignments[si];
+    const slot=raw?{...raw,slotNo:si+1}:{rank:'normal',name:'賞品',slotNo:si+1};
+    const el=document.createElement('div');
+    el.className='reel-item';
+    el.innerHTML=reelItemHTML(slot);
+    frag.appendChild(el);
+  }
+  return frag;
+}
+
+/** 窓付きリール: センターの論理インデックスを中心に窓を切り替え、strip を差し替えて reelPos を合わせる */
+function shiftReelWindow(logicalCenterStripIdx){
+  const strip=document.getElementById('reelStrip');
+  const frameEl=document.getElementById('reelFrame');
+  if(!strip||!frameEl||strip.children.length===0) return;
+  const fw=frameEl.offsetWidth;
+  reelWindowBase=(logicalCenterStripIdx-REEL_WINDOW_HALF+totalItems)%totalItems;
+  const frag=buildReelWindowContent(reelWindowBase);
+  const had=strip.children.length;
+  while(frag.firstChild) strip.appendChild(frag.firstChild);
+  for(let i=0;i<had;i++) if(strip.firstChild) strip.removeChild(strip.firstChild);
+  if(strip.children.length>=2){
+    const r0=strip.children[0].getBoundingClientRect();
+    const r1=strip.children[1].getBoundingClientRect();
+    const stripRect=strip.getBoundingClientRect();
+    const firstCenter=(r0.left+r0.width/2)-stripRect.left;
+    const centerStep=Math.abs((r1.left+r1.width/2)-(r0.left+r0.width/2))||ITEM_W;
+    reelPos=fw/2-firstCenter-REEL_WINDOW_HALF*centerStep;
+  } else {
+    reelPos=-(fw/2-ITEM_W/2)+16;
+  }
+  strip.style.transform=`translateX(${reelPos}px)`;
+}
+
+/** 窓付きリール: センターが窓端に近づいたら窓をずらして再描画（animate/runStop から呼ぶ）。
+ * 切り替えはスロットルし、8GB端末でも回転が止まって見えないようにする。force 時はスロットルしない（runStop用）。 */
+function updateReelWindowIfNeeded(force){
+  if(totalItems<=REEL_WINDOW_SIZE) return;
+  const strip=document.getElementById('reelStrip');
+  const frameEl=document.getElementById('reelFrame');
+  if(!strip||strip.children.length<2||!frameEl) return;
+  const now=performance.now();
+  if(!force&&now-_lastReelWindowShiftTime<REEL_WINDOW_SHIFT_THROTTLE_MS) return;
+  const fw=frameEl.offsetWidth;
+  const r0=strip.children[0].getBoundingClientRect();
+  const r1=strip.children[1].getBoundingClientRect();
+  const stripRect=strip.getBoundingClientRect();
+  const firstCenter=(r0.left+r0.width/2)-stripRect.left;
+  const centerStep=Math.abs((r1.left+r1.width/2)-(r0.left+r0.width/2))||ITEM_W;
+  if(centerStep<=0) return;
+  const k=(fw/2-reelPos-firstCenter)/centerStep;
+  if(k>=REEL_WINDOW_SIZE-20||k<20){
+    _lastReelWindowShiftTime=now;
+    const logicalCenterStripIdx=(reelWindowBase+Math.round(k)+totalItems)%totalItems;
+    shiftReelWindow(logicalCenterStripIdx);
+  }
+}
 
 /** リールが消える原因（strip.children が 0 になる理由）:
  * ・strip の子を変更するのは buildReel と buildReelChunked のみ。どちらも「先に append してから古い子を remove」なので、
@@ -1040,7 +1125,7 @@ function buildReel(){
   if(state!=='idle'&&state!=='showing'){
     pushReelEvent('buildReel_skip', state);
     console.warn('[LUCKY-DRAW] buildReel スキップ state='+state+' 呼び出し元='+_caller);
-    if(strip.children.length===0&&config.slotAssignments&&config.slotAssignments.length>0){
+    if(REEL_RECOVERY_ENABLED&&strip.children.length===0&&config.slotAssignments&&config.slotAssignments.length>0){
       setTimeout(()=>{ if(strip.children.length===0) buildReel(); },0);
     }
     return;
@@ -1076,19 +1161,25 @@ function buildReel(){
     logPanel('⚠ リール: totalItems=0 のためスキップ', true);
     return;
   }
-  // スロット数が多いときは重複を1回に抑えてDOMを軽く（例: 992→992要素、2回なら1984で重い）
-  const repeats=totalItems>80?1:totalItems>50?2:5;
+  const useWindow=totalItems>REEL_WINDOW_SIZE;
   const frag=document.createDocumentFragment();
   try {
-    for(let r=0;r<repeats;r++){
-      for(let idx=0;idx<totalItems;idx++){
-        const si=reelDisplayIndices[idx];
-        const raw=config.slotAssignments[si];
-        const slot=raw ? {...raw, slotNo:si+1} : {rank:'normal',name:'賞品',slotNo:si+1};
-        const el=document.createElement('div');
-        el.className='reel-item';
-        el.innerHTML=reelItemHTML(slot);
-        frag.appendChild(el);
+    if(useWindow){
+      reelWindowBase=0;
+      const winFrag=buildReelWindowContent(reelWindowBase);
+      while(winFrag.firstChild) frag.appendChild(winFrag.firstChild);
+    } else {
+      const repeats=totalItems>80?2:totalItems>50?2:5;
+      for(let r=0;r<repeats;r++){
+        for(let idx=0;idx<totalItems;idx++){
+          const si=reelDisplayIndices[idx];
+          const raw=config.slotAssignments[si];
+          const slot=raw ? {...raw, slotNo:si+1} : {rank:'normal',name:'賞品',slotNo:si+1};
+          const el=document.createElement('div');
+          el.className='reel-item';
+          el.innerHTML=reelItemHTML(slot);
+          frag.appendChild(el);
+        }
       }
     }
   } catch(e){
@@ -1102,9 +1193,9 @@ function buildReel(){
     return;
   }
   // strip の子を差し替える直前に再チェック（idle/showing 以外では絶対に実行しない）
-  if(state!=='idle'&&state!=='showing'){
+    if(state!=='idle'&&state!=='showing'){
     console.warn('[LUCKY-DRAW] buildReel: state='+state+' のため strip 更新をスキップ');
-    if(strip.children.length===0&&config.slotAssignments&&config.slotAssignments.length>0){
+    if(REEL_RECOVERY_ENABLED&&strip.children.length===0&&config.slotAssignments&&config.slotAssignments.length>0){
       setTimeout(()=>{ if(strip.children.length===0) buildReel(); },0);
     }
     return;
@@ -1131,18 +1222,27 @@ function buildReel(){
     logPanel('⚠ リール 子要素の差し替えエラー: ' + (e&&e.message ? e.message : String(e)), true);
     if(hadChildren>0 && strip.children.length===0){
       logPanel('⚠ strip が空になりました。呼び出し元: '+_caller, true);
-      if(config.slotAssignments&&config.slotAssignments.length>0) setTimeout(()=>buildReel(),0);
+      if(REEL_RECOVERY_ENABLED&&config.slotAssignments&&config.slotAssignments.length>0) setTimeout(()=>buildReel(),0);
     }
     return;
   }
-  if(strip.children.length===0&&config.slotAssignments&&config.slotAssignments.length>0){
+  if(REEL_RECOVERY_ENABLED&&strip.children.length===0&&config.slotAssignments&&config.slotAssignments.length>0){
     console.warn('[LUCKY-DRAW] buildReel 完了直後に strip が空 → 復元を試行');
     setTimeout(()=>buildReel(),0);
     return;
   }
-  console.log('[LUCKY-DRAW] buildReel 完了 strip.children='+strip.children.length);
+  console.log('[LUCKY-DRAW] buildReel 完了 strip.children='+strip.children.length+(useWindow?' (窓付き)':''));
   const fw=document.getElementById('reelFrame').offsetWidth;
-  reelPos=-(fw/2 - ITEM_W/2) + 16;
+  if(useWindow&&strip.children.length>=2){
+    const r0=strip.children[0].getBoundingClientRect();
+    const r1=strip.children[1].getBoundingClientRect();
+    const stripRect=strip.getBoundingClientRect();
+    const firstCenter=(r0.left+r0.width/2)-stripRect.left;
+    const centerStep=Math.abs((r1.left+r1.width/2)-(r0.left+r0.width/2))||ITEM_W;
+    reelPos=fw/2-firstCenter-REEL_WINDOW_HALF*centerStep;
+  } else {
+    reelPos=-(fw/2 - ITEM_W/2) + 16;
+  }
   strip.style.transform=`translateX(${reelPos}px)`;
   updateHistoryCount();
   if(state==='idle') showReelNav(true);
@@ -1169,7 +1269,45 @@ function buildReelChunked(savedReelPos){
   reelDisplayIndices=allDrawn ? config.slotAssignments.map((_,i)=>i) : remainingSlotIndices.slice();
   totalItems=reelDisplayIndices.length;
   if(totalItems===0){ _buildReelInProgress=false; return; }
-  const repeats=totalItems>80?1:totalItems>50?2:5;
+  if(totalItems>REEL_WINDOW_SIZE){
+    const opts=typeof savedReelPos==='object'&&savedReelPos!==null?savedReelPos:null;
+    const startFromPrev=opts&&opts.startFromPrevWinnerMinus1;
+    let base=0;
+    if(startFromPrev&&actualWinnerSlotIdx>=0&&config.slotAssignments){
+      const totalSlots=config.slotAssignments.length;
+      const prevSlotIdx=actualWinnerSlotIdx===0?totalSlots-1:actualWinnerSlotIdx-1;
+      let stripIdx=reelDisplayIndices.indexOf(prevSlotIdx);
+      if(stripIdx<0) stripIdx=totalItems-1;
+      base=(stripIdx-REEL_WINDOW_HALF+totalItems)%totalItems;
+    }
+    reelWindowBase=base;
+    const frag=buildReelWindowContent(reelWindowBase);
+    const hadChildren=strip.children.length;
+    while(frag.firstChild) strip.appendChild(frag.firstChild);
+    for(let i=0;i<hadChildren;i++) if(strip.firstChild) strip.removeChild(strip.firstChild);
+    if(strip.children.length===0){
+      if(REEL_RECOVERY_ENABLED&&config.slotAssignments&&config.slotAssignments.length>0) setTimeout(()=>buildReel(),0);
+      _buildReelInProgress=false;
+      return;
+    }
+    const frameEl=document.getElementById('reelFrame');
+    const fw=frameEl?frameEl.offsetWidth:0;
+    let firstCenter=ITEM_W/2, centerStep=ITEM_W;
+    if(strip.children.length>=2&&fw>0){
+      const r0=strip.children[0].getBoundingClientRect();
+      const r1=strip.children[1].getBoundingClientRect();
+      const stripRect=strip.getBoundingClientRect();
+      firstCenter=(r0.left+r0.width/2)-stripRect.left;
+      centerStep=Math.abs((r1.left+r1.width/2)-(r0.left+r0.width/2))||ITEM_W;
+    }
+    reelPos=fw/2-firstCenter-REEL_WINDOW_HALF*centerStep;
+    strip.style.transform=`translateX(${reelPos}px)`;
+    if(state==='idle') showReelNav(true);
+    setTimeout(ensureReelVisible,150);
+    _buildReelInProgress=false;
+    return;
+  }
+  const repeats=totalItems>80?2:totalItems>50?2:5;
   const totalNodes=totalItems*repeats;
   const frag=document.createDocumentFragment();
   let offset=0;
@@ -1193,7 +1331,7 @@ function buildReelChunked(savedReelPos){
     }
     if(state!=='idle'&&state!=='showing'){
       _buildReelInProgress=false;
-      if(strip.children.length===0&&config.slotAssignments&&config.slotAssignments.length>0){
+      if(REEL_RECOVERY_ENABLED&&strip.children.length===0&&config.slotAssignments&&config.slotAssignments.length>0){
         buildReel();
       }
       return;
@@ -1202,7 +1340,7 @@ function buildReelChunked(savedReelPos){
     while(frag.firstChild) strip.appendChild(frag.firstChild);
     for(let i=0;i<hadChildren;i++) if(strip.firstChild) strip.removeChild(strip.firstChild);
     if(strip.children.length===0){
-      if(config.slotAssignments&&config.slotAssignments.length>0) setTimeout(()=>buildReel(),0);
+      if(REEL_RECOVERY_ENABLED&&config.slotAssignments&&config.slotAssignments.length>0) setTimeout(()=>buildReel(),0);
       _buildReelInProgress=false;
       return;
     }
@@ -1310,15 +1448,17 @@ function reelStep(dir){
   reelStepping=true;
   SE.reelTick();
   const strip=document.getElementById('reelStrip');
-  const oneSet=totalItems*ITEM_W;
   let from=reelPos;
   let target=from - dir*ITEM_W;
-  if(target>0){
-    from-=oneSet; target=from - dir*ITEM_W;
-    reelPos=from; strip.style.transform=`translateX(${from}px)`;
-  }else if(target<-oneSet){
-    from+=oneSet; target=from - dir*ITEM_W;
-    reelPos=from; strip.style.transform=`translateX(${from}px)`;
+  if(totalItems<=REEL_WINDOW_SIZE){
+    const oneSet=totalItems*ITEM_W;
+    if(target>0){
+      from-=oneSet; target=from - dir*ITEM_W;
+      reelPos=from; strip.style.transform=`translateX(${from}px)`;
+    }else if(target<-oneSet){
+      from+=oneSet; target=from - dir*ITEM_W;
+      reelPos=from; strip.style.transform=`translateX(${from}px)`;
+    }
   }
   const frames=12;
   let f=0;
@@ -1329,7 +1469,7 @@ function reelStep(dir){
     reelPos=from+(target-from)*ease;
     strip.style.transform=`translateX(${reelPos}px)`;
     if(f<frames) requestAnimationFrame(step);
-    else { reelPos=target; strip.style.transform=`translateX(${reelPos}px)`; reelStepping=false; }
+    else { reelPos=target; strip.style.transform=`translateX(${reelPos}px)`; updateReelWindowIfNeeded(); reelStepping=false; }
   }
   requestAnimationFrame(step);
 }
@@ -1400,16 +1540,18 @@ function startSpin(){
   pushReelEvent('startSpin', 'state='+state);
   let strip=document.getElementById('reelStrip');
   if(strip && strip.children.length===0){
-    if(config.prizePool&&config.prizePool.length>0 && (!config.slotAssignments||config.slotAssignments.length===0)){
-      computeSlotAssignments();
-    }
-    if(config.slotAssignments && config.slotAssignments.length>0){
-      buildReel();
-      if(!strip.children.length){
-        _buildReelInProgress=false;
-        buildReel();
+    if(REEL_RECOVERY_ENABLED){
+      if(config.prizePool&&config.prizePool.length>0 && (!config.slotAssignments||config.slotAssignments.length===0)){
+        computeSlotAssignments();
       }
-      strip=document.getElementById('reelStrip');
+      if(config.slotAssignments && config.slotAssignments.length>0){
+        buildReel();
+        if(!strip.children.length){
+          _buildReelInProgress=false;
+          buildReel();
+        }
+        strip=document.getElementById('reelStrip');
+      }
     }
     if(!strip.children.length){
       logPanel('⚠ リールを復元できませんでした。賞品を読み込んでから START を押してください', true);
@@ -1473,10 +1615,12 @@ function startSpin(){
         setBtnState('start');
         document.getElementById('speedLines').style.opacity='0';
         setReelSpeedDisplay(0);
-        buildReel();
-        if(stripEl.children.length===0){ _buildReelInProgress=false; buildReel(); }
-        setTimeout(ensureReelVisible,150);
-        logPanel('⚠ リールが消えていたため復元しました。もう一度 START を押してください', true);
+        if(REEL_RECOVERY_ENABLED){
+          buildReel();
+          if(stripEl.children.length===0){ _buildReelInProgress=false; buildReel(); }
+          setTimeout(ensureReelVisible,150);
+          logPanel('⚠ リールが消えていたため復元しました。もう一度 START を押してください', true);
+        }
         return;
       }
     }
@@ -1489,11 +1633,12 @@ function startSpin(){
     setReelSpeedDisplay(speed);
     const move=Math.min(speed*(dt/FRAME_MS), oneSetFixed*0.5);
     reelPos-=move;
-    if(reelPos<-oneSetFixed*3) reelPos+=oneSetFixed;
+    if(totalItems<=REEL_WINDOW_SIZE){ if(reelPos<-oneSetFixed*3) reelPos+=oneSetFixed; }
     if(!Number.isFinite(reelPos)){ reelPos=-(oneSetFixed*2); }
     const curIdx=Math.floor(-reelPos/itemStepForTick);
     if(curIdx!==lastTickIdx){ SE.reelTick(); lastTickIdx=curIdx; }
     if(stripEl) stripEl.style.transform=`translateX(${reelPos}px)`;
+    updateReelWindowIfNeeded();
     reelAnim=requestAnimationFrame(animate);
   }
   reelAnim=requestAnimationFrame(animate);
@@ -1511,20 +1656,17 @@ function stopSpin(){
   state='stopping';
   pushReelEvent('stopSpin', 'state='+state);
   setBtnState('stopping');
-  if(_showWinnerFallbackTimer!=null){ clearTimeout(_showWinnerFallbackTimer); _showWinnerFallbackTimer=null; }
-  _showWinnerFallbackTimer=setTimeout(()=>{
-    _showWinnerFallbackTimer=null;
-    if(state==='stopping'){ console.warn('[LUCKY-DRAW] 当選表示フォールバック（停止から一定時間経過）'); showWinner(); }
-  }, 9000);
   SE.stop();
   document.getElementById('reelFrame').classList.add('hot');
   document.getElementById('hitZone').classList.add('hot');
 
   let strip=document.getElementById('reelStrip');
   if(strip && strip.children.length===0 && config.slotAssignments && config.slotAssignments.length>0){
-    logPanel('⚠ リールが消えていた → 復元してから演出します…', true);
-    buildReel();
-    strip=document.getElementById('reelStrip');
+    if(REEL_RECOVERY_ENABLED){
+      logPanel('⚠ リールが消えていた → 復元してから演出します…', true);
+      buildReel();
+      strip=document.getElementById('reelStrip');
+    }
   }
 
   const fullCount=remainingSlotIndices.length;
@@ -1549,12 +1691,15 @@ function stopSpin(){
     const stripRect=strip.getBoundingClientRect();
     firstCenter=(r0.left+r0.width/2)-stripRect.left;
   }
-  const oneSet=totalItems*itemW;
+  const oneSet=totalItems*centerStep;
   if(oneSet<=0){ state='idle'; setBtnState('start'); return; }
 
   // ① 当選を抽選で決定: 現在センターのマス + N マス先に止める → その位置のスロットが当選
   const currentCenter=-reelPos+fw/2;
-  const currentStripIdx=Math.floor((currentCenter-firstCenter)/centerStep);
+  const stripIdxInWindow=Math.floor((currentCenter-firstCenter)/centerStep);
+  const currentStripIdx=totalItems>REEL_WINDOW_SIZE
+    ?(reelWindowBase+stripIdxInWindow+totalItems)%totalItems
+    :stripIdxInWindow;
   const minM=Math.max(1, Math.floor(config.reelStopMin)||50);
   const maxM=Math.max(minM, Math.floor(config.reelStopMax)||100);
   const N=minM+Math.floor(Math.random()*(maxM-minM+1));
@@ -1576,37 +1721,38 @@ function stopSpin(){
   const patternNames=['Overshoot','Normal','Feint','Pendulum','Direct'];
   logPanel(`🛑 STOP → +${N}マスで停止 → Pattern: ${patternNames[selectedPattern]} → No.${actualWinnerSlotIdx+1} ${(winSlotLog?.name||'').slice(0,16)}${(winSlotLog?.name||'').length>16?'…':''}`, true);
 
-  // MBIG・SBIGのとき 演出をランダム選択
-  if((winRank==='mega'||winRank==='super')&&Math.random()<0.5){
-    const effects=['stars','warp','lightning','shake'];
-    const effect=effects[Math.floor(Math.random()*effects.length)];
-    if(effect==='stars'){
-      startShootingStarRush(winRank);
-    } else if(effect==='warp'){
-      startWarpSpeed(winRank);
-    } else if(effect==='lightning'){
-      startLightning(winRank);
-      startScreenShake(winRank); // 雷と同時にシェイク
-    } else if(effect==='shake'){
-      startScreenShake(winRank);
+  const startPos=reelPos;
+  let targetReelPos;
+  if(totalItems>REEL_WINDOW_SIZE){
+    const k=(displayIdx-reelWindowBase+totalItems)%totalItems;
+    targetReelPos=fw/2-firstCenter-k*centerStep;
+  } else {
+    targetReelPos=-(firstCenter+targetStripIdx*centerStep-fw/2);  // ② 当選スロットの「中心」がフレーム中央に来る位置
+  }
+  // 減速で進める距離は「目標位置までの実際の距離」に合わせる（N*itemW だと centerStep とずれて止まった番号と当選が1つずれる）
+  let moveTotal=startPos-targetReelPos;
+  if(totalItems<=REEL_WINDOW_SIZE){
+    if(moveTotal<0) moveTotal+=oneSet;
+    if(moveTotal>oneSet) moveTotal=oneSet;
+  } else {
+    if(moveTotal<0){
+      shiftReelWindow(displayIdx);
+      targetReelPos=reelPos;
+      moveTotal=0;
     }
   }
-
-  const startPos=reelPos;
-  const moveTotal=N*itemW;
-  const targetReelPos=-(firstCenter+targetStripIdx*centerStep-fw/2);  // ② 当選スロットの「中心」がフレーム中央に来る位置
   if(window.__REEL_DEBUG){
-    console.log('[LUCKY-DRAW] stopSpin', { reelPos, fw, itemW, currentCenter, currentStripIdx, N, targetStripIdx, displayIdx, actualWinnerSlotIdx, totalItems, targetReelPos });
+    console.log('[LUCKY-DRAW] stopSpin', { reelPos, fw, itemW, centerStep, moveTotal, currentCenter, currentStripIdx, N, targetStripIdx, displayIdx, actualWinnerSlotIdx, totalItems, targetReelPos });
   }
   // 減速開始時の速度（加速中の場合は現在速度、それ以外は標準60/サクサク80）
   const maxSpeedForDecel=config.speedMode==='fast' ? 80 : REEL_SPEED_MAX;
   let v0=Math.min(maxSpeedForDecel, Math.max(maxSpeedForDecel*0.2, currentReelSpeed));
   let moved=0;
   let lastTime=performance.now();
-  let lastTickIdx=Math.floor(-reelPos/itemW);
+  let lastTickIdx=Math.floor(-reelPos/centerStep);
 
   function setPos(x){ reelPos=x; const s=document.getElementById('reelStrip'); if(s) s.style.transform=`translateX(${x}px)`; }
-  function wrapPos(){ if(reelPos<-oneSet*3) reelPos+=oneSet; while(reelPos>0) reelPos-=oneSet; }
+  function wrapPos(){ if(totalItems<=REEL_WINDOW_SIZE){ if(reelPos<-oneSet*3) reelPos+=oneSet; while(reelPos>0) reelPos-=oneSet; } }
 
   const SNAP_THRESHOLD=100;  // 残り100px以内になったら最小速度を保ち、ゆっくり減速
   const ALIGN_SNAP_THRESHOLD=2;  // センター合わせ処理では2px以内でスナップ
@@ -1626,14 +1772,24 @@ function stopSpin(){
     document.getElementById('reelFrame').classList.add('confirmed');
     document.getElementById('hitZone').classList.add('confirmed');
 
-    // ③ 目視時間：止まった番号を必ず目視してから大画面へ
+    // ③ MBIG・SBIGの演出はリールが止まった後にのみ開始（回転中に当選演出はありえない）
+    if((currentWinRank==='mega'||currentWinRank==='super')&&Math.random()<0.5){
+      const effects=['stars','warp','lightning','shake'];
+      const effect=effects[Math.floor(Math.random()*effects.length)];
+      if(effect==='stars') startShootingStarRush(currentWinRank);
+      else if(effect==='warp') startWarpSpeed(currentWinRank);
+      else if(effect==='lightning'){ startLightning(currentWinRank); startScreenShake(currentWinRank); }
+      else if(effect==='shake') startScreenShake(currentWinRank);
+    }
+
+    // ④ 目視時間：止まった番号を必ず目視してから大画面へ
     const REEL_VIEWING_MS=config.speedMode==='fast' ? 1200 : 1800;
     const showWinnerDelayByRank=config.speedMode==='fast'
       ? { mega:1500, super:1500, big:1200, normal:1200 }
       : { mega:2200, super:2200, big:1800, normal:1800 };
     const viewingMs=Math.max(REEL_VIEWING_MS, showWinnerDelayByRank[currentWinRank]||showWinnerDelayByRank.normal);
 
-    // ④ 目視時間後に showWinner
+    // ⑤ 目視時間後に showWinner
     setTimeout(()=> showWinner(), viewingMs);
   }
 
@@ -1643,17 +1799,18 @@ function stopSpin(){
     const startTime=performance.now();
     function tick(now){
       const stripCheck=document.getElementById('reelStrip');
-      if(stripCheck&&stripCheck.children.length===0&&config.slotAssignments&&config.slotAssignments.length>0){
-        if(reelAnim!==null){ cancelAnimationFrame(reelAnim); reelAnim=null; }
-        if(speedEl) speedEl.style.opacity='0';
-        setReelSpeedDisplay(0);
+    if(stripCheck&&stripCheck.children.length===0&&config.slotAssignments&&config.slotAssignments.length>0){
+      if(reelAnim!==null){ cancelAnimationFrame(reelAnim); reelAnim=null; }
+      if(speedEl) speedEl.style.opacity='0';
+      setReelSpeedDisplay(0);
+      if(REEL_RECOVERY_ENABLED){
         buildReel();
         if(stripCheck.children.length===0){ _buildReelInProgress=false; buildReel(); }
         setTimeout(ensureReelVisible,150);
-        setTimeout(()=> showWinner(), 200);
-        return;
       }
-      const elapsed=now-startTime;
+      return;
+    }
+    const elapsed=now-startTime;
       const t=Math.min(1, elapsed/durationMs);
       const eased=1-Math.pow(1-t, 2);  // ease-out
       const pos=from+(to-from)*eased;
@@ -1673,6 +1830,7 @@ function stopSpin(){
     const pattern=selectedPattern;
     const baseDuration=config.speedMode==='fast' ? 250 : 400;
     const feintWaitMs=config.speedMode==='fast' ? 200 : 350;
+    const alreadyAtTarget=Math.abs(reelPos-targetReelPos)<3;
 
     switch(pattern){
       case 0: // Overshoot: 行き過ぎ→戻る
@@ -1682,8 +1840,9 @@ function stopSpin(){
           });
         });
         break;
-      case 1: // Normal: 自然に当選で止まる
-        smoothMove(reelPos, targetReelPos, baseDuration, goToConfirmed);
+      case 1: // Normal: 自然に当選で止まる（既に当選位置なら「何も動かず400ms待つ」を避け、短く確定）
+        if(alreadyAtTarget){ setPos(targetReelPos); setTimeout(goToConfirmed, 80); }
+        else smoothMove(reelPos, targetReelPos, baseDuration, goToConfirmed);
         break;
       case 2: // Feint: 手前で止まる→1マス進む
         smoothMove(reelPos, targetReelPos+centerStep, baseDuration*0.7, ()=>{
@@ -1714,10 +1873,12 @@ function stopSpin(){
         });
         break;
       case 4: // Direct: 直線で直行（Normalより短い時間）
-        smoothMove(reelPos, targetReelPos, baseDuration*0.7, goToConfirmed);
+        if(alreadyAtTarget){ setPos(targetReelPos); setTimeout(goToConfirmed, 80); }
+        else smoothMove(reelPos, targetReelPos, baseDuration*0.7, goToConfirmed);
         break;
       default:
-        smoothMove(reelPos, targetReelPos, baseDuration, goToConfirmed);
+        if(alreadyAtTarget){ setPos(targetReelPos); setTimeout(goToConfirmed, 80); }
+        else smoothMove(reelPos, targetReelPos, baseDuration, goToConfirmed);
     }
   }
   function runStop(now){
@@ -1726,11 +1887,11 @@ function stopSpin(){
       if(reelAnim!==null){ cancelAnimationFrame(reelAnim); reelAnim=null; }
       if(speedEl) speedEl.style.opacity='0';
       setReelSpeedDisplay(0);
-      buildReel();
-      if(stripCheck.children.length===0){ _buildReelInProgress=false; buildReel(); }
-      setTimeout(ensureReelVisible,150);
-      // 当選は確定済みなのでオーバーレイを必ず表示（ストレステストの winner_overlay_not_shown 対策）
-      setTimeout(()=> showWinner(), 200);
+      if(REEL_RECOVERY_ENABLED){
+        buildReel();
+        if(stripCheck.children.length===0){ _buildReelInProgress=false; buildReel(); }
+        setTimeout(ensureReelVisible,150);
+      }
       return;
     }
     const dt=Math.min(now-lastTime, 50);
@@ -1755,9 +1916,24 @@ function stopSpin(){
     moved+=move;
     wrapPos();
     setPos(reelPos);
+    updateReelWindowIfNeeded(true);
+    if(totalItems>REEL_WINDOW_SIZE){
+      const strip=document.getElementById('reelStrip');
+      if(strip&&strip.children.length>=2){
+        const r0=strip.children[0].getBoundingClientRect();
+        const r1=strip.children[1].getBoundingClientRect();
+        const stripRect=strip.getBoundingClientRect();
+        const fc=(r0.left+r0.width/2)-stripRect.left;
+        const cs=Math.abs((r1.left+r1.width/2)-(r0.left+r0.width/2))||ITEM_W;
+        const k=(displayIdx-reelWindowBase+totalItems)%totalItems;
+        targetReelPos=fw/2-fc-k*cs;
+        const remainingDist=reelPos-targetReelPos;
+        if(remainingDist<=0) moveTotal=moved; else moveTotal=moved+remainingDist;
+      }
+    }
     currentReelSpeed=speed;
     setReelSpeedDisplay(speed);
-    const curIdx=Math.floor(-reelPos/itemW);
+    const curIdx=Math.floor(-reelPos/centerStep);
     if(curIdx!==lastTickIdx){ SE.reelTick(); lastTickIdx=curIdx; }
     reelAnim=requestAnimationFrame(runStop);
   }
@@ -1782,7 +1958,9 @@ function getSlotIndexFromReelPos(pos){
   }
   const currentCenter=-pos+fw/2;
   const stripIdx=Math.floor((currentCenter-firstCenter)/centerStep);
-  const displayIdx=(stripIdx%totalItems+totalItems)%totalItems;
+  const displayIdx=totalItems>REEL_WINDOW_SIZE
+    ?(reelWindowBase+stripIdx+totalItems)%totalItems
+    :(stripIdx%totalItems+totalItems)%totalItems;
   return reelDisplayIndices[displayIdx];
 }
 
@@ -1808,18 +1986,21 @@ function getVisualCenterSlotIndex(){
     if(dist<bestDist){ bestDist=dist; bestIdx=i; }
   }
   if(bestIdx<0) return -1;
-  const displayIdx=(bestIdx%totalItems+totalItems)%totalItems;
+  const displayIdx=totalItems>REEL_WINDOW_SIZE
+    ?(reelWindowBase+bestIdx+totalItems)%totalItems
+    :(bestIdx%totalItems+totalItems)%totalItems;
   return reelDisplayIndices[displayIdx];
 }
 
 // ===== Winner =====
+/** 当選賞品の演出は必ず100%リールが停止してからしか行わない。state が stopping でない呼び出しは無視する。 */
 function showWinner(){
-  if(_showWinnerFallbackTimer!=null){ clearTimeout(_showWinnerFallbackTimer); _showWinnerFallbackTimer=null; }
+  if(state!=='stopping') return;
   pushReelEvent('showWinner', '');
   state='showing';
   // リールが空のまま表示されるバグ対策: 当選表示の直前に必ずリールを復元
   const stripEl=document.getElementById('reelStrip');
-  if(stripEl && stripEl.children.length===0 && config.slotAssignments && config.slotAssignments.length>0){
+  if(REEL_RECOVERY_ENABLED&&stripEl && stripEl.children.length===0 && config.slotAssignments && config.slotAssignments.length>0){
     logPanel('🔄 リールを復元してから当選表示します…', true);
     buildReel();
     if(stripEl.children.length===0){ _buildReelInProgress=false; buildReel(); }
@@ -1882,11 +2063,12 @@ function showWinner(){
 function nextDraw(){
   pushReelEvent('nextDraw', '');
   state='idle';
-  // 次へボタン押下時にリールが消えていれば、即ここで強制復旧（押したら必ず表示されるようにする）
-  const stripEl=document.getElementById('reelStrip');
-  if(stripEl&&stripEl.children.length===0&&config.slotAssignments&&config.slotAssignments.length>0){
-    _buildReelInProgress=false;
-    buildReel();
+  if(REEL_RECOVERY_ENABLED){
+    const stripEl=document.getElementById('reelStrip');
+    if(stripEl&&stripEl.children.length===0&&config.slotAssignments&&config.slotAssignments.length>0){
+      _buildReelInProgress=false;
+      buildReel();
+    }
   }
   drawCount++;
   SE.next();
@@ -3620,7 +3802,7 @@ buildReel();
       console.warn('[LUCKY-DRAW] リールが空 state='+state+' 原因:', cause, '直前に:', seq);
       console.warn('[LUCKY-DRAW] デバッグ: __reelDebugDump() で状態を確認できます');
     }
-    if(config.slotAssignments&&config.slotAssignments.length>0&&state!=='spinning'&&state!=='stopping'){
+    if(REEL_RECOVERY_ENABLED&&config.slotAssignments&&config.slotAssignments.length>0&&state!=='spinning'&&state!=='stopping'){
       setTimeout(()=>{ if(strip.children.length===0) buildReel(); },0);
     }
   });
@@ -3654,7 +3836,7 @@ setInterval(()=>{
   const s=document.getElementById('reelStrip');
   if(!s) return;
   const n=s.children.length;
-  if(n===0){
+  if(n===0&&REEL_RECOVERY_ENABLED){
     const now=Date.now();
     if(now-lastReelEmptyLog>=2000){ lastReelEmptyLog=now; logPanel('⚠ リールが空（定期確認）→ 復元を試行', true); }
     ensureReelVisible();
@@ -3662,10 +3844,10 @@ setInterval(()=>{
 }, 2000);
 
 // 5秒ごとのセーフティネット（リールが消えたままにならないよう二重チェック）
-setInterval(()=>{ ensureReelVisible(); }, 5000);
+setInterval(()=>{ if(REEL_RECOVERY_ENABLED) ensureReelVisible(); }, 5000);
 
 // 初期化のタイミングずれでリールが空になった場合の復元（100ms / 400ms / 800ms で再試行）
-[100,400,800].forEach(ms=>setTimeout(()=>{ ensureReelVisible(); }, ms));
+if(REEL_RECOVERY_ENABLED){ [100,400,800].forEach(ms=>setTimeout(()=>{ ensureReelVisible(); }, ms)); }
 initReelImageZoom();
 syncHeaderBrandEvent();
 syncBGMVolumeSlider();
