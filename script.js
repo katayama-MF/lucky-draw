@@ -354,7 +354,8 @@ const BGM={
   win(){
     BGM.stop();
   },
-  stop(){ BGM._stopAll(0.5); BGM._state='none'; }
+  /** @param {number} [fadeTime] フェード時間（秒）。当選表示時は0.1で即近く止め、ファンファーレと被らせない */
+  stop(fadeTime){ BGM._stopAll(typeof fadeTime==='number'?fadeTime:0.5); BGM._state='none'; }
 };
 let bgmEnabled=false;
 
@@ -740,11 +741,11 @@ function stopScreenShake(){
   document.body.style.transition='';
 }
 
-function stopAllEffects(){
-  // 花吹雪もクリア
+/** @param {number} [bgmFade] 当選表示時は0.1でBGMを即止め、ファンファーレと被らせない */
+function stopAllEffects(bgmFade){
   const petals=document.getElementById('petals');
   if(petals) petals.innerHTML='';
-  BGM.stop();
+  BGM.stop(typeof bgmFade==='number'?bgmFade:0.5);
   stopShootingStarRush();
   stopWarpSpeed();
   stopLightning();
@@ -843,7 +844,9 @@ let remainingSlotIndices=[];     // 未抽選のフルリスト（抽選確率�
 let reelDisplayIndices=[];      // リール表示用（数字順・全件表示）
 let actualWinnerSlotIdx=-1;     // 実際の当選スロット（表示サブセット時用）
 let currentReelSpeed=0;        // 現在のリール速度（減速開始時に使用）
+let lastPattern=-1;            // 前回の止まりパターン（連続回避用）
 let defaultedPrizeKeys=new Set(); // デフォルト指定済み賞品 (name+'\0'+rank)
+let defaultImageMap={}; // 一括デフォルトで永続化した画像マップ (key: name+'\0'+rank → imageUrl)
 const missingPrizePicsIds=new Set();   // 404で存在しない画像ID（再取得をスキップ）
 const prizePicsDisplayCache=new Map(); // id->dataUrl 表示用キャッシュ（localStorageに保存しない）
 
@@ -1203,9 +1206,20 @@ function buildReelChunked(savedReelPos){
       _buildReelInProgress=false;
       return;
     }
-    const oneSet=totalItems*ITEM_W;
     const frameEl=document.getElementById('reelFrame');
     const fw=frameEl?frameEl.offsetWidth:0;
+    // ラップ周期はDOM実測のcenterStepを使う（リール横幅ズレ蓄積の防止）
+    let oneSet=totalItems*ITEM_W;
+    let firstCenter=ITEM_W/2, centerStep=ITEM_W;
+    if(strip.children.length>=2&&fw>0){
+      const r0=strip.children[0].getBoundingClientRect();
+      const r1=strip.children[1].getBoundingClientRect();
+      const stripRect=strip.getBoundingClientRect();
+      firstCenter=(r0.left+r0.width/2)-stripRect.left;
+      const c0=r0.left+r0.width/2, c1=r1.left+r1.width/2;
+      centerStep=Math.abs(c1-c0)||ITEM_W;
+      oneSet=totalItems*centerStep;
+    }
     const opts=typeof savedReelPos==='object'&&savedReelPos!==null ? savedReelPos : null;
     const startFromPrev=opts&&opts.startFromPrevWinnerMinus1;
     if(startFromPrev&&actualWinnerSlotIdx>=0&&config.slotAssignments){
@@ -1214,15 +1228,6 @@ function buildReelChunked(savedReelPos){
       const prevSlotIdx=actualWinnerSlotIdx===0 ? totalSlots-1 : actualWinnerSlotIdx-1;
       let stripIdx=reelDisplayIndices.indexOf(prevSlotIdx);
       if(stripIdx<0) stripIdx=totalItems-1;  // 既に抽選済みの場合は末尾から
-      let firstCenter=ITEM_W/2, centerStep=ITEM_W;
-      if(strip.children.length>=2&&fw>0){
-        const r0=strip.children[0].getBoundingClientRect();
-        const r1=strip.children[1].getBoundingClientRect();
-        const stripRect=strip.getBoundingClientRect();
-        firstCenter=(r0.left+r0.width/2)-stripRect.left;
-        const c0=r0.left+r0.width/2, c1=r1.left+r1.width/2;
-        centerStep=Math.abs(c1-c0)||ITEM_W;
-      }
       reelPos=fw/2-firstCenter-stripIdx*centerStep;
       while(reelPos>0) reelPos-=oneSet;
       while(oneSet>0&&reelPos<-oneSet*3) reelPos+=oneSet;
@@ -1237,7 +1242,7 @@ function buildReelChunked(savedReelPos){
         reelPos=-(fw/2-ITEM_W/2)+16;
       }
     } else if(typeof savedReelPos==='number'){
-      reelPos=savedReelPos-ITEM_W;
+      reelPos=savedReelPos-centerStep;
       while(reelPos>0) reelPos-=oneSet;
       while(oneSet>0&&reelPos<-oneSet*3) reelPos+=oneSet;
     }
@@ -1434,7 +1439,16 @@ function startSpin(){
   }, stopEnableMs);
 
   const totalItemsFixed=totalItems;
-  const oneSetFixed=totalItemsFixed*ITEM_W;
+  // ラップ周期はDOM実測値を使う（ITEM_W=256と実レイアウト240の差でズレが蓄積するため）
+  let oneSetFixed=totalItemsFixed*ITEM_W;
+  strip=document.getElementById('reelStrip');
+  if(strip&&strip.children.length>=2){
+    const r0=strip.children[0].getBoundingClientRect();
+    const r1=strip.children[1].getBoundingClientRect();
+    const c0=r0.left+r0.width/2, c1=r1.left+r1.width/2;
+    const centerStep=Math.abs(c1-c0);
+    if(centerStep>0) oneSetFixed=totalItemsFixed*centerStep;
+  }
   if(oneSetFixed<=0){
     console.error('[LUCKY-DRAW] startSpin: oneSet<=0 totalItems='+totalItemsFixed);
     state='idle'; setBtnState('start'); return;
@@ -1443,8 +1457,9 @@ function startSpin(){
   const ACCEL_SEC=config.speedMode==='fast' ? 0.35 : 0.525;
   const ACCEL_FRAMES=Math.max(60, Math.round(ACCEL_SEC*60));
   const MAX_SPEED=config.speedMode==='fast' ? 80 : REEL_SPEED_MAX;
+  const itemStepForTick=oneSetFixed/totalItemsFixed;  // 1マスあたりのピクセル（tick用）
   let frame=0;
-  let lastTickIdx=Math.floor(-reelPos/ITEM_W);
+  let lastTickIdx=Math.floor(-reelPos/itemStepForTick);
   let lastTime=performance.now();
   let emptyCheckFrame=0;
   function animate(now){
@@ -1476,7 +1491,7 @@ function startSpin(){
     reelPos-=move;
     if(reelPos<-oneSetFixed*3) reelPos+=oneSetFixed;
     if(!Number.isFinite(reelPos)){ reelPos=-(oneSetFixed*2); }
-    const curIdx=Math.floor(-reelPos/ITEM_W);
+    const curIdx=Math.floor(-reelPos/itemStepForTick);
     if(curIdx!==lastTickIdx){ SE.reelTick(); lastTickIdx=curIdx; }
     if(stripEl) stripEl.style.transform=`translateX(${reelPos}px)`;
     reelAnim=requestAnimationFrame(animate);
@@ -1550,7 +1565,16 @@ function stopSpin(){
   if(winnerIdx<0) winnerIdx=0;
   const winSlotLog=config.slotAssignments[actualWinnerSlotIdx];
   const winRank=winSlotLog?.rank||'normal';
-  logPanel(`🛑 STOP → +${N}マスで停止 → No.${actualWinnerSlotIdx+1} ${(winSlotLog?.name||'').slice(0,16)}${(winSlotLog?.name||'').length>16?'…':''}`, true);
+  // 演出パターンをSTOP押下時に決定（動作確認しやすいようこのタイミングでログ出力）
+  let candidates=[0,1,2,3,4];
+  if(lastPattern>=0){
+    candidates=candidates.filter(p=>p!==lastPattern);
+    if(candidates.length===0) candidates=[0,1,2,3,4];
+  }
+  const selectedPattern=candidates[Math.floor(Math.random()*candidates.length)];
+  lastPattern=selectedPattern;
+  const patternNames=['Overshoot','Normal','Feint','Pendulum','Direct'];
+  logPanel(`🛑 STOP → +${N}マスで停止 → Pattern: ${patternNames[selectedPattern]} → No.${actualWinnerSlotIdx+1} ${(winSlotLog?.name||'').slice(0,16)}${(winSlotLog?.name||'').length>16?'…':''}`, true);
 
   // MBIG・SBIGのとき 演出をランダム選択
   if((winRank==='mega'||winRank==='super')&&Math.random()<0.5){
@@ -1587,43 +1611,37 @@ function stopSpin(){
   const SNAP_THRESHOLD=100;  // 残り100px以内になったら最小速度を保ち、ゆっくり減速
   const ALIGN_SNAP_THRESHOLD=2;  // センター合わせ処理では2px以内でスナップ
   const MIN_SPEED=1;  // 減速の最小速度とセンター合わせ速度（必ず同じ値）
-  let isAligning=false;  // センター合わせ中フラグ
-  // winRankをクロージャで参照できるようにする
   const currentWinRank=winRank;
-  function alignToCenter(){
-    if(isAligning) return;
-    const diff=reelPos-targetReelPos;
-    if(Math.abs(diff)<=ALIGN_SNAP_THRESHOLD){
-      // 既にセンターに合っている場合はスナップして確定演出へ（wrapPos は呼ばない＝showWinner で reelPos から当選を算出するため）
-      reelPos=targetReelPos;
-      setPos(reelPos);
-      if(speedEl) speedEl.style.opacity='0';
-      setReelSpeedDisplay(0);
-      currentReelSpeed=0;
-      // 完全に止まってから確定（confirmedクラス追加）
-      // 当選番号を目視できる時間を確保してから大画面へ遷移
-      const confirmDelay=config.speedMode==='fast' ? 100 : 300;
-      const REEL_VIEWING_MS=config.speedMode==='fast' ? 1200 : 1800;  // 止まった番号を目視できる最低時間
-      const showWinnerDelayByRank=config.speedMode==='fast'
-        ? { mega:1500, super:1500, big:1200, normal:1200 }
-        : { mega:2200, super:2200, big:1800, normal:1800 };
-      const showWinnerDelay=Math.max(REEL_VIEWING_MS, showWinnerDelayByRank[currentWinRank]||showWinnerDelayByRank.normal);
-      setTimeout(()=>{
-        document.getElementById('reelFrame').classList.add('confirmed');
-        document.getElementById('hitZone').classList.add('confirmed');
-        // 確定後、当選番号を目視できてから大画面へ遷移
-        requestAnimationFrame(()=>{
-          requestAnimationFrame(()=>{
-            setTimeout(()=> showWinner(), showWinnerDelay);
-          });
-        });
-      }, confirmDelay);
-      return;
-    }
-    // センターからズレている場合：減速の最小速度でセンターに向かって移動
-    isAligning=true;
-    const alignSpeed=MIN_SPEED;  // 減速の最小速度と同じ
-    function runAlign(now){
+
+  // パターン完了後の共通処理：スナップ → 確定 → 目視時間 → 当選表示
+  function goToConfirmed(){
+    // ① 止まった位置でスナップ（必ず完了してから次へ）
+    reelPos=targetReelPos;
+    setPos(reelPos);
+    if(speedEl) speedEl.style.opacity='0';
+    setReelSpeedDisplay(0);
+    currentReelSpeed=0;
+
+    // ② confirmed（確定表示）
+    document.getElementById('reelFrame').classList.add('confirmed');
+    document.getElementById('hitZone').classList.add('confirmed');
+
+    // ③ 目視時間：止まった番号を必ず目視してから大画面へ
+    const REEL_VIEWING_MS=config.speedMode==='fast' ? 1200 : 1800;
+    const showWinnerDelayByRank=config.speedMode==='fast'
+      ? { mega:1500, super:1500, big:1200, normal:1200 }
+      : { mega:2200, super:2200, big:1800, normal:1800 };
+    const viewingMs=Math.max(REEL_VIEWING_MS, showWinnerDelayByRank[currentWinRank]||showWinnerDelayByRank.normal);
+
+    // ④ 目視時間後に showWinner
+    setTimeout(()=> showWinner(), viewingMs);
+  }
+
+  // smoothMove: from→to をイージングで補間（ease-out）
+  function smoothMove(from, to, durationMs, onComplete){
+    if(durationMs<=0){ setPos(to); onComplete(); return; }
+    const startTime=performance.now();
+    function tick(now){
       const stripCheck=document.getElementById('reelStrip');
       if(stripCheck&&stripCheck.children.length===0&&config.slotAssignments&&config.slotAssignments.length>0){
         if(reelAnim!==null){ cancelAnimationFrame(reelAnim); reelAnim=null; }
@@ -1632,51 +1650,75 @@ function stopSpin(){
         buildReel();
         if(stripCheck.children.length===0){ _buildReelInProgress=false; buildReel(); }
         setTimeout(ensureReelVisible,150);
-        // 当選は確定済みなのでオーバーレイを必ず表示（ストレステストの winner_overlay_not_shown 対策）
         setTimeout(()=> showWinner(), 200);
         return;
       }
-      const dt=Math.min(now-lastTime, 50);
-      lastTime=now;
-      const diff=reelPos-targetReelPos;
-      if(Math.abs(diff)<=ALIGN_SNAP_THRESHOLD){
-        // センターに到達したらスナップして停止（wrapPos は呼ばない＝showWinner で reelPos から当選を算出するため）
-        reelPos=targetReelPos;
-        setPos(reelPos);
-        if(speedEl) speedEl.style.opacity='0';
-        setReelSpeedDisplay(0);
-        currentReelSpeed=0;
-        isAligning=false;
-        // 完全に止まってから確定（confirmedクラス追加）
-        // 当選番号を目視できる時間を確保してから大画面へ遷移
-        const confirmDelay=config.speedMode==='fast' ? 200 : 400;
-        const REEL_VIEWING_MS=config.speedMode==='fast' ? 1200 : 1800;  // 止まった番号を目視できる最低時間
-        const showWinnerDelayByRank=config.speedMode==='fast'
-          ? { mega:1500, super:1500, big:1200, normal:1200 }
-          : { mega:2200, super:2200, big:1800, normal:1800 };
-        const showWinnerDelay=Math.max(REEL_VIEWING_MS, showWinnerDelayByRank[currentWinRank]||showWinnerDelayByRank.normal);
-        setTimeout(()=>{
-          document.getElementById('reelFrame').classList.add('confirmed');
-          document.getElementById('hitZone').classList.add('confirmed');
-          // 確定後、当選番号を目視できてから大画面へ遷移
-          requestAnimationFrame(()=>{
-            requestAnimationFrame(()=>{
-              setTimeout(()=> showWinner(), showWinnerDelay);
-            });
-          });
-        }, confirmDelay);
+      const elapsed=now-startTime;
+      const t=Math.min(1, elapsed/durationMs);
+      const eased=1-Math.pow(1-t, 2);  // ease-out
+      const pos=from+(to-from)*eased;
+      setPos(pos);
+      if(t>=1){
+        setPos(to);
+        onComplete();
         return;
       }
-      // 減速の最小速度でセンターに向かって移動
-      const move=Math.min(alignSpeed*(dt/FRAME_MS), Math.abs(diff));
-      reelPos-=diff>0?move:-move;
-      wrapPos();
-      setPos(reelPos);
-      currentReelSpeed=alignSpeed;
-      setReelSpeedDisplay(alignSpeed);
-      reelAnim=requestAnimationFrame(runAlign);
+      reelAnim=requestAnimationFrame(tick);
     }
-    reelAnim=requestAnimationFrame(runAlign);
+    reelAnim=requestAnimationFrame(tick);
+  }
+
+  // 5パターンの止まり演出（パターンはSTOP押下時に既に選択済み）
+  function runPatternFinale(){
+    const pattern=selectedPattern;
+    const baseDuration=config.speedMode==='fast' ? 250 : 400;
+    const feintWaitMs=config.speedMode==='fast' ? 200 : 350;
+
+    switch(pattern){
+      case 0: // Overshoot: 行き過ぎ→戻る
+        smoothMove(reelPos, targetReelPos-0.4*centerStep, baseDuration*0.6, ()=>{
+          smoothMove(reelPos, targetReelPos, baseDuration*0.8, ()=>{
+            goToConfirmed();
+          });
+        });
+        break;
+      case 1: // Normal: 自然に当選で止まる
+        smoothMove(reelPos, targetReelPos, baseDuration, goToConfirmed);
+        break;
+      case 2: // Feint: 手前で止まる→1マス進む
+        smoothMove(reelPos, targetReelPos+centerStep, baseDuration*0.7, ()=>{
+          setTimeout(()=>{
+            smoothMove(reelPos, targetReelPos, baseDuration*0.6, goToConfirmed);
+          }, feintWaitMs);
+        });
+        break;
+      case 3: // Pendulum: 振れて収束
+        smoothMove(reelPos, targetReelPos, baseDuration*0.8, ()=>{
+          const amp=centerStep*0.25;
+          const pendStart=performance.now();
+          const pendDur=config.speedMode==='fast' ? 600 : 900;
+          function pendTick(now){
+            const elapsed=now-pendStart;
+            if(elapsed>=pendDur){
+              setPos(targetReelPos);
+              goToConfirmed();
+              return;
+            }
+            const decay=Math.pow(1-elapsed/pendDur, 2);
+            const phase=(elapsed/pendDur)*Math.PI*4;
+            const pos=targetReelPos+amp*Math.sin(phase)*decay;
+            setPos(pos);
+            reelAnim=requestAnimationFrame(pendTick);
+          }
+          reelAnim=requestAnimationFrame(pendTick);
+        });
+        break;
+      case 4: // Direct: 直線で直行（Normalより短い時間）
+        smoothMove(reelPos, targetReelPos, baseDuration*0.7, goToConfirmed);
+        break;
+      default:
+        smoothMove(reelPos, targetReelPos, baseDuration, goToConfirmed);
+    }
   }
   function runStop(now){
     const stripCheck=document.getElementById('reelStrip');
@@ -1695,11 +1737,10 @@ function stopSpin(){
     lastTime=now;
     const remaining=moveTotal-moved;
     if(remaining<=0){
-      // 完全に停止：現在位置を保持したままセンター合わせ処理を開始
+      // 完全に停止：現在位置を保持したままパターン演出を開始
       wrapPos();
       setPos(reelPos);
-      // センター合わせ処理を開始（ズレがあれば速度5で移動、なければそのまま確定演出へ）
-      alignToCenter();
+      runPatternFinale();
       return;
     }
     // 等減速: v²=v0²-2as より speed=v0*sqrt(1-moved/moveTotal)
@@ -1824,7 +1865,7 @@ function showWinner(){
   addHistoryEntry(drawCount, slotNo, name, rank, displayImg);
 
   showWinnerDisplay(slotNo, name, rank, displayImg);
-  stopAllEffects();
+  stopAllEffects(0.1);  // BGMを0.1秒で即止め、ファンファーレと被らせない
   spawnConfetti();
   spawnSparkles();
   // レートに応じて花吹雪を生成（MH/SB/BGのみ）
@@ -2231,8 +2272,11 @@ function setAllImagesAsDefault(){
     pool.forEach(p=>{ if(p.name===name&&p.rank===rank) p.imageUrl=img; });
     slots.forEach(s=>{ if(s.name===name&&s.rank===rank) s.imageUrl=img; });
   });
+  // 次回以降（バージョン更新・スプシ再読み込み後も）この画像をデフォルトとして適用
+  Object.assign(defaultImageMap, imgByKey);
+  saveDefaultImageMap();
   buildPrizeGrid(); buildReel(); rebuildHistoryDOM(); saveToStorage();
-  logPanel(`📌 ${Object.keys(imgByKey).length}件の賞品画像を一括でデフォルトに設定しました`);
+  logPanel(`📌 ${Object.keys(imgByKey).length}件の賞品画像を一括でデフォルトに設定しました（次回以降も反映されます）`);
 }
 function triggerBulkUpload(){ logPanel('賞品プール型ではスプレッドシートで画像URLを設定してください'); }
 function bulkUploadFromFolder(){}
@@ -2296,6 +2340,10 @@ function applyPrizeSeedData(){
     map[key].count+=(parseInt(d[2],10)||1);
   });
   config.prizePool=Object.values(map);
+  config.prizePool.forEach(p=>{
+    const k=(p.name||'')+'\0'+(p.rank||'normal');
+    if(defaultImageMap[k]) p.imageUrl=defaultImageMap[k];
+  });
   config.spreadsheetId=PRIZE_SHEET_ID;
   computeSlotAssignments();
   buildPrizeGrid();
@@ -2534,6 +2582,7 @@ async function applyPoolFinal(pool,spreadsheetId){
   const existingByKey={};
   (config.prizePool||[]).forEach(p=>{ if(p.imageUrl){ const k=(p.name||'')+'\0'+(p.rank||'normal'); existingByKey[k]=p.imageUrl; } });
   (config.slotAssignments||[]).forEach(s=>{ if(s.imageUrl){ const k=(s.name||'')+'\0'+(s.rank||'normal'); if(!existingByKey[k]) existingByKey[k]=s.imageUrl; } });
+  Object.keys(defaultImageMap).forEach(k=>{ if(!existingByKey[k]) existingByKey[k]=defaultImageMap[k]; }); // 永続化済みデフォルト画像を適用
   pool.forEach(p=>{
     if(!p.imageUrl||!/^(https?:|data:)/i.test(String(p.imageUrl))){
       const k=(p.name||'')+'\0'+(p.rank||'normal');
@@ -2879,6 +2928,23 @@ function saveSettings(){
 // ===== Persistence =====
 const STORAGE_KEY='luckyDrawConfig';
 const PROGRESS_KEY='luckyDrawProgress';
+const DEFAULT_IMAGE_MAP_KEY='luckyDrawDefaultImageMap'; // 一括デフォルト設定を永続化（バージョン更新後も適用）
+function saveDefaultImageMap(){
+  try{
+    const sanitized={};
+    Object.keys(defaultImageMap).forEach(k=>{
+      const v=String(defaultImageMap[k]||'');
+      if(v&&!v.startsWith('data:')) sanitized[k]=v; // data:は容量大なのでスキップ（prize_pics:とhttps:のみ保存）
+    });
+    localStorage.setItem(DEFAULT_IMAGE_MAP_KEY, JSON.stringify(sanitized));
+  }catch(_){}
+}
+function loadDefaultImageMap(){
+  try{
+    const raw=localStorage.getItem(DEFAULT_IMAGE_MAP_KEY);
+    if(raw){ const o=JSON.parse(raw); if(o&&typeof o==='object') defaultImageMap=o; }
+  }catch(_){ defaultImageMap={}; }
+}
 const IDB_NAME='luckyDrawIDB';
 const IDB_STORE='images';
 function _idb(){ return new Promise((res,rej)=>{ const r=indexedDB.open(IDB_NAME,1); r.onerror=()=>rej(r.error); r.onsuccess=()=>res(r.result); r.onupgradeneeded=e=>{ if(!e.target.result.objectStoreNames.contains(IDB_STORE)) e.target.result.createObjectStore(IDB_STORE); }; }); }
@@ -3442,6 +3508,7 @@ function clearConsole(){
 
 // Load saved config first
 const _hadSaved=loadFromStorage();
+loadDefaultImageMap(); // 一括デフォルト画像（バージョン更新後も適用するため別キーで永続化）
 (async function init(){
   if(_hadSaved){
     logPanel('📋 設定を復元');
