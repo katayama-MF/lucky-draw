@@ -134,19 +134,15 @@
 
 ---
 
-## 13. 5 秒ごとのセーフティネット
+## 13. 5 秒ごとのセーフティネット（削除済み）
 
-**場所**: 3677〜3679行付近
-
-- **setInterval(()=> ensureReelVisible(), 5000)** で、5 秒ごとに ensureReelVisible() を実行（空でなくても「子が少なすぎ」なら buildReel する）。
+対症療法的な定時ポーリングは使用しない。正規のイベント駆動（MutationObserver 等）で対応する。
 
 ---
 
-## 14. 初期化時の遅延復元
+## 14. 初期化時の遅延復元（削除済み）
 
-**場所**: 3681行付近
-
-- **100ms / 400ms / 800ms** の 3 回、setTimeout で ensureReelVisible() を呼ぶ。初期化のタイミングずれでリールが空になった場合の復元用。
+対症療法的な「とりあえず何回か試す」は使用しない。
 
 ---
 
@@ -174,8 +170,8 @@
 | showWinner | 入口で strip が空 | buildReel() してから表示続行 |
 | nextDraw | 入口で strip が空 | buildReel() してから次へ続行 |
 | MutationObserver | strip の子が 0 になった瞬間 | ログ + (spinning/stopping 以外なら setTimeout(buildReel, 0)) |
-| setInterval 2秒 | 2 秒ごとに strip が 0 | ensureReelVisible() |
-| setInterval 5秒 | 5 秒ごと | ensureReelVisible() |
-| 初期化 | 100/400/800 ms 後 | ensureReelVisible() |
+| ~~setInterval 2秒~~ | （削除済み・対症療法のため） | - |
+| ~~setInterval 5秒~~ | （削除済み・対症療法のため） | - |
+| ~~初期化 100/400/800ms~~ | （削除済み・対症療法のため） | - |
 
 以上が、リールが消えた場合の緊急処理・復旧の一覧である。

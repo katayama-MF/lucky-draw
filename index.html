@@ -36,11 +36,12 @@
           <div class="event" id="headerEvent">マグナ eスポーツ英単語バトル 2026</div>
           <span class="header-version" id="headerVersion">ver.1.1.03</span>
         </div>
-        <div class="remaining-draws" id="remainingDraws">残り: <span class="remaining-number">--</span>回</div>
+        <div class="remaining-draws" id="remainingDraws">残り: <span class="remaining-number">--</span>本</div>
       </div>
     </div>
     <div class="header-right">
       <button class="tb-btn" id="tbHistory" onclick="toggleHistory()" title="抽選履歴"><span class="tb-icon">📋</span><span class="tb-label">履歴</span></button>
+      <button class="tb-btn" id="tbLightweight" onclick="toggleLightweightMode()" title="軽量化モード（GPU負荷低減）"><span class="tb-label" id="tbLightweightLabel">軽量</span></button>
       <button class="tb-btn" id="tbSpeedMode" onclick="toggleSpeedMode()" title="標準⇔サクサク切り替え"><span class="tb-label" id="tbSpeedModeLabel">標準</span></button>
       <button class="tb-btn on" id="tbSound" onclick="toggleSoundAll()" title="SE ON/OFF"><span class="tb-label">SE</span></button>
       <button class="tb-btn" id="tbBGM" onclick="toggleBGM()" title="BGM ON/OFF"><span class="tb-label">BGM</span></button>
@@ -51,12 +52,11 @@
   </div>
 
   <div class="main-area">
-    <!-- Reel glow aura -->
+    <!-- 2段階リール: 上=レートリール、下=賞品リール（賞品リールは必要なときだけ表示） -->
     <div class="reel-aura"></div>
-    <!-- Reel wrapper (for nav arrow positioning) -->
-    <div class="reel-wrapper">
+    <!-- レートリール（上段） -->
+    <div class="reel-wrapper rate-reel-wrapper">
       <div class="reel-nav left" id="reelNavLeft" onclick="reelStep(-1)">◀</div>
-      <!-- Reel (always visible) -->
       <div class="reel-frame" id="reelFrame">
         <input type="file" accept="image/*" id="reelUploadInput" style="display:none">
         <div class="hit-zone" id="hitZone">
@@ -77,6 +77,21 @@
       </div>
       <div class="reel-nav right" id="reelNavRight" onclick="reelStep(1)">▶</div>
     </div>
+    <!-- 賞品リール（下段・常にスペースを確保し、出るときだけ内容を表示） -->
+    <div class="reel-wrapper prize-reel-wrapper prize-reel-empty" id="prizeReelWrapper">
+      <div class="reel-nav left" id="prizeReelNavLeft" onclick="prizeReelStep(-1)" title="賞品リールを右へ">◀</div>
+      <div class="reel-frame" id="prizeReelFrame">
+        <div class="hit-zone" id="prizeHitZone">
+          <div class="hit-zone-glow"></div>
+          <div class="hit-marker top"><div class="tri"></div></div>
+          <div class="hit-marker bottom"><div class="tri"></div></div>
+        </div>
+        <div class="reel-strip" id="prizeReelStrip"></div>
+        <div class="reel-fade-left"></div>
+        <div class="reel-fade-right"></div>
+      </div>
+      <div class="reel-nav right" id="prizeReelNavRight" onclick="prizeReelStep(1)" title="賞品リールを左へ">▶</div>
+    </div>
 
     <!-- Control area (below reel) -->
     <div class="control-area">
@@ -92,7 +107,7 @@
         </div>
         <!-- Spin controls: START / STOP / 演出中 -->
         <div class="spin-control" id="spinControl">
-          <button class="big-btn" id="bigBtn" onclick="onBtnClick()" onmouseenter="SE.buttonHover()">START</button>
+          <button class="big-btn" id="bigBtn" onclick="onBtnClick()">START</button>
           <div class="btn-label" id="btnLabel">PRESS TO START</div>
         </div>
       </div>
@@ -120,7 +135,7 @@
         </div>
       </div>
     </div>
-    <button class="next-btn" onclick="nextDraw()" onmouseenter="SE.buttonHover()">次の抽選へ →<br>NEXT →</button>
+    <button class="next-btn" id="nextBtn" onclick="nextDraw()" title="Enter キーでも進めます">NEXT</button>
   </div>
 
   <!-- History Panel (slide-out from left) -->
@@ -139,7 +154,7 @@
     </div>
   </div>
 
-  <div class="footer">�MINTFLAG INC.</div>
+  <div class="footer">© MINTFLAG INC.</div>
 
   <!-- Image zoom overlay (tap reel image to enlarge) -->
   <div class="image-zoom-overlay" id="imageZoomOverlay" onclick="hideImageZoom()">
@@ -153,6 +168,15 @@
   <!-- Flash (brief white flash on win) -->
   <div class="flash-overlay" id="flashOverlay"></div>
 
+  <!-- 在庫エラー表示（在庫0時に画面全体で表示） -->
+  <div class="stock-error-overlay" id="stockErrorOverlay">
+    <div class="stock-error-content">
+      <div class="stock-error-icon">⚠️</div>
+      <div class="stock-error-title">※在庫エラー</div>
+      <div class="stock-error-message">係員を呼んでください</div>
+    </div>
+  </div>
+
   <!-- Confetti & Sparkles (float over everything, no block) -->
   <div class="confetti-container" id="confetti"></div>
   <div class="sparkle-container" id="sparkles"></div>
@@ -162,30 +186,26 @@
   <div class="settings-overlay" id="settingsOverlay">
     <div class="settings-card">
       <div class="settings-title">⚙ SETTINGS</div>
+      <div class="settings-actions settings-actions-top">
+        <button class="s-btn s-btn-close" onclick="toggleSettings()">閉じる</button>
+        <button class="s-btn s-btn-save" onclick="saveSettings()">保存</button>
+      </div>
       <!-- Tabs -->
       <div class="settings-tabs">
-        <button class="stab active" id="tabGeneral" onclick="switchTab('general')">一般</button>
-        <button class="stab" id="tabPrizes" onclick="switchTab('prizes')">賞品 一覧</button>
+        <button class="stab active" id="tabPrizes" onclick="switchTab('prizes')">賞品 一覧</button>
         <button class="stab" id="tabSound" onclick="switchTab('sound')">🔊 音</button>
+        <button class="stab" id="tabGeneral" onclick="switchTab('general')">一般</button>
       </div>
       <!-- General Tab -->
-      <div id="panelGeneral">
+      <div id="panelGeneral" style="display:none;">
         <div class="setting-group"><div class="setting-label">ブランド名</div><input class="setting-input" id="setBrand" value="マグナとふしぎの少女 presents"></div>
         <div class="setting-group"><div class="setting-label">イベント名</div><input class="setting-input" id="setEvent" value="マグナ eスポーツ英単語バトル 2026"></div>
         <div class="setting-group">
-          <div class="setting-label">モード</div>
-          <div style="display:flex;gap:8px;align-items:center;margin-top:6px;flex-wrap:wrap;">
-            <button type="button" class="speed-opt" id="btnModeNormal" onclick="setSpeedMode('normal')">標準</button>
-            <button type="button" class="speed-opt" id="btnModeFast" onclick="setSpeedMode('fast')">サクサク</button>
-            <span id="speedModeDesc" class="setting-label" style="margin-left:8px;"></span>
-          </div>
-        </div>
-        <div class="setting-group">
-          <div class="setting-label">止まるマス数（ストップ後プラス何マスで止めるかの範囲）<span id="reelStopNote" style="color:var(--text-dim);font-size:11px;"></span></div>
-          <div style="display:flex;gap:8px;align-items:center;margin-top:6px;">
-            <input type="number" min="1" max="999" class="setting-input" id="setReelStopMin" style="width:80px" placeholder="最小">
-            <span>〜</span>
-            <input type="number" min="1" max="999" class="setting-input" id="setReelStopMax" style="width:80px" placeholder="最大">
+          <div class="setting-label">📦 Chromebook等への移行</div>
+          <p class="prize-desc">こちらの設定（賞品・SE・BGM等）を Chromebook へコピーする場合: ①「設定をエクスポート」で config.json をダウンロード → ② lucky-draw フォルダに保存 → ③フォルダごと Chromebook にコピー → ④ Chromebook で「config.json を読み込み」を1回クリック</p>
+          <div style="display:flex;gap:12px;align-items:center;margin-top:12px;flex-wrap:wrap;">
+            <button type="button" class="prize-btn" onclick="exportToConfigFile()">📤 設定をエクスポート（config.json）</button>
+            <button type="button" class="prize-btn" onclick="loadFromConfigFile()">📥 config.json を読み込み</button>
           </div>
         </div>
         <div class="setting-group">
@@ -195,18 +215,32 @@
             <button type="button" class="speed-opt" id="btnRemainingDrawsOff" onclick="setRemainingDrawsDisplay(false)">OFF</button>
           </div>
         </div>
+        <div class="setting-group" style="margin-top:24px;">
+          <div class="setting-label">🧪 ストレステスト</div>
+          <p class="prize-desc">自動で抽選を繰り返し、リール消失・当選ズレ・エラーなどを検出します。ログは stress-test-logs/ に保存されます。</p>
+          <div style="display:flex;gap:12px;align-items:center;margin-top:12px;flex-wrap:wrap;">
+            <label>回数:</label>
+            <input type="number" id="stressPlayCount" min="1" max="1000" value="100" style="width:80px" class="setting-input">
+            <span style="color:var(--text-dim);font-size:12px;">（1〜1000、デフォルト100）</span>
+          </div>
+          <div style="display:flex;gap:12px;align-items:center;margin-top:12px;">
+            <button type="button" class="speed-opt" id="stressStartBtn" onclick="startStressTest()" style="background:var(--cyan);border-color:var(--cyan);color:var(--bg);">▶ スタート</button>
+            <button type="button" class="speed-opt" id="stressStopBtn" onclick="stopStressTest()" disabled style="background:#ef4444;border-color:#ef4444;color:#fff;">■ ストップ</button>
+          </div>
+          <div id="stressStatus" class="stress-status" style="margin-top:12px;font-size:13px;color:var(--text-dim);"></div>
+        </div>
       </div>
       <!-- Prizes Tab -->
-      <div id="panelPrizes" style="display:none;">
+      <div id="panelPrizes">
         <div class="setting-group">
           <div class="setting-label">📊 賞品プール</div>
           <p class="prize-desc">スプレッドシートに「レート,賞品名,本数,画像URL」で賞品を登録。在庫合計＝抽選No.数。確率に従いランダム配分。</p>
           <div class="prize-action-row">
-            <a id="sheetLink" href="https://docs.google.com/spreadsheets/d/1muSX_EEJTbDW1DJs2y0NEFhHA9z5jRJL0UthQKzqNR8/edit" target="_blank" rel="noopener" class="speed-opt sheet-link" style="background:var(--purple);border-color:var(--purple);color:#fff;text-decoration:none;font-weight:600;">📊 スプシを開く</a>
-            <button class="speed-opt update-btn" onclick="loadPrizesFromSheet()" style="background:var(--cyan);border-color:var(--cyan);color:var(--bg);font-weight:700;">🔄 更新</button>
-            <button class="speed-opt" onclick="loadImagesFromFolder()" title="画像フォルダを選択し、該当ファイル名（LD_0001.png等）の画像を賞品に一括適用">📁 画像フォルダから読み込み</button>
-            <button class="speed-opt" onclick="setAllImagesAsDefault()" title="各賞品の現在の画像を同一賞品の全スロットに適用">📌 画像を一括デフォルトに</button>
-            <button class="speed-opt" onclick="exportPrizeRankJson()" title="賞品画像IDとレートの対応表をJSONでダウンロード（仮画像のレート色分け用）">📤 ID・レート一覧をエクスポート</button>
+            <a id="sheetLink" href="https://docs.google.com/spreadsheets/d/1muSX_EEJTbDW1DJs2y0NEFhHA9z5jRJL0UthQKzqNR8/edit" target="_blank" rel="noopener" class="prize-btn prize-btn-primary">📊 スプシを開く</a>
+            <button type="button" class="prize-btn prize-btn-accent" onclick="loadPrizesFromSheet()">🔄 更新</button>
+            <button type="button" class="prize-btn" onclick="loadImagesFromFolder()" title="画像フォルダを選択し、該当ファイル名（LD_0001.png等）の画像を賞品に一括適用">📁 画像フォルダから読み込み</button>
+            <button type="button" class="prize-btn" onclick="setAllImagesAsDefault()" title="各賞品の現在の画像を同一賞品の全スロットに適用">📌 画像を一括デフォルトに</button>
+            <button type="button" class="prize-btn" onclick="exportPrizeRankJson()" title="賞品画像IDとレートの対応表をJSONでダウンロード（仮画像のレート色分け用）">📤 ID・レート一覧をエクスポート</button>
           </div>
           <div id="sheetStatus" class="sheet-status"></div>
         </div>
@@ -217,8 +251,11 @@
       </div>
       <!-- Sound Tab -->
       <div id="panelSound" style="display:none;">
+        <div class="sound-folder-note" style="margin-bottom:12px;padding:8px 12px;background:rgba(0,229,255,0.08);border-radius:8px;font-size:12px;color:var(--text-dim);">▶ で視聴可能。📁 でファイルを入れ替え（sound/に保存）。使用中/未使用はゲーム内で実際に鳴るかどうかです。</div>
         <div class="setting-label" style="margin-bottom:8px;color:var(--cyan);">🔊 SE</div>
         <div class="sound-grid" id="seGrid"></div>
+        <div class="setting-label" style="margin:12px 0 8px;color:var(--gold);">🎰 レートリール当選（HIT以外）</div>
+        <div class="sound-grid" id="rrGrid"></div>
         <div class="setting-label" style="margin:12px 0 8px;color:var(--magenta);">🎺 ファンファーレ（ランク別）</div>
         <div class="sound-grid" id="ffGrid"></div>
         <div class="setting-label" style="margin:12px 0 8px;color:var(--gold);">🎵 BGM</div>
@@ -228,14 +265,6 @@
           <span id="bgmVolumeLabel" class="volume-label">50%</span>
         </div>
         <div class="sound-grid" id="bgmGrid"></div>
-        <div style="margin-top:12px;display:flex;gap:8px;">
-          <button class="speed-opt" onclick="allSoundOn()" style="flex:1;">音ON</button>
-          <button class="speed-opt" onclick="allSoundOff()" style="flex:1;">音OFF</button>
-        </div>
-      </div>
-      <div class="settings-actions" style="flex-wrap:wrap;">
-        <button class="s-btn cancel" onclick="toggleSettings()">閉じる</button>
-        <button class="s-btn save" onclick="saveSettings()">保存 設定を保存</button>
       </div>
     </div>
   </div>

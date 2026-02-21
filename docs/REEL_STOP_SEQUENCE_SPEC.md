@@ -10,7 +10,7 @@
 2. **STOP** → `stopSpin()` が呼ばれる
    - 抽選（actualWinnerSlotIdx, targetReelPos を決定）
    - state='stopping'
-   - フォールバック用に 9 秒タイマーをセット（後述）
+   - （対症療法的なフォールバックタイマーは使用しない）
    - **runStop()** を `requestAnimationFrame` で開始
 3. **runStop(now)** が毎フレーム呼ばれる
    - **毎フレーム先頭で** `#reelStrip` の `children.length === 0` をチェック（後述・経路A）
@@ -35,8 +35,7 @@
 | # | 経路 | 条件 | いつ showWinner が呼ばれるか |
 |---|------|------|------------------------------|
 | **1** | **goToConfirmed() 内** | パターン演出が完了し、goToConfirmed() が実行されたとき | **viewingMs 後**（標準で 1800ms 前後）。リールはとっくに止まった後。 |
-| **2** | **_showWinnerFallbackTimer** | STOP から 9 秒経過しても state が 'stopping' のまま（通常フローがどこかで止まった場合） | **9 秒後**。フォールバック用。 |
-| **3** | **runStop() の先頭分岐** | そのフレームで `#reelStrip.children.length === 0` だったとき | buildReel()、150ms 後に ensureReelVisible のみ。**showWinner() は呼ばない**。当選表示は通常フロー（次のフレーム以降で remaining<=0 → runPatternFinale → goToConfirmed）か、9秒フォールバックに任せる。 |
+| **2** | **runStop() の先頭分岐** | そのフレームで `#reelStrip.children.length === 0` だったとき | buildReel() で復元し、**setPos(targetReelPos) → runPatternFinale()** で正規フローを完了。フォールバックに頼らない。 |
 | **4** | **smoothMove の tick 内の分岐** | パターン演出の某一フレームで strip の子が 0 だったとき | 同様に buildReel()、150ms 後に ensureReelVisible のみ。**showWinner() は呼ばない**。 |
 
 経路 1 が「止まってから目視時間後に表示」の正規ルート。経路 3・4 は strip 復旧のみ行い、当選表示は別経路に任せる。
@@ -45,15 +44,14 @@
 
 ## 3. 経路 3・4 の扱い
 
-- strip が空のときは **buildReel() と ensureReelVisible で復旧するだけ**。showWinner() は呼ばない。
-- 当選表示は、その後の通常フロー（remaining<=0 → runPatternFinale → goToConfirmed → viewingMs 後に showWinner）か、9秒フォールバックで行う。
+- strip が空のときは **buildReel() で復元し、正規フロー（runPatternFinale → goToConfirmed → showWinner）を完了**する。
 
 ---
 
 ## 4. その他・補足
 
 - **Normal で alreadyAtTarget のとき**: runStop で remaining<=0 になった時点で reelPos はほぼ targetReelPos。runPatternFinale() で `setTimeout(goToConfirmed, 80)` だけして、80ms 後に goToConfirmed() → その中で setTimeout(showWinner, viewingMs)。この経路では「止まってから 80ms で確定 → さらに viewingMs で当選表示」なので、止まる前に表示はしない。
-- **フォールバック**: goToConfirmed が何らかの理由で呼ばれない場合、9 秒後に showWinner が一度だけ呼ばれる。
+- 対症療法的なフォールバックは使用しない。正規フローで当選表示まで完了する。
 
 ---
 

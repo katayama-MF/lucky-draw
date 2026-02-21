@@ -1,6 +1,9 @@
 # Node
 node_modules/
 
+# 自動ブラッシュアップのログ
+logs/
+
 # macOS
 .DS_Store
 

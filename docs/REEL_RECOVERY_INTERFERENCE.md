@@ -35,11 +35,11 @@
 - state は `stopping` のため buildReel() は strip を更新しない。setTimeout(buildReel, 0) だけが積まれる。
 - **return するため runPatternFinale() が呼ばれない**（runStop から）／**smoothMove の onComplete が呼ばれない**（smoothMove から）。
 - その結果 **goToConfirmed() が一度も呼ばれず、showWinner() も通常経路では呼ばれない**。
-- 当選表示は **9秒フォールバック**が発火するまで出ない。
+- 当選表示は正規フロー（runStop/smoothMove 内で strip 復元後に goToConfirmed → showWinner）で完了する。フォールバックは使用しない。
 
 **他仕様への影響**:
 - 「止まったあと、目視時間経過で当選表示」という仕様が破綻する。
-- 減速中／演出中に strip が空になると「当選表示が一瞬で出る」どころか「最大9秒出ない」という逆の事象になる。
+- 減速中／演出中に strip が空になった場合、buildReel で復元したあと正規フローで当選表示まで完了する。
 
 **結論**: 他仕様を強く邪魔する。復旧処理がメインの止まりフローを打ち切っている。
 
@@ -156,7 +156,7 @@
 | # | 処理 | 邪魔の内容 | 深刻度 |
 |---|------|------------|--------|
 | 1 | stopSpin 入口の buildReel | 復元されず減速〜演出中ずっと strip が空。ログと実態が不一致。 | 中 |
-| 2 | runStop / smoothMove で strip 空時の return | runPatternFinale や goToConfirmed が呼ばれず、当選表示が 9秒フォールバックまで出ない。 | **高** |
+| 2 | runStop / smoothMove で strip 空時 | buildReel で復元し、setPos → runPatternFinale（または onComplete）で正規フローを完了。 | - |
 | 3 | animate で strip 空時の abort | 回転を止める設計なので仕様としては一貫。 | 低 |
 | 4 | ensureReelVisible の tooFew | Chunked 中や showing 中に strip を上書きしうる。チラつき・位置ずれの可能性。 | 中 |
 | 5 | 5秒 setInterval(ensureReelVisible) | nextDraw 直後の buildReelChunked をスキップさせ、「前回当選の1つ前」が効かなくなる可能性。 | 中 |

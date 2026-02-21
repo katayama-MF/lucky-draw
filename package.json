@@ -9,6 +9,8 @@
     "test": "node scripts/debug-reel.test.js",
     "test:reel": "node scripts/reel-disappear.test.js",
     "test:stress": "node scripts/stress-play.test.js",
+    "test:stress:run": "node scripts/run-stress-with-server.js",
+    "brushup:auto": "node scripts/auto-brushup.js",
     "test:cycle": "node scripts/test-cycle.js",
     "test:cycle:full": "node scripts/test-cycle-full.js",
     "test:cycle:mini": "node scripts/test-cycle-mini-full.js",
