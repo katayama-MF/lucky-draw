@@ -1,5 +1,5 @@
 // ===== アプリ版（左上に表示。更新のたびに 1.0.2 → 1.0.3 のように上げる） =====
-const SCRIPT_VERSION='1.1.04';
+const SCRIPT_VERSION='1.1.05';
 
 // ===== Audio System =====
 let audioCtx=null;
@@ -922,7 +922,6 @@ let config={
   slotAssignments:[],     // 自動配分結果 [{rank, name, imageUrl, slotNo}, ...] slotNo=1..N
   prizePicsDataUrls:{},    // id->dataUrl（重複を避け、画像を1枚分だけ保持）
   speedMode:'normal',reelOrder:'sequential',bgmFile:'',bgmVolume:50,showRemainingDraws:true,lightweightMode:false,
-  forceMegaWin:false,  // テスト用: true でレートリール停止時に常にMEGA当選（在庫ありの場合のみ）
   spreadsheetId:'',sheetRange:'A2:D',
   predictionEffectsEnabled:false,  // 流星・ワープ演出（未使用）
   reelStopMin:50, reelStopMax:100   // ストップ後「プラス何マスで止めるか」の範囲（B案: 既定を半分で短く）
@@ -1025,6 +1024,8 @@ const USE_TWO_STAGE_REEL=true;
 const RATE_LABELS={mega:'MEGA<br>超大あたり',super:'SUPER<br>すごい',big:'BIG<br>大当たり',normal:'HIT<br>当たり'};
 const RATE_REEL_SLOTS=50;
 const PRIZE_REEL_SPEED_MAX=50;  // 賞品リールの最大速度（レートリールと同単位）
+/** STOP押下後の減速で、必ずこのスロット数以上は回ってから止まる（押したタイミングで一瞬で止まらないようにする） */
+const MIN_DECEL_TRAVEL_SLOTS=10;
 /** レートリールの内訳（固定）: MEGA 3, SUPER 7, BIG 15, HIT 25。当選確率は pickRateRandom で在庫割合に従う */
 const RATE_REEL_FIXED_COUNTS={mega:3,super:7,big:15,normal:25};
 let prizeReelPos=0;
@@ -1891,8 +1892,7 @@ function stopRateSpin(){
   SE.stop();
   document.getElementById('reelFrame').classList.add('hot');
   document.getElementById('hitZone').classList.add('hot');
-  let pickedRate=config.forceMegaWin?(getRateStockTotals().mega>0?'mega':null):null;
-  if(pickedRate===null) pickedRate=pickRateRandom();
+  const pickedRate=pickRateRandom();
   if(!pickedRate){
     state='idle'; setBtnState('start'); showStockError(); logPanel('⚠ 在庫がありません',true); return;
   }
@@ -1919,9 +1919,15 @@ function stopRateSpin(){
   while(targetReelPos>reelPos&&oneSet>0) targetReelPos-=oneSet;  // 逆回転せず：目標を現在より左に
   while(oneSet>0&&targetReelPos+oneSet<=reelPos) targetReelPos+=oneSet;  // 同じスロットで最も近い左側の周期を選択（移動距離最小化）
   if(window.__reelDebugStop){ console.log('[rate] stop',{reelPos,rawTarget,targetReelPos,oneSet,wouldReverse:targetReelPos>reelPos}); }
-  const distance=Math.abs(targetReelPos-reelPos);
+  const minTravelPx=MIN_DECEL_TRAVEL_SLOTS*(centerStep||ITEM_W);
+  let actualTarget=targetReelPos;
+  if(oneSet>0){
+    let d=Math.abs(actualTarget-reelPos);
+    while(d<minTravelPx){ actualTarget-=oneSet; d=Math.abs(actualTarget-reelPos); }  // 最低10スロットは回るように目標を左にずらす
+    if(actualTarget>reelPos){ actualTarget=targetReelPos; }  // 逆回転にならないよう補正
+  }
+  const actualDistance=Math.abs(actualTarget-reelPos);
   const spinSpeedPxPerSec=RATE_REEL_SPEED_MAX*60;
-  const stopDuration=Math.max(config.speedMode==='fast'?2500:5000, distance>0?Math.ceil(2*distance/spinSpeedPxPerSec):0);
   const rateViewingMs=1000;
   function setRatePos(x){ reelPos=x; if(strip) strip.style.transform=`translateX(${x}px)`; }
   function goToRateStopped(){
@@ -1930,13 +1936,6 @@ function stopRateSpin(){
     SE.confirm();
     setTimeout(()=>onRateStopped(pickedRate), rateViewingMs);
   }
-  // 標準モード時のみ: 距離0や1スロット未満のときは減速演出がほぼ見えない→目標を1周分ずらしてじっくり演出を見せる
-  let actualTarget=targetReelPos;
-  if(config.speedMode!=='fast'&&oneSet>0&&distance<(centerStep||ITEM_W)*0.5){
-    actualTarget=targetReelPos-oneSet;  // 1周分左にずらす（逆回転なし・同じスロットの前の周期）
-    if(actualTarget>reelPos){ actualTarget=targetReelPos; }  // 補正で右側になったら元に戻す
-  }
-  const actualDistance=Math.abs(actualTarget-reelPos);
   const actualStopDuration=Math.max(config.speedMode==='fast'?2500:5000, actualDistance>0?Math.ceil(2*actualDistance/spinSpeedPxPerSec):0);
   if(actualStopDuration<=0){ setRatePos(actualTarget); goToRateStopped(); return; }
   const from=reelPos;
@@ -2005,7 +2004,7 @@ function onRateStopped(rate){
 }
 
 /** 賞品リールのストリップを構築（該当レートの賞品のみ。ループ用に copies 周分並べる。在庫0は売り切れ表示）
- * MEGA等で賞品数が少ないとき、3周だと減速中に表示が途切れるため、フレーム幅に応じてコピー数を増やす */
+ * 減速中に最低 MIN_DECEL_TRAVEL_SLOTS 進むため、その分も含めてストリップ幅を確保する */
 function buildPrizeReelStrip(entries){
   const strip=document.getElementById('prizeReelStrip');
   const frameEl=document.getElementById('prizeReelFrame');
@@ -2013,7 +2012,8 @@ function buildPrizeReelStrip(entries){
   strip.innerHTML='';
   const fw=(frameEl&&frameEl.offsetWidth)||1200;
   const oneSetMin=entries.length*PRIZE_ITEM_W;
-  let copies=Math.max(3,oneSetMin<=0?3:Math.ceil(2+fw/oneSetMin));
+  const minDecelPx=MIN_DECEL_TRAVEL_SLOTS*PRIZE_ITEM_W;
+  let copies=Math.max(3,oneSetMin<=0?3:Math.ceil(2+fw/oneSetMin+minDecelPx/oneSetMin));
   if(entries.length<=4) copies=Math.max(copies,5);  // Chromebook等: 賞品少なめのときは余裕を持たせる
   if(strip.dataset) strip.dataset.prizeReelCopies=String(copies);
   for(let c=0;c<copies;c++){
@@ -2087,16 +2087,15 @@ function startPrizeReelSpin(rate,entries){
         while(oneSet>0&&finalTargetPos>startDecelPos) finalTargetPos-=oneSet;  // 逆回転せず：目標を現在より左に
         while(oneSet>0&&finalTargetPos+oneSet<=startDecelPos) finalTargetPos+=oneSet;  // 同じスロットで最も近い左側の周期を選択（移動距離最小化）
         if(window.__reelDebugStop){ console.log('[prize] stop',{startDecelPos,rawFinal,finalTargetPos,oneSet,wouldReverse:finalTargetPos>startDecelPos}); }
+        const minTravelPx=MIN_DECEL_TRAVEL_SLOTS*(centerStep||PRIZE_ITEM_W);
+        const targetBeforeMinTravel=finalTargetPos;
+        if(oneSet>0){
+          let d=Math.abs(finalTargetPos-startDecelPos);
+          while(d<minTravelPx){ finalTargetPos-=oneSet; d=Math.abs(finalTargetPos-startDecelPos); }  // 最低10スロットは回るように目標を左にずらす
+          if(finalTargetPos>startDecelPos){ finalTargetPos=targetBeforeMinTravel; }  // 逆回転にならないよう補正
+        }
         decelFrom=startDecelPos;
         lastTickIdx=Math.floor(-startDecelPos/itemStepForTick);
-        let finalTarget=finalTargetPos;
-        const distance=Math.abs(finalTarget-startDecelPos);
-        // 標準モード時のみ: 距離0や1スロット未満のときは減速演出がほぼ見えない→目標を1周分ずらしてじっくり演出を見せる
-        if(config.speedMode!=='fast'&&oneSet>0&&distance<(centerStep||PRIZE_ITEM_W)*0.5){
-          finalTarget=finalTargetPos-oneSet;
-          if(finalTarget>startDecelPos){ finalTarget=finalTargetPos; }
-          finalTargetPos=finalTarget;
-        }
         const actualDistance=Math.abs(finalTargetPos-startDecelPos);
         const spinSpeedPxPerSec=MAX_SPEED*60;
         decelStopDuration=Math.max(config.speedMode==='fast'?2500:5000, actualDistance>0?Math.ceil(2*actualDistance/spinSpeedPxPerSec):0);
@@ -4004,10 +4003,6 @@ function toggleSettings(){
   const btnOn=document.getElementById('btnRemainingDrawsOn'), btnOff=document.getElementById('btnRemainingDrawsOff');
   if(btnOn) btnOn.classList.toggle('active',config.showRemainingDraws!==false);
   if(btnOff) btnOff.classList.toggle('active',config.showRemainingDraws===false);
-  // 強制MEGA当選のボタン状態を更新
-  const btnMegaOn=document.getElementById('btnForceMegaOn'), btnMegaOff=document.getElementById('btnForceMegaOff');
-  if(btnMegaOn) btnMegaOn.classList.toggle('active',config.forceMegaWin===true);
-  if(btnMegaOff) btnMegaOff.classList.toggle('active',config.forceMegaWin!==true);
   // ツールバーのボタンも更新（高さを強制的に固定）
   const tbBtn=document.getElementById('tbRemainingDraws');
   if(tbBtn){
@@ -4651,14 +4646,6 @@ function setRemainingDrawsDisplay(show){
   updateRemainingDraws();
   saveToStorage();
   logPanel(`💾 設定を保存しました: 残り抽選回数カウンター: ${show?'ON':'OFF'}`);
-}
-function setForceMegaWin(on){
-  SE.commonClick();
-  config.forceMegaWin=!!on;
-  const btnOn=document.getElementById('btnForceMegaOn'), btnOff=document.getElementById('btnForceMegaOff');
-  if(btnOn) btnOn.classList.toggle('active',config.forceMegaWin);
-  if(btnOff) btnOff.classList.toggle('active',!config.forceMegaWin);
-  logPanel(config.forceMegaWin?'🎰 強制MEGA当選 ON（テスト用）':'🎰 強制MEGA当選 OFF');
 }
 
 // ツールバーから残り抽選回数カウンターをトグル
