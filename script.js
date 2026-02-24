@@ -928,6 +928,8 @@ let config={
 };
 const EMOJIS=['🎁','🏆','⭐','🎉','🌟','✨','🎀','🎈','🎊','🍀','💎','🎪','🎯','🎲','🔮','💫','🌈','🦋','🌸','🍭'];
 const ITEM_W=256;
+/** 賞品リール1アイテム幅（CSS .prize-reel-wrapper .reel-item 260px + margin 14*2）。計測失敗時のフォールバック用 */
+const PRIZE_ITEM_W=288;
 const FRAME_MS=1000/60;     // 60fps基準。これで「速度60」がリフレッシュレートに依存しない
 /** リール復旧処理を一括オフ（true で有効）。docs/REEL_RECOVERY_SPEC.md の全経路を無効にする */
 const REEL_RECOVERY_ENABLED=false;
@@ -1689,13 +1691,14 @@ function prizeReelStep(dir){
   if(strip.children.length===0) return;
   prizeReelStepping=true;
   SE.reelTick();
-  let centerStep=ITEM_W;
+  let centerStep=PRIZE_ITEM_W;
   const childCount=strip.children.length;
-  const uniqueCount=Math.max(1,Math.floor(childCount/3));  // 3周分並んでいる
+  const copies=Math.max(1,parseInt(strip.dataset&&strip.dataset.prizeReelCopies,10)||3);
+  const uniqueCount=Math.max(1,Math.floor(childCount/copies));
   if(childCount>=2){
     const r0=strip.children[0].getBoundingClientRect();
     const r1=strip.children[1].getBoundingClientRect();
-    centerStep=Math.abs((r1.left+r1.width/2)-(r0.left+r0.width/2))||ITEM_W;
+    centerStep=Math.abs((r1.left+r1.width/2)-(r0.left+r0.width/2))||PRIZE_ITEM_W;
   }
   const oneSet=uniqueCount*centerStep;
   let from=prizeReelPos;
@@ -1976,7 +1979,7 @@ function onRateStopped(rate){
   if(wrapper&&strip&&frameEl){
     buildPrizeReelStrip(entries);
     const fw=frameEl.offsetWidth;
-    strip.style.transform=`translateX(${-(fw/2-ITEM_W/2)+16}px)`;  // 初期位置
+    strip.style.transform=`translateX(${-(fw/2-PRIZE_ITEM_W/2)+16}px)`;  // 初期位置（賞品リールは PRIZE_ITEM_W）
     wrapper.classList.remove('prize-reel-empty','prize-reel-rate-mega','prize-reel-rate-super','prize-reel-rate-big');
     if(rate!=='normal') wrapper.classList.add('prize-reel-rate-'+rate);
     showPrizeReelNav(true);
@@ -1985,12 +1988,17 @@ function onRateStopped(rate){
   }
 }
 
-/** 賞品リールのストリップを構築（該当レートの賞品のみ。ループ用に3周分並べる。在庫0は売り切れ表示） */
+/** 賞品リールのストリップを構築（該当レートの賞品のみ。ループ用に copies 周分並べる。在庫0は売り切れ表示）
+ * MEGA等で賞品数が少ないとき、3周だと減速中に表示が途切れるため、フレーム幅に応じてコピー数を増やす */
 function buildPrizeReelStrip(entries){
   const strip=document.getElementById('prizeReelStrip');
+  const frameEl=document.getElementById('prizeReelFrame');
   if(!strip) return;
   strip.innerHTML='';
-  const copies=3;
+  const fw=(frameEl&&frameEl.offsetWidth)||1200;
+  const oneSetMin=entries.length*PRIZE_ITEM_W;
+  const copies=Math.max(3,oneSetMin<=0?3:Math.ceil(2+fw/oneSetMin));
+  if(strip.dataset) strip.dataset.prizeReelCopies=String(copies);
   for(let c=0;c<copies;c++){
     entries.forEach((e)=>{
       const slot={rank:e.rank,name:e.name,slotNo:e.poolIndex+1,imageUrl:e.imageUrl,soldOut:(e.count<=0)};
@@ -2022,18 +2030,20 @@ function startPrizeReelSpin(rate,entries){
   buildPrizeReelStrip(entries);
   const targetSlotIdx=entries.findIndex(e=>e.poolIndex===twoStageWinner.poolIndex);
   if(targetSlotIdx<0){ showWinnerTwoStage(); return; }
+  // レイアウト確定（Chromebook等で getBoundingClientRect が 0 になるのを防ぎ、ループずれで「黒く見える」を防止）
+  void frameEl.offsetHeight;
   const fw=frameEl.offsetWidth;
-  let firstCenter=ITEM_W/2, centerStep=ITEM_W;
+  let firstCenter=PRIZE_ITEM_W/2, centerStep=PRIZE_ITEM_W;
   if(strip.children.length>=2){
     const r0=strip.children[0].getBoundingClientRect();
     const r1=strip.children[1].getBoundingClientRect();
     const stripRect=strip.getBoundingClientRect();
     firstCenter=(r0.left+r0.width/2)-stripRect.left;
-    centerStep=Math.abs((r1.left+r1.width/2)-(r0.left+r0.width/2))||ITEM_W;
+    centerStep=Math.abs((r1.left+r1.width/2)-(r0.left+r0.width/2))||PRIZE_ITEM_W;
   }
   const oneSet=entries.length*centerStep;
   let targetReelPos=fw/2-firstCenter-targetSlotIdx*centerStep;
-  prizeReelPos=-(fw/2-ITEM_W/2)+16;
+  prizeReelPos=-(fw/2-PRIZE_ITEM_W/2)+16;
   if(oneSet>0&&prizeReelPos<-oneSet*2){ const n=Math.ceil(-prizeReelPos/oneSet); prizeReelPos+=n*oneSet; }
   strip.style.transform=`translateX(${prizeReelPos}px)`;
   const ACCEL_SEC=config.speedMode==='fast'?0.35:0.525;
@@ -2062,7 +2072,7 @@ function startPrizeReelSpin(rate,entries){
       let finalTarget=finalTargetPos;
       const distance=Math.abs(finalTarget-startDecelPos);
       // 標準モード時のみ: 距離0や1スロット未満のときは減速演出がほぼ見えない→目標を1周分ずらしてじっくり演出を見せる
-      if(config.speedMode!=='fast'&&oneSet>0&&distance<(centerStep||ITEM_W)*0.5){
+      if(config.speedMode!=='fast'&&oneSet>0&&distance<(centerStep||PRIZE_ITEM_W)*0.5){
         finalTarget=finalTargetPos-oneSet;
         if(finalTarget>startDecelPos){ finalTarget=finalTargetPos; }
         finalTargetPos=finalTarget;
