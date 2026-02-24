@@ -1,5 +1,5 @@
 // ===== アプリ版（左上に表示。更新のたびに 1.0.2 → 1.0.3 のように上げる） =====
-const SCRIPT_VERSION='1.1.03';
+const SCRIPT_VERSION='1.1.04';
 
 // ===== Audio System =====
 let audioCtx=null;
@@ -922,6 +922,7 @@ let config={
   slotAssignments:[],     // 自動配分結果 [{rank, name, imageUrl, slotNo}, ...] slotNo=1..N
   prizePicsDataUrls:{},    // id->dataUrl（重複を避け、画像を1枚分だけ保持）
   speedMode:'normal',reelOrder:'sequential',bgmFile:'',bgmVolume:50,showRemainingDraws:true,lightweightMode:false,
+  forceMegaWin:false,  // テスト用: true でレートリール停止時に常にMEGA当選（在庫ありの場合のみ）
   spreadsheetId:'',sheetRange:'A2:D',
   predictionEffectsEnabled:false,  // 流星・ワープ演出（未使用）
   reelStopMin:50, reelStopMax:100   // ストップ後「プラス何マスで止めるか」の範囲（B案: 既定を半分で短く）
@@ -993,6 +994,20 @@ function decrementPrizePool(poolIndex){
   if(poolIndex<0||poolIndex>=pool.length) return;
   const c=parseInt(pool[poolIndex].count,10)||0;
   pool[poolIndex].count=Math.max(0,c-1);
+}
+/** 履歴の抽選分を prizePool の在庫から差し引く（config/進捗読み込み後に呼ぶ。残り＋履歴が合計と一致するようにする） */
+function applyHistoryToPool(){
+  if(!USE_TWO_STAGE_REEL||!config.prizePool||!config.prizePool.length||historyEntries.length===0) return;
+  const drawnByKey={};
+  historyEntries.forEach(e=>{
+    const k=(String(e.name||'').trim()+'\0'+(e.rank||'normal'));
+    drawnByKey[k]=(drawnByKey[k]||0)+1;
+  });
+  config.prizePool.forEach(p=>{
+    const k=(String(p.name||'').trim()+'\0'+(p.rank||'normal'));
+    const drawn=drawnByKey[k]||0;
+    p.count=Math.max(0,(parseInt(p.count,10)||0)-drawn);
+  });
 }
 /** 賞品の在庫を1本戻す（履歴リセット時に復元用）。name+rankでマッチ */
 function incrementPrizePoolByNameRank(name,rank){
@@ -1876,7 +1891,8 @@ function stopRateSpin(){
   SE.stop();
   document.getElementById('reelFrame').classList.add('hot');
   document.getElementById('hitZone').classList.add('hot');
-  const pickedRate=pickRateRandom();
+  let pickedRate=config.forceMegaWin?(getRateStockTotals().mega>0?'mega':null):null;
+  if(pickedRate===null) pickedRate=pickRateRandom();
   if(!pickedRate){
     state='idle'; setBtnState('start'); showStockError(); logPanel('⚠ 在庫がありません',true); return;
   }
@@ -1997,7 +2013,8 @@ function buildPrizeReelStrip(entries){
   strip.innerHTML='';
   const fw=(frameEl&&frameEl.offsetWidth)||1200;
   const oneSetMin=entries.length*PRIZE_ITEM_W;
-  const copies=Math.max(3,oneSetMin<=0?3:Math.ceil(2+fw/oneSetMin));
+  let copies=Math.max(3,oneSetMin<=0?3:Math.ceil(2+fw/oneSetMin));
+  if(entries.length<=4) copies=Math.max(copies,5);  // Chromebook等: 賞品少なめのときは余裕を持たせる
   if(strip.dataset) strip.dataset.prizeReelCopies=String(copies);
   for(let c=0;c<copies;c++){
     entries.forEach((e)=>{
@@ -2030,102 +2047,107 @@ function startPrizeReelSpin(rate,entries){
   buildPrizeReelStrip(entries);
   const targetSlotIdx=entries.findIndex(e=>e.poolIndex===twoStageWinner.poolIndex);
   if(targetSlotIdx<0){ showWinnerTwoStage(); return; }
-  // レイアウト確定（Chromebook等で getBoundingClientRect が 0 になるのを防ぎ、ループずれで「黒く見える」を防止）
-  void frameEl.offsetHeight;
-  const fw=frameEl.offsetWidth;
-  let firstCenter=PRIZE_ITEM_W/2, centerStep=PRIZE_ITEM_W;
-  if(strip.children.length>=2){
-    const r0=strip.children[0].getBoundingClientRect();
-    const r1=strip.children[1].getBoundingClientRect();
-    const stripRect=strip.getBoundingClientRect();
-    firstCenter=(r0.left+r0.width/2)-stripRect.left;
-    centerStep=Math.abs((r1.left+r1.width/2)-(r0.left+r0.width/2))||PRIZE_ITEM_W;
-  }
-  const oneSet=entries.length*centerStep;
-  let targetReelPos=fw/2-firstCenter-targetSlotIdx*centerStep;
-  prizeReelPos=-(fw/2-PRIZE_ITEM_W/2)+16;
-  if(oneSet>0&&prizeReelPos<-oneSet*2){ const n=Math.ceil(-prizeReelPos/oneSet); prizeReelPos+=n*oneSet; }
-  strip.style.transform=`translateX(${prizeReelPos}px)`;
-  const ACCEL_SEC=config.speedMode==='fast'?0.35:0.525;
-  const ACCEL_FRAMES=Math.max(60,Math.round(ACCEL_SEC*60));
-  const MAX_SPEED=PRIZE_REEL_SPEED_MAX;
-  const itemStepForTick=centerStep;
-  let frame=0, lastTime=performance.now(), lastTickIdx=Math.floor(-prizeReelPos/itemStepForTick);
-  let phase='spin';
-  let startDecelPos=0, decelStartTime=0, finalTargetPos=0, decelFrom=0, decelStopDuration=0;
-  prizeReelDecelTrigger=()=>{
-    if(phase==='spin'){
-      phase='decel';
-      setBtnState('stopping');
-      SE.stop();
-      frameEl.classList.add('hot');
-      document.getElementById('prizeHitZone')?.classList.add('hot');
-      startDecelPos=prizeReelPos;
-      decelStartTime=performance.now();
-      finalTargetPos=targetReelPos;
-      const rawFinal=finalTargetPos;
-      while(oneSet>0&&finalTargetPos>startDecelPos) finalTargetPos-=oneSet;  // 逆回転せず：目標を現在より左に
-      while(oneSet>0&&finalTargetPos+oneSet<=startDecelPos) finalTargetPos+=oneSet;  // 同じスロットで最も近い左側の周期を選択（移動距離最小化）
-      if(window.__reelDebugStop){ console.log('[prize] stop',{startDecelPos,rawFinal,finalTargetPos,oneSet,wouldReverse:finalTargetPos>startDecelPos}); }
-      decelFrom=startDecelPos;
-      lastTickIdx=Math.floor(-startDecelPos/itemStepForTick);
-      let finalTarget=finalTargetPos;
-      const distance=Math.abs(finalTarget-startDecelPos);
-      // 標準モード時のみ: 距離0や1スロット未満のときは減速演出がほぼ見えない→目標を1周分ずらしてじっくり演出を見せる
-      if(config.speedMode!=='fast'&&oneSet>0&&distance<(centerStep||PRIZE_ITEM_W)*0.5){
-        finalTarget=finalTargetPos-oneSet;
-        if(finalTarget>startDecelPos){ finalTarget=finalTargetPos; }
-        finalTargetPos=finalTarget;
-      }
-      const actualDistance=Math.abs(finalTargetPos-startDecelPos);
-      const spinSpeedPxPerSec=MAX_SPEED*60;
-      decelStopDuration=Math.max(config.speedMode==='fast'?2500:5000, actualDistance>0?Math.ceil(2*actualDistance/spinSpeedPxPerSec):0);
-    }
-    prizeReelDecelTrigger=null;
-  };
-  function tick(now){
+  // Chromebook等: レイアウトが安定してから計測するため2フレーム遅延して開始（getBoundingClientRect のずれ防止）
+  function startAfterLayout(){
     if(state!=='prize_spinning') return;
-    const dt=Math.min(now-lastTime,50);
-    lastTime=now;
-    if(phase==='spin'){
-      frame++;
-      const p=Math.min(1,frame/ACCEL_FRAMES);
-      const speed=MAX_SPEED*p;
-      setReelSpeedDisplay(speed);
-      const move=Math.min(speed*(dt/FRAME_MS), oneSet*0.5);
-      prizeReelPos-=move;
-      if(oneSet>0&&prizeReelPos<-oneSet*2) prizeReelPos+=oneSet;
+    void frameEl.offsetHeight;
+    const fw=frameEl.offsetWidth;
+    let firstCenter=PRIZE_ITEM_W/2, centerStep=PRIZE_ITEM_W;
+    if(strip.children.length>=2){
+      const r0=strip.children[0].getBoundingClientRect();
+      const r1=strip.children[1].getBoundingClientRect();
+      const stripRect=strip.getBoundingClientRect();
+      firstCenter=(r0.left+r0.width/2)-stripRect.left;
+      const measured=Math.abs((r1.left+r1.width/2)-(r0.left+r0.width/2));
+      centerStep=(measured>1)?measured:PRIZE_ITEM_W;
+    }
+    const oneSet=entries.length*centerStep;
+    let targetReelPos=fw/2-firstCenter-targetSlotIdx*centerStep;
+    prizeReelPos=-(fw/2-PRIZE_ITEM_W/2)+16;
+    if(oneSet>0&&prizeReelPos<-oneSet*2){ const n=Math.ceil(-prizeReelPos/oneSet); prizeReelPos+=n*oneSet; }
+    strip.style.transform=`translateX(${prizeReelPos}px)`;
+    const ACCEL_SEC=config.speedMode==='fast'?0.35:0.525;
+    const ACCEL_FRAMES=Math.max(60,Math.round(ACCEL_SEC*60));
+    const MAX_SPEED=PRIZE_REEL_SPEED_MAX;
+    const itemStepForTick=centerStep;
+    let frame=0, lastTime=performance.now(), lastTickIdx=Math.floor(-prizeReelPos/itemStepForTick);
+    let phase='spin';
+    let startDecelPos=0, decelStartTime=0, finalTargetPos=0, decelFrom=0, decelStopDuration=0;
+    prizeReelDecelTrigger=()=>{
+      if(phase==='spin'){
+        phase='decel';
+        setBtnState('stopping');
+        SE.stop();
+        frameEl.classList.add('hot');
+        document.getElementById('prizeHitZone')?.classList.add('hot');
+        startDecelPos=prizeReelPos;
+        decelStartTime=performance.now();
+        finalTargetPos=targetReelPos;
+        const rawFinal=finalTargetPos;
+        while(oneSet>0&&finalTargetPos>startDecelPos) finalTargetPos-=oneSet;  // 逆回転せず：目標を現在より左に
+        while(oneSet>0&&finalTargetPos+oneSet<=startDecelPos) finalTargetPos+=oneSet;  // 同じスロットで最も近い左側の周期を選択（移動距離最小化）
+        if(window.__reelDebugStop){ console.log('[prize] stop',{startDecelPos,rawFinal,finalTargetPos,oneSet,wouldReverse:finalTargetPos>startDecelPos}); }
+        decelFrom=startDecelPos;
+        lastTickIdx=Math.floor(-startDecelPos/itemStepForTick);
+        let finalTarget=finalTargetPos;
+        const distance=Math.abs(finalTarget-startDecelPos);
+        // 標準モード時のみ: 距離0や1スロット未満のときは減速演出がほぼ見えない→目標を1周分ずらしてじっくり演出を見せる
+        if(config.speedMode!=='fast'&&oneSet>0&&distance<(centerStep||PRIZE_ITEM_W)*0.5){
+          finalTarget=finalTargetPos-oneSet;
+          if(finalTarget>startDecelPos){ finalTarget=finalTargetPos; }
+          finalTargetPos=finalTarget;
+        }
+        const actualDistance=Math.abs(finalTargetPos-startDecelPos);
+        const spinSpeedPxPerSec=MAX_SPEED*60;
+        decelStopDuration=Math.max(config.speedMode==='fast'?2500:5000, actualDistance>0?Math.ceil(2*actualDistance/spinSpeedPxPerSec):0);
+      }
+      prizeReelDecelTrigger=null;
+    };
+    function tick(now){
+      if(state!=='prize_spinning') return;
+      const dt=Math.min(now-lastTime,50);
+      lastTime=now;
+      if(phase==='spin'){
+        frame++;
+        const p=Math.min(1,frame/ACCEL_FRAMES);
+        const speed=MAX_SPEED*p;
+        setReelSpeedDisplay(speed);
+        const move=Math.min(speed*(dt/FRAME_MS), oneSet*0.5);
+        prizeReelPos-=move;
+        if(oneSet>0&&prizeReelPos<-oneSet*2) prizeReelPos+=oneSet;
+        const curIdx=Math.floor(-prizeReelPos/itemStepForTick);
+        if(curIdx!==lastTickIdx){ SE.reelTick(); lastTickIdx=curIdx; }
+        strip.style.transform=`translateX(${prizeReelPos}px)`;
+        reelAnim=requestAnimationFrame(tick);
+        return;
+      }
+      const t=Math.min(1,(now-decelStartTime)/decelStopDuration);
+      const eased=1-Math.pow(1-t,2);
+      let pos=decelFrom+(finalTargetPos-decelFrom)*eased;
+      prizeReelPos=Math.max(finalTargetPos,Math.min(pos,decelFrom));  // 絶対に右へ行かない（逆回転ゼロ）
       const curIdx=Math.floor(-prizeReelPos/itemStepForTick);
       if(curIdx!==lastTickIdx){ SE.reelTick(); lastTickIdx=curIdx; }
+      if(t>=1){
+        prizeReelPos=finalTargetPos;
+        strip.style.transform=`translateX(${prizeReelPos}px)`;
+        document.getElementById('speedLines').style.opacity='0';
+        setReelSpeedDisplay(0);
+        SE.confirm();
+        const prizeViewingMs=1000;
+        setTimeout(()=>{
+          state='showing';
+          showPrizeReelNav(false);
+          wrapper.classList.add('prize-reel-empty');
+          showWinnerTwoStage();
+        }, prizeViewingMs);
+        return;
+      }
       strip.style.transform=`translateX(${prizeReelPos}px)`;
       reelAnim=requestAnimationFrame(tick);
-      return;
     }
-    const t=Math.min(1,(now-decelStartTime)/decelStopDuration);
-    const eased=1-Math.pow(1-t,2);
-    let pos=decelFrom+(finalTargetPos-decelFrom)*eased;
-    prizeReelPos=Math.max(finalTargetPos,Math.min(pos,decelFrom));  // 絶対に右へ行かない（逆回転ゼロ）
-    const curIdx=Math.floor(-prizeReelPos/itemStepForTick);
-    if(curIdx!==lastTickIdx){ SE.reelTick(); lastTickIdx=curIdx; }
-    if(t>=1){
-      prizeReelPos=finalTargetPos;
-      strip.style.transform=`translateX(${prizeReelPos}px)`;
-      document.getElementById('speedLines').style.opacity='0';
-      setReelSpeedDisplay(0);
-      SE.confirm();
-      const prizeViewingMs=1000;
-      setTimeout(()=>{
-        state='showing';
-        showPrizeReelNav(false);
-        wrapper.classList.add('prize-reel-empty');
-        showWinnerTwoStage();
-      }, prizeViewingMs);
-      return;
-    }
-    strip.style.transform=`translateX(${prizeReelPos}px)`;
     reelAnim=requestAnimationFrame(tick);
   }
-  reelAnim=requestAnimationFrame(tick);
+  requestAnimationFrame(()=>{ requestAnimationFrame(startAfterLayout); });
 }
 
 /** 賞品リールを減速して停止 */
@@ -3605,11 +3627,11 @@ async function applyPoolFinal(pool,spreadsheetId){
   if(historyEntries.length>0 && USE_TWO_STAGE_REEL){
     const drawnByKey={};
     historyEntries.forEach(e=>{
-      const k=(String(e.name||'')+'\0'+(e.rank||'normal'));
+      const k=(String(e.name||'').trim()+'\0'+(e.rank||'normal'));
       drawnByKey[k]=(drawnByKey[k]||0)+1;
     });
     pool.forEach(p=>{
-      const k=(String(p.name||'')+'\0'+(p.rank||'normal'));
+      const k=(String(p.name||'').trim()+'\0'+(p.rank||'normal'));
       const drawn=drawnByKey[k]||0;
       p.count=Math.max(0,(parseInt(p.count,10)||0)-drawn);
     });
@@ -3982,6 +4004,10 @@ function toggleSettings(){
   const btnOn=document.getElementById('btnRemainingDrawsOn'), btnOff=document.getElementById('btnRemainingDrawsOff');
   if(btnOn) btnOn.classList.toggle('active',config.showRemainingDraws!==false);
   if(btnOff) btnOff.classList.toggle('active',config.showRemainingDraws===false);
+  // 強制MEGA当選のボタン状態を更新
+  const btnMegaOn=document.getElementById('btnForceMegaOn'), btnMegaOff=document.getElementById('btnForceMegaOff');
+  if(btnMegaOn) btnMegaOn.classList.toggle('active',config.forceMegaWin===true);
+  if(btnMegaOff) btnMegaOff.classList.toggle('active',config.forceMegaWin!==true);
   // ツールバーのボタンも更新（高さを強制的に固定）
   const tbBtn=document.getElementById('tbRemainingDraws');
   if(tbBtn){
@@ -4480,13 +4506,14 @@ async function loadFromConfigFile(){
     if(data.drawCount) drawCount=data.drawCount;
     if(Array.isArray(data.drawnSlotIndices)) drawnSlotIndices=new Set(data.drawnSlotIndices);
     if(data.historyEntries) historyEntries=data.historyEntries;
+    applyHistoryToPool();  // 残り＋履歴が合計と一致するよう在庫を反映
     saveToStorage(); saveProgress();
     document.getElementById('setBrand').value=config.brand;
     document.getElementById('setEvent').value=config.event;
     const btnOn=document.getElementById('btnRemainingDrawsOn'), btnOff=document.getElementById('btnRemainingDrawsOff');
     if(btnOn) btnOn.classList.toggle('active',config.showRemainingDraws!==false);
     if(btnOff) btnOff.classList.toggle('active',config.showRemainingDraws===false);
-    rebuildHistoryDOM(); buildPrizeGrid(); buildReel(); updateRemainingDraws(); buildSoundGrid();
+    rebuildHistoryDOM(); buildPrizeGrid(); buildReel(); updateRemainingDraws(); updateHistoryCount(); buildSoundGrid();
     document.getElementById('tbBGM').classList.toggle('on',soundConfig.bgm.enabled);
     if(!soundConfig.bgm.enabled) BGM.stop();
     logPanel('✅ config.json から設定を読み込みました');
@@ -4526,6 +4553,7 @@ function importConfig(){
     if(data.drawCount) drawCount=data.drawCount;
     if(Array.isArray(data.drawnSlotIndices)) drawnSlotIndices=new Set(data.drawnSlotIndices);
     if(data.historyEntries) historyEntries=data.historyEntries;
+    applyHistoryToPool();  // 残り＋履歴が合計と一致するよう在庫を反映
     saveToStorage();
     saveProgress();
     // Refresh settings UI
@@ -4623,6 +4651,14 @@ function setRemainingDrawsDisplay(show){
   updateRemainingDraws();
   saveToStorage();
   logPanel(`💾 設定を保存しました: 残り抽選回数カウンター: ${show?'ON':'OFF'}`);
+}
+function setForceMegaWin(on){
+  SE.commonClick();
+  config.forceMegaWin=!!on;
+  const btnOn=document.getElementById('btnForceMegaOn'), btnOff=document.getElementById('btnForceMegaOff');
+  if(btnOn) btnOn.classList.toggle('active',config.forceMegaWin);
+  if(btnOff) btnOff.classList.toggle('active',!config.forceMegaWin);
+  logPanel(config.forceMegaWin?'🎰 強制MEGA当選 ON（テスト用）':'🎰 強制MEGA当選 OFF');
 }
 
 // ツールバーから残り抽選回数カウンターをトグル
@@ -4850,8 +4886,10 @@ setTimeout(()=>{
 // Load draw progress (history, drawCount, drawnCounts)
 const _hadProgress=loadProgress();
 if(_hadProgress && historyEntries.length>0){
+  applyHistoryToPool();  // 残り本数＝在庫合計になるよう、履歴分を在庫から差し引く
   rebuildHistoryDOM();
   updateRemainingDraws();
+  updateHistoryCount();
   logPanel(`📋 履歴を復元 (${historyEntries.length}件)`);
 }
 
