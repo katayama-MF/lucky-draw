@@ -3735,7 +3735,7 @@ async function loadPrizesFromSheet(){
   SE.commonClick();
   const el=document.getElementById('sheetStatus');
   if(window.location.protocol==='file:'){
-    if(el){ el.textContent='⚠️ ファイルを直接開いています。ターミナルで「npm start」または「python3 -m http.server 3000」を実行し、http://localhost:3000 で開いてください'; el.style.color='#f87171'; }
+    if(el){ el.textContent='⚠️ ファイルを直接開いています。lucky-draw フォルダで「node server.js」を実行し、ブラウザで http://localhost:8080 を開いてください（ChromebookのLinuxでも同様）'; el.style.color='#f87171'; }
     return;
   }
   if(el){ el.textContent='読み込み中...'; el.style.color='var(--text-dim)'; }
@@ -3747,7 +3747,7 @@ async function loadPrizesFromSheet(){
     logPanel('📊 スプレッドシートから賞品プールを読み込みました');
     setTimeout(()=>{ buildPrizeGrid(); if(USE_TWO_STAGE_REEL) buildRateReel(); else buildReel(); },80);
   } else {
-    if(el){ el.textContent='取得失敗。ターミナルで npm start を実行し、http://localhost:3000 で開いてください'; el.style.color='#f87171'; }
+    if(el){ el.textContent='取得失敗。lucky-draw フォルダで node server.js を実行し、http://localhost:8080 で開いてください'; el.style.color='#f87171'; }
   }
 }
 
