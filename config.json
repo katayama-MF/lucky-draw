@@ -22,7 +22,7 @@
     },
     {
       "rank": "super",
-      "name": "マグナ・OOPARTS \n好きなレジェンズ1体",
+      "name": "金のベルテックス宝箱",
       "count": 25,
       "imageUrl": "prize_pics:LD_0004"
     },
@@ -239,15 +239,15 @@
       "slotNo": 2
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 3
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 4
     },
     {
@@ -275,15 +275,15 @@
       "slotNo": 8
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nクフ王 1体",
+      "imageUrl": "prize_pics:LD_0006",
       "slotNo": 9
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nテスラ 1体",
-      "imageUrl": "prize_pics:LD_0008",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 10
     },
     {
@@ -293,9 +293,9 @@
       "slotNo": 11
     },
     {
-      "rank": "mega",
-      "name": "ベルテックス静岡\nSpecialグッズ",
-      "imageUrl": "prize_pics:LD_0001",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 12
     },
     {
@@ -311,15 +311,15 @@
       "slotNo": 14
     },
     {
-      "rank": "big",
-      "name": "おしりシール \n竹パンダ",
-      "imageUrl": "prize_pics:LD_0022",
-      "slotNo": 15
-    },
-    {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 15
+    },
+    {
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nミント 1体",
+      "imageUrl": "prize_pics:LD_0007",
       "slotNo": 16
     },
     {
@@ -347,21 +347,21 @@
       "slotNo": 20
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nクフ王 1体",
-      "imageUrl": "prize_pics:LD_0006",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 21
-    },
-    {
-      "rank": "super",
-      "name": "Amazonギフト券 \n1000円",
-      "imageUrl": "prize_pics:LD_0010",
-      "slotNo": 22
     },
     {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 22
+    },
+    {
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 23
     },
     {
@@ -371,9 +371,9 @@
       "slotNo": 24
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 25
     },
     {
@@ -401,15 +401,15 @@
       "slotNo": 29
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 30
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nミント 1体",
-      "imageUrl": "prize_pics:LD_0007",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 31
     },
     {
@@ -438,8 +438,8 @@
     },
     {
       "rank": "super",
-      "name": "マグナ・OOPARTS \nハンニバル 1体",
-      "imageUrl": "prize_pics:LD_0005",
+      "name": "金のベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0004",
       "slotNo": 36
     },
     {
@@ -449,27 +449,27 @@
       "slotNo": 37
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 38
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "big",
+      "name": "どんぶりシール",
+      "imageUrl": "prize_pics:LD_0028",
       "slotNo": 39
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nミント 1体",
-      "imageUrl": "prize_pics:LD_0007",
-      "slotNo": 40
-    },
-    {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 40
+    },
+    {
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nクフ王 1体",
+      "imageUrl": "prize_pics:LD_0006",
       "slotNo": 41
     },
     {
@@ -485,9 +485,9 @@
       "slotNo": 43
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 44
     },
     {
@@ -497,9 +497,9 @@
       "slotNo": 45
     },
     {
-      "rank": "big",
-      "name": "Rosopann 透明ぷっくりシール",
-      "imageUrl": "prize_pics:LD_0037",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 46
     },
     {
@@ -521,15 +521,15 @@
       "slotNo": 49
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
-      "slotNo": 50
-    },
-    {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 50
+    },
+    {
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nミント 1体",
+      "imageUrl": "prize_pics:LD_0007",
       "slotNo": 51
     },
     {
@@ -539,21 +539,21 @@
       "slotNo": 52
     },
     {
-      "rank": "super",
-      "name": "Amazonギフト券 \n1000円",
-      "imageUrl": "prize_pics:LD_0010",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 53
     },
     {
       "rank": "super",
-      "name": "ぷくぷくシール スヌーピー \nピンクラベル",
-      "imageUrl": "prize_pics:LD_0014",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 54
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nテスラ 1体",
+      "imageUrl": "prize_pics:LD_0008",
       "slotNo": 55
     },
     {
@@ -569,15 +569,15 @@
       "slotNo": 57
     },
     {
-      "rank": "super",
-      "name": "ぷくぷくシール スヌーピー \nブルーラベル",
-      "imageUrl": "prize_pics:LD_0015",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 58
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nミント 1体",
-      "imageUrl": "prize_pics:LD_0007",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 59
     },
     {
@@ -599,9 +599,9 @@
       "slotNo": 62
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \n好きなレジェンズ1体",
-      "imageUrl": "prize_pics:LD_0004",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 63
     },
     {
@@ -624,8 +624,8 @@
     },
     {
       "rank": "super",
-      "name": "マグナ・OOPARTS \nハンニバル 1体",
-      "imageUrl": "prize_pics:LD_0005",
+      "name": "金のベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0004",
       "slotNo": 67
     },
     {
@@ -642,8 +642,8 @@
     },
     {
       "rank": "super",
-      "name": "タイルシール \nシナモン＆ポムプリなど",
-      "imageUrl": "prize_pics:LD_0018",
+      "name": "ぷくぷくシール スヌーピー \nピンクラベル",
+      "imageUrl": "prize_pics:LD_0014",
       "slotNo": 70
     },
     {
@@ -665,9 +665,9 @@
       "slotNo": 73
     },
     {
-      "rank": "super",
-      "name": "ENJOY Sticker Set クロミ 水色",
-      "imageUrl": "prize_pics:LD_0033",
+      "rank": "mega",
+      "name": "ベルテックス静岡\nSpecialグッズ",
+      "imageUrl": "prize_pics:LD_0001",
       "slotNo": 74
     },
     {
@@ -683,15 +683,15 @@
       "slotNo": 76
     },
     {
-      "rank": "big",
-      "name": "おしりシール \nしろくま",
-      "imageUrl": "prize_pics:LD_0023",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 77
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nテスラ 1体",
-      "imageUrl": "prize_pics:LD_0008",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 78
     },
     {
@@ -707,15 +707,15 @@
       "slotNo": 80
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nテスラ 1体",
-      "imageUrl": "prize_pics:LD_0008",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 81
     },
     {
-      "rank": "mega",
-      "name": "マグナとふしぎの少女\nオリジナルグッズ",
-      "imageUrl": "prize_pics:LD_0002",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nテスラ 1体",
+      "imageUrl": "prize_pics:LD_0008",
       "slotNo": 82
     },
     {
@@ -725,15 +725,15 @@
       "slotNo": 83
     },
     {
-      "rank": "big",
-      "name": "ドバイチョコ",
-      "imageUrl": "prize_pics:LD_0020",
-      "slotNo": 84
-    },
-    {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 84
+    },
+    {
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nクフ王 1体",
+      "imageUrl": "prize_pics:LD_0006",
       "slotNo": 85
     },
     {
@@ -755,15 +755,15 @@
       "slotNo": 88
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nテスラ 1体",
+      "imageUrl": "prize_pics:LD_0008",
       "slotNo": 89
     },
     {
-      "rank": "mega",
-      "name": "マグナとふしぎの少女\nオリジナルグッズ",
-      "imageUrl": "prize_pics:LD_0002",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 90
     },
     {
@@ -773,15 +773,15 @@
       "slotNo": 91
     },
     {
-      "rank": "mega",
-      "name": "マグナとふしぎの少女\nオリジナルグッズ",
-      "imageUrl": "prize_pics:LD_0002",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nミント 1体",
+      "imageUrl": "prize_pics:LD_0007",
       "slotNo": 92
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 93
     },
     {
@@ -803,33 +803,33 @@
       "slotNo": 96
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 97
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 98
+    },
+    {
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nクフ王 1体",
+      "imageUrl": "prize_pics:LD_0006",
+      "slotNo": 99
     },
     {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 99
-    },
-    {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 100
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 101
     },
     {
@@ -845,9 +845,9 @@
       "slotNo": 103
     },
     {
-      "rank": "super",
-      "name": "ぷくぷくシール スヌーピー \n紫ラベル",
-      "imageUrl": "prize_pics:LD_0012",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 104
     },
     {
@@ -857,33 +857,33 @@
       "slotNo": 105
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "金のベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0004",
       "slotNo": 106
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nハンニバル 1体",
-      "imageUrl": "prize_pics:LD_0005",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 107
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nハンニバル 1体",
-      "imageUrl": "prize_pics:LD_0005",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 108
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nテスラ 1体",
+      "imageUrl": "prize_pics:LD_0008",
       "slotNo": 109
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nミント 1体",
+      "imageUrl": "prize_pics:LD_0007",
       "slotNo": 110
     },
     {
@@ -911,9 +911,9 @@
       "slotNo": 114
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 115
     },
     {
@@ -935,15 +935,15 @@
       "slotNo": 118
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "big",
+      "name": "これってタイルシール？",
+      "imageUrl": "prize_pics:LD_0025",
       "slotNo": 119
     },
     {
       "rank": "super",
-      "name": "マグナ・OOPARTS \nテスラ 1体",
-      "imageUrl": "prize_pics:LD_0008",
+      "name": "金のベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0004",
       "slotNo": 120
     },
     {
@@ -959,21 +959,21 @@
       "slotNo": 122
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nミント 1体",
+      "imageUrl": "prize_pics:LD_0007",
       "slotNo": 123
     },
     {
-      "rank": "big",
-      "name": "すしシール",
-      "imageUrl": "prize_pics:LD_0027",
-      "slotNo": 124
-    },
-    {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 124
+    },
+    {
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 125
     },
     {
@@ -983,15 +983,15 @@
       "slotNo": 126
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "big",
+      "name": "おしりシール \n竹パンダ",
+      "imageUrl": "prize_pics:LD_0022",
       "slotNo": 127
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 128
     },
     {
@@ -1001,9 +1001,9 @@
       "slotNo": 129
     },
     {
-      "rank": "big",
-      "name": "おしりシール \n居眠りパンダ",
-      "imageUrl": "prize_pics:LD_0021",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 130
     },
     {
@@ -1013,9 +1013,9 @@
       "slotNo": 131
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nハンニバル 1体",
+      "imageUrl": "prize_pics:LD_0005",
       "slotNo": 132
     },
     {
@@ -1050,20 +1050,20 @@
     },
     {
       "rank": "super",
-      "name": "Amazonギフト券 \n1000円",
-      "imageUrl": "prize_pics:LD_0010",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 138
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nクフ王 1体",
-      "imageUrl": "prize_pics:LD_0006",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 139
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 140
     },
     {
@@ -1091,15 +1091,15 @@
       "slotNo": 144
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nミント 1体",
+      "imageUrl": "prize_pics:LD_0007",
       "slotNo": 145
     },
     {
-      "rank": "big",
-      "name": "肉球シール\nどれか1つ",
-      "imageUrl": "prize_pics:LD_0024",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 146
     },
     {
@@ -1109,9 +1109,9 @@
       "slotNo": 147
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "mega",
+      "name": "マグナとふしぎの少女\nオリジナルグッズ",
+      "imageUrl": "prize_pics:LD_0002",
       "slotNo": 148
     },
     {
@@ -1128,8 +1128,8 @@
     },
     {
       "rank": "super",
-      "name": "マグナ・OOPARTS \n好きなレジェンズ1体",
-      "imageUrl": "prize_pics:LD_0004",
+      "name": "マグナ・OOPARTS \nクフ王 1体",
+      "imageUrl": "prize_pics:LD_0006",
       "slotNo": 151
     },
     {
@@ -1163,9 +1163,9 @@
       "slotNo": 156
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nミント 1体",
+      "imageUrl": "prize_pics:LD_0007",
       "slotNo": 157
     },
     {
@@ -1175,9 +1175,9 @@
       "slotNo": 158
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 159
     },
     {
@@ -1187,9 +1187,9 @@
       "slotNo": 160
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nクフ王 1体",
+      "imageUrl": "prize_pics:LD_0006",
       "slotNo": 161
     },
     {
@@ -1199,15 +1199,15 @@
       "slotNo": 162
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "mega",
+      "name": "マグナとふしぎの少女\nオリジナルグッズ",
+      "imageUrl": "prize_pics:LD_0002",
       "slotNo": 163
     },
     {
-      "rank": "big",
-      "name": "おしりシール \n竹パンダ",
-      "imageUrl": "prize_pics:LD_0022",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 164
     },
     {
@@ -1241,39 +1241,39 @@
       "slotNo": 169
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nミント 1体",
+      "imageUrl": "prize_pics:LD_0007",
       "slotNo": 170
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "金のベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0004",
       "slotNo": 171
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nクフ王 1体",
+      "imageUrl": "prize_pics:LD_0006",
       "slotNo": 172
-    },
-    {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 173
     },
     {
       "rank": "super",
       "name": "ベルテックス宝箱",
       "imageUrl": "prize_pics:LD_0009",
+      "slotNo": 173
+    },
+    {
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 174
     },
     {
-      "rank": "big",
-      "name": "ドバイチョコ",
-      "imageUrl": "prize_pics:LD_0020",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 175
     },
     {
@@ -1295,9 +1295,9 @@
       "slotNo": 178
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "金のベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0004",
       "slotNo": 179
     },
     {
@@ -1313,9 +1313,9 @@
       "slotNo": 181
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 182
     },
     {
@@ -1325,9 +1325,9 @@
       "slotNo": 183
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 184
     },
     {
@@ -1337,15 +1337,15 @@
       "slotNo": 185
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "mega",
+      "name": "マグナとふしぎの少女\nオリジナルグッズ",
+      "imageUrl": "prize_pics:LD_0002",
       "slotNo": 186
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 187
     },
     {
@@ -1355,39 +1355,39 @@
       "slotNo": 188
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 189
     },
     {
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
+      "slotNo": 190
+    },
+    {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 190
+      "slotNo": 191
+    },
+    {
+      "rank": "mega",
+      "name": "マグナとふしぎの少女\nオリジナルグッズ",
+      "imageUrl": "prize_pics:LD_0002",
+      "slotNo": 192
     },
     {
       "rank": "super",
       "name": "ベルテックス宝箱",
       "imageUrl": "prize_pics:LD_0009",
-      "slotNo": 191
-    },
-    {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 192
-    },
-    {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 193
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \n好きなレジェンズ1体",
-      "imageUrl": "prize_pics:LD_0004",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 194
     },
     {
@@ -1397,9 +1397,9 @@
       "slotNo": 195
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nハンニバル 1体",
-      "imageUrl": "prize_pics:LD_0005",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 196
     },
     {
@@ -1409,21 +1409,21 @@
       "slotNo": 197
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nクフ王 1体",
-      "imageUrl": "prize_pics:LD_0006",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 198
     },
     {
       "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "name": "金のベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0004",
       "slotNo": 199
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nテスラ 1体",
+      "imageUrl": "prize_pics:LD_0008",
       "slotNo": 200
     },
     {
@@ -1439,9 +1439,9 @@
       "slotNo": 202
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nミント 1体",
+      "imageUrl": "prize_pics:LD_0007",
       "slotNo": 203
     },
     {
@@ -1469,21 +1469,21 @@
       "slotNo": 207
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "金のベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0004",
       "slotNo": 208
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nハンニバル 1体",
-      "imageUrl": "prize_pics:LD_0005",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 209
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nハンニバル 1体",
-      "imageUrl": "prize_pics:LD_0005",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 210
     },
     {
@@ -1493,21 +1493,21 @@
       "slotNo": 211
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 212
-    },
-    {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 213
-    },
-    {
       "rank": "super",
       "name": "ベルテックス宝箱",
       "imageUrl": "prize_pics:LD_0009",
+      "slotNo": 212
+    },
+    {
+      "rank": "super",
+      "name": "金のベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0004",
+      "slotNo": 213
+    },
+    {
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 214
     },
     {
@@ -1529,9 +1529,9 @@
       "slotNo": 217
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 218
     },
     {
@@ -1547,9 +1547,9 @@
       "slotNo": 220
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nハンニバル 1体",
-      "imageUrl": "prize_pics:LD_0005",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 221
     },
     {
@@ -1583,9 +1583,9 @@
       "slotNo": 226
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nミント 1体",
+      "imageUrl": "prize_pics:LD_0007",
       "slotNo": 227
     },
     {
@@ -1596,8 +1596,8 @@
     },
     {
       "rank": "super",
-      "name": "マグナ・OOPARTS \nテスラ 1体",
-      "imageUrl": "prize_pics:LD_0008",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 229
     },
     {
@@ -1607,27 +1607,27 @@
       "slotNo": 230
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 231
+    },
+    {
+      "rank": "super",
+      "name": "ぷくぷくシール スヌーピー \n赤ラベル",
+      "imageUrl": "prize_pics:LD_0013",
+      "slotNo": 232
     },
     {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 232
-    },
-    {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \n好きなレジェンズ1体",
-      "imageUrl": "prize_pics:LD_0004",
       "slotNo": 233
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 234
     },
     {
@@ -1637,33 +1637,33 @@
       "slotNo": 235
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 236
-    },
-    {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 237
-    },
-    {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nテスラ 1体",
-      "imageUrl": "prize_pics:LD_0008",
-      "slotNo": 238
-    },
-    {
       "rank": "super",
       "name": "マグナ・OOPARTS \nクフ王 1体",
       "imageUrl": "prize_pics:LD_0006",
-      "slotNo": 239
+      "slotNo": 236
     },
     {
       "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "name": "マグナ・OOPARTS \nハンニバル 1体",
+      "imageUrl": "prize_pics:LD_0005",
+      "slotNo": 237
+    },
+    {
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 238
+    },
+    {
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 239
+    },
+    {
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 240
     },
     {
@@ -1673,15 +1673,15 @@
       "slotNo": 241
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nハンニバル 1体",
+      "imageUrl": "prize_pics:LD_0005",
       "slotNo": 242
     },
     {
       "rank": "super",
-      "name": "マグナ・OOPARTS \nハンニバル 1体",
-      "imageUrl": "prize_pics:LD_0005",
+      "name": "金のベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0004",
       "slotNo": 243
     },
     {
@@ -1703,9 +1703,9 @@
       "slotNo": 246
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nミント 1体",
+      "imageUrl": "prize_pics:LD_0007",
       "slotNo": 247
     },
     {
@@ -1721,9 +1721,9 @@
       "slotNo": 249
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nハンニバル 1体",
+      "imageUrl": "prize_pics:LD_0005",
       "slotNo": 250
     },
     {
@@ -1733,21 +1733,21 @@
       "slotNo": 251
     },
     {
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 252
+    },
+    {
       "rank": "super",
       "name": "ベルテックス宝箱",
       "imageUrl": "prize_pics:LD_0009",
-      "slotNo": 252
+      "slotNo": 253
     },
     {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 253
-    },
-    {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 254
     },
     {
@@ -1763,9 +1763,9 @@
       "slotNo": 256
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 257
     },
     {
@@ -1787,15 +1787,15 @@
       "slotNo": 260
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "金のベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0004",
       "slotNo": 261
     },
     {
       "rank": "super",
-      "name": "マグナ・OOPARTS \nクフ王 1体",
-      "imageUrl": "prize_pics:LD_0006",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 262
     },
     {
@@ -1805,15 +1805,15 @@
       "slotNo": 263
     },
     {
-      "rank": "mega",
-      "name": "ベルテックス静岡\nSpecialグッズ",
-      "imageUrl": "prize_pics:LD_0001",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 264
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 265
     },
     {
@@ -1829,9 +1829,9 @@
       "slotNo": 267
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 268
     },
     {
@@ -1871,15 +1871,15 @@
       "slotNo": 274
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nテスラ 1体",
-      "imageUrl": "prize_pics:LD_0008",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 275
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nミント 1体",
-      "imageUrl": "prize_pics:LD_0007",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 276
     },
     {
@@ -1889,15 +1889,15 @@
       "slotNo": 277
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 278
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "Amazonギフト券 \n1000円",
+      "imageUrl": "prize_pics:LD_0010",
       "slotNo": 279
     },
     {
@@ -1913,9 +1913,9 @@
       "slotNo": 281
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nハンニバル 1体",
+      "imageUrl": "prize_pics:LD_0005",
       "slotNo": 282
     },
     {
@@ -1925,15 +1925,15 @@
       "slotNo": 283
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "big",
+      "name": "ドバイチョコ",
+      "imageUrl": "prize_pics:LD_0020",
       "slotNo": 284
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 285
     },
     {
@@ -1949,15 +1949,15 @@
       "slotNo": 287
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
-      "slotNo": 288
-    },
-    {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 288
+    },
+    {
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nミント 1体",
+      "imageUrl": "prize_pics:LD_0007",
       "slotNo": 289
     },
     {
@@ -1967,9 +1967,9 @@
       "slotNo": 290
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ぷくぷくシール スヌーピー \nピンクラベル",
+      "imageUrl": "prize_pics:LD_0014",
       "slotNo": 291
     },
     {
@@ -1979,27 +1979,27 @@
       "slotNo": 292
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nミント 1体",
-      "imageUrl": "prize_pics:LD_0007",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 293
     },
     {
       "rank": "super",
-      "name": "マグナ・OOPARTS \n好きなレジェンズ1体",
-      "imageUrl": "prize_pics:LD_0004",
+      "name": "マグナ・OOPARTS \nミント 1体",
+      "imageUrl": "prize_pics:LD_0007",
       "slotNo": 294
     },
     {
       "rank": "super",
-      "name": "マグナ・OOPARTS \n好きなレジェンズ1体",
-      "imageUrl": "prize_pics:LD_0004",
+      "name": "マグナ・OOPARTS \nミント 1体",
+      "imageUrl": "prize_pics:LD_0007",
       "slotNo": 295
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \n好きなレジェンズ1体",
-      "imageUrl": "prize_pics:LD_0004",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 296
     },
     {
@@ -2009,27 +2009,27 @@
       "slotNo": 297
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nテスラ 1体",
-      "imageUrl": "prize_pics:LD_0008",
-      "slotNo": 298
-    },
-    {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nミント 1体",
-      "imageUrl": "prize_pics:LD_0007",
-      "slotNo": 299
-    },
-    {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 300
+      "slotNo": 298
     },
     {
       "rank": "super",
       "name": "ベルテックス宝箱",
       "imageUrl": "prize_pics:LD_0009",
+      "slotNo": 299
+    },
+    {
+      "rank": "super",
+      "name": "ボンドロシール \nハンギョドン",
+      "imageUrl": "prize_pics:LD_0011",
+      "slotNo": 300
+    },
+    {
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 301
     },
     {
@@ -2039,9 +2039,9 @@
       "slotNo": 302
     },
     {
-      "rank": "mega",
-      "name": "マグナとふしぎの少女\nオリジナルグッズ",
-      "imageUrl": "prize_pics:LD_0002",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 303
     },
     {
@@ -2051,9 +2051,9 @@
       "slotNo": 304
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 305
     },
     {
@@ -2093,21 +2093,21 @@
       "slotNo": 311
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 312
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ぷくぷくシール スヌーピー \nブルーラベル",
+      "imageUrl": "prize_pics:LD_0015",
       "slotNo": 313
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \n好きなレジェンズ1体",
-      "imageUrl": "prize_pics:LD_0004",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 314
     },
     {
@@ -2123,21 +2123,21 @@
       "slotNo": 316
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nテスラ 1体",
+      "imageUrl": "prize_pics:LD_0008",
       "slotNo": 317
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nテスラ 1体",
+      "imageUrl": "prize_pics:LD_0008",
       "slotNo": 318
     },
     {
-      "rank": "super",
-      "name": "Amazonギフト券 \n1000円",
-      "imageUrl": "prize_pics:LD_0010",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 319
     },
     {
@@ -2147,9 +2147,9 @@
       "slotNo": 320
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 321
     },
     {
@@ -2177,15 +2177,15 @@
       "slotNo": 325
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "Amazonギフト券 \n1000円",
+      "imageUrl": "prize_pics:LD_0010",
       "slotNo": 326
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ぷくぷくシール スヌーピー \n赤ラベル",
+      "imageUrl": "prize_pics:LD_0013",
       "slotNo": 327
     },
     {
@@ -2195,15 +2195,15 @@
       "slotNo": 328
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "mega",
+      "name": "ベルテックス静岡\nSpecialグッズ",
+      "imageUrl": "prize_pics:LD_0001",
       "slotNo": 329
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nハンニバル 1体",
-      "imageUrl": "prize_pics:LD_0005",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 330
     },
     {
@@ -2214,8 +2214,8 @@
     },
     {
       "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "name": "Amazonギフト券 \n1000円",
+      "imageUrl": "prize_pics:LD_0010",
       "slotNo": 332
     },
     {
@@ -2225,9 +2225,9 @@
       "slotNo": 333
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "金のベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0004",
       "slotNo": 334
     },
     {
@@ -2255,21 +2255,21 @@
       "slotNo": 338
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 339
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 340
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 341
     },
     {
@@ -2297,9 +2297,9 @@
       "slotNo": 345
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nハンニバル 1体",
-      "imageUrl": "prize_pics:LD_0005",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 346
     },
     {
@@ -2316,8 +2316,8 @@
     },
     {
       "rank": "super",
-      "name": "ぷくぷくシール スヌーピー \n紫ラベル",
-      "imageUrl": "prize_pics:LD_0012",
+      "name": "タイルシール \nモンチッチ",
+      "imageUrl": "prize_pics:LD_0019",
       "slotNo": 349
     },
     {
@@ -2327,9 +2327,9 @@
       "slotNo": 350
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 351
     },
     {
@@ -2340,8 +2340,8 @@
     },
     {
       "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "name": "マグナ・OOPARTS \nミント 1体",
+      "imageUrl": "prize_pics:LD_0007",
       "slotNo": 353
     },
     {
@@ -2357,15 +2357,15 @@
       "slotNo": 355
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nミント 1体",
+      "imageUrl": "prize_pics:LD_0007",
       "slotNo": 356
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "big",
+      "name": "Rosopann 透明ぷっくりシール",
+      "imageUrl": "prize_pics:LD_0037",
       "slotNo": 357
     },
     {
@@ -2387,15 +2387,15 @@
       "slotNo": 360
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
-      "slotNo": 361
-    },
-    {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 361
+    },
+    {
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nクフ王 1体",
+      "imageUrl": "prize_pics:LD_0006",
       "slotNo": 362
     },
     {
@@ -2435,9 +2435,9 @@
       "slotNo": 368
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ぷくぷくシール スヌーピー \n紫ラベル",
+      "imageUrl": "prize_pics:LD_0012",
       "slotNo": 369
     },
     {
@@ -2447,9 +2447,9 @@
       "slotNo": 370
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "金のベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0004",
       "slotNo": 371
     },
     {
@@ -2471,27 +2471,27 @@
       "slotNo": 374
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 375
-    },
-    {
       "rank": "super",
       "name": "マグナ・OOPARTS \nクフ王 1体",
       "imageUrl": "prize_pics:LD_0006",
-      "slotNo": 376
+      "slotNo": 375
     },
     {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 377
+      "slotNo": 376
     },
     {
       "rank": "super",
-      "name": "マグナ・OOPARTS \nハンニバル 1体",
-      "imageUrl": "prize_pics:LD_0005",
+      "name": "マグナ・OOPARTS \nテスラ 1体",
+      "imageUrl": "prize_pics:LD_0008",
+      "slotNo": 377
+    },
+    {
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 378
     },
     {
@@ -2507,9 +2507,9 @@
       "slotNo": 380
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 381
     },
     {
@@ -2537,15 +2537,15 @@
       "slotNo": 385
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "金のベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0004",
       "slotNo": 386
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "タイルシール \n日焼けキティ＆クロミ",
+      "imageUrl": "prize_pics:LD_0017",
       "slotNo": 387
     },
     {
@@ -2555,33 +2555,33 @@
       "slotNo": 388
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 389
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nハンニバル 1体",
-      "imageUrl": "prize_pics:LD_0005",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 390
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nハンニバル 1体",
-      "imageUrl": "prize_pics:LD_0005",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 391
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nテスラ 1体",
-      "imageUrl": "prize_pics:LD_0008",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 392
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nクフ王 1体",
-      "imageUrl": "prize_pics:LD_0006",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 393
     },
     {
@@ -2591,27 +2591,27 @@
       "slotNo": 394
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nハンニバル 1体",
-      "imageUrl": "prize_pics:LD_0005",
-      "slotNo": 395
-    },
-    {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 396
+      "slotNo": 395
     },
     {
       "rank": "super",
-      "name": "マグナ・OOPARTS \n好きなレジェンズ1体",
-      "imageUrl": "prize_pics:LD_0004",
+      "name": "タイルシール \n日焼けキティ",
+      "imageUrl": "prize_pics:LD_0016",
+      "slotNo": 396
+    },
+    {
+      "rank": "big",
+      "name": "ペラペラシール\nどれか1つ",
+      "imageUrl": "prize_pics:LD_0026",
       "slotNo": 397
     },
     {
       "rank": "super",
-      "name": "マグナ・OOPARTS \nミント 1体",
-      "imageUrl": "prize_pics:LD_0007",
+      "name": "マグナ・OOPARTS \nクフ王 1体",
+      "imageUrl": "prize_pics:LD_0006",
       "slotNo": 398
     },
     {
@@ -2627,9 +2627,9 @@
       "slotNo": 400
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nハンニバル 1体",
-      "imageUrl": "prize_pics:LD_0005",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 401
     },
     {
@@ -2645,27 +2645,27 @@
       "slotNo": 403
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nクフ王 1体",
+      "imageUrl": "prize_pics:LD_0006",
       "slotNo": 404
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 405
-    },
-    {
-      "rank": "super",
-      "name": "ボンドロシール \nハンギョドン",
-      "imageUrl": "prize_pics:LD_0011",
-      "slotNo": 406
     },
     {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 406
+    },
+    {
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nクフ王 1体",
+      "imageUrl": "prize_pics:LD_0006",
       "slotNo": 407
     },
     {
@@ -2675,9 +2675,9 @@
       "slotNo": 408
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nハンニバル 1体",
+      "imageUrl": "prize_pics:LD_0005",
       "slotNo": 409
     },
     {
@@ -2747,15 +2747,15 @@
       "slotNo": 420
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nハンニバル 1体",
+      "imageUrl": "prize_pics:LD_0005",
       "slotNo": 421
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 422
     },
     {
@@ -2765,9 +2765,9 @@
       "slotNo": 423
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ぷくぷくシール スヌーピー \nピンクラベル",
+      "imageUrl": "prize_pics:LD_0014",
       "slotNo": 424
     },
     {
@@ -2789,15 +2789,15 @@
       "slotNo": 427
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 428
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \n好きなレジェンズ1体",
-      "imageUrl": "prize_pics:LD_0004",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 429
     },
     {
@@ -2825,9 +2825,9 @@
       "slotNo": 433
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nクフ王 1体",
-      "imageUrl": "prize_pics:LD_0006",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 434
     },
     {
@@ -2849,9 +2849,9 @@
       "slotNo": 437
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 438
     },
     {
@@ -2873,9 +2873,9 @@
       "slotNo": 441
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nハンニバル 1体",
+      "imageUrl": "prize_pics:LD_0005",
       "slotNo": 442
     },
     {
@@ -2891,27 +2891,27 @@
       "slotNo": 444
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 445
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 446
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \n好きなレジェンズ1体",
-      "imageUrl": "prize_pics:LD_0004",
-      "slotNo": 447
-    },
-    {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 447
+    },
+    {
+      "rank": "big",
+      "name": "肉球シール\nどれか1つ",
+      "imageUrl": "prize_pics:LD_0024",
       "slotNo": 448
     },
     {
@@ -2951,9 +2951,9 @@
       "slotNo": 454
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 455
     },
     {
@@ -2981,15 +2981,15 @@
       "slotNo": 459
     },
     {
-      "rank": "big",
-      "name": "おしりシール \n居眠りパンダ",
-      "imageUrl": "prize_pics:LD_0021",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 460
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nミント 1体",
-      "imageUrl": "prize_pics:LD_0007",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 461
     },
     {
@@ -2999,9 +2999,9 @@
       "slotNo": 462
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nクフ王 1体",
+      "imageUrl": "prize_pics:LD_0006",
       "slotNo": 463
     },
     {
@@ -3011,27 +3011,27 @@
       "slotNo": 464
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 465
-    },
-    {
       "rank": "super",
       "name": "マグナ・OOPARTS \nクフ王 1体",
       "imageUrl": "prize_pics:LD_0006",
-      "slotNo": 466
+      "slotNo": 465
     },
     {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 466
+    },
+    {
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nハンニバル 1体",
+      "imageUrl": "prize_pics:LD_0005",
       "slotNo": 467
     },
     {
-      "rank": "mega",
-      "name": "ベルテックス静岡\nSpecialグッズ",
-      "imageUrl": "prize_pics:LD_0001",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 468
     },
     {
@@ -3041,21 +3041,21 @@
       "slotNo": 469
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 470
-    },
-    {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 471
     },
     {
       "rank": "super",
       "name": "マグナ・OOPARTS \nミント 1体",
       "imageUrl": "prize_pics:LD_0007",
+      "slotNo": 471
+    },
+    {
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 472
     },
     {
@@ -3065,9 +3065,9 @@
       "slotNo": 473
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nハンニバル 1体",
+      "imageUrl": "prize_pics:LD_0005",
       "slotNo": 474
     },
     {
@@ -3083,9 +3083,9 @@
       "slotNo": 476
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nミント 1体",
+      "imageUrl": "prize_pics:LD_0007",
       "slotNo": 477
     },
     {
@@ -3113,9 +3113,9 @@
       "slotNo": 481
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nクフ王 1体",
+      "imageUrl": "prize_pics:LD_0006",
       "slotNo": 482
     },
     {
@@ -3131,9 +3131,9 @@
       "slotNo": 484
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "金のベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0004",
       "slotNo": 485
     },
     {
@@ -3149,9 +3149,9 @@
       "slotNo": 487
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 488
     },
     {
@@ -3161,27 +3161,27 @@
       "slotNo": 489
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "金のベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0004",
       "slotNo": 490
     },
     {
-      "rank": "mega",
-      "name": "マグナとふしぎの少女\nオリジナルグッズ",
-      "imageUrl": "prize_pics:LD_0002",
-      "slotNo": 491
-    },
-    {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 491
+    },
+    {
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nテスラ 1体",
+      "imageUrl": "prize_pics:LD_0008",
       "slotNo": 492
     },
     {
       "rank": "super",
-      "name": "ボンドロシール \nハローキティ",
-      "imageUrl": "prize_pics:LD_0031",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 493
     },
     {
@@ -3191,9 +3191,9 @@
       "slotNo": 494
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 495
     },
     {
@@ -3203,27 +3203,27 @@
       "slotNo": 496
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 497
     },
     {
-      "rank": "big",
-      "name": "これってタイルシール？",
-      "imageUrl": "prize_pics:LD_0025",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 498
     },
     {
       "rank": "super",
-      "name": "Amazonギフト券 \n1000円",
-      "imageUrl": "prize_pics:LD_0010",
+      "name": "マグナ・OOPARTS \nテスラ 1体",
+      "imageUrl": "prize_pics:LD_0008",
       "slotNo": 499
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 500
     },
     {
@@ -3245,15 +3245,15 @@
       "slotNo": 503
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nハンニバル 1体",
+      "imageUrl": "prize_pics:LD_0005",
       "slotNo": 504
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nクフ王 1体",
+      "imageUrl": "prize_pics:LD_0006",
       "slotNo": 505
     },
     {
@@ -3263,27 +3263,27 @@
       "slotNo": 506
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 507
-    },
-    {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
-      "slotNo": 508
-    },
-    {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nテスラ 1体",
-      "imageUrl": "prize_pics:LD_0008",
-      "slotNo": 509
     },
     {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 508
+    },
+    {
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 509
+    },
+    {
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nテスラ 1体",
+      "imageUrl": "prize_pics:LD_0008",
       "slotNo": 510
     },
     {
@@ -3294,8 +3294,8 @@
     },
     {
       "rank": "super",
-      "name": "Amazonギフト券 \n1000円",
-      "imageUrl": "prize_pics:LD_0010",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 512
     },
     {
@@ -3305,9 +3305,9 @@
       "slotNo": 513
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nハンニバル 1体",
+      "imageUrl": "prize_pics:LD_0005",
       "slotNo": 514
     },
     {
@@ -3317,27 +3317,27 @@
       "slotNo": 515
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 516
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nハンニバル 1体",
+      "imageUrl": "prize_pics:LD_0005",
       "slotNo": 517
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \n好きなレジェンズ1体",
-      "imageUrl": "prize_pics:LD_0004",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 518
     },
     {
-      "rank": "super",
-      "name": "Amazonギフト券 \n1000円",
-      "imageUrl": "prize_pics:LD_0010",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 519
     },
     {
@@ -3353,9 +3353,9 @@
       "slotNo": 521
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 522
     },
     {
@@ -3371,9 +3371,9 @@
       "slotNo": 524
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nテスラ 1体",
+      "imageUrl": "prize_pics:LD_0008",
       "slotNo": 525
     },
     {
@@ -3389,9 +3389,9 @@
       "slotNo": 527
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nミント 1体",
-      "imageUrl": "prize_pics:LD_0007",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 528
     },
     {
@@ -3414,8 +3414,8 @@
     },
     {
       "rank": "super",
-      "name": "マグナ・OOPARTS \nテスラ 1体",
-      "imageUrl": "prize_pics:LD_0008",
+      "name": "マグナ・OOPARTS \nクフ王 1体",
+      "imageUrl": "prize_pics:LD_0006",
       "slotNo": 532
     },
     {
@@ -3425,21 +3425,21 @@
       "slotNo": 533
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nハンニバル 1体",
+      "imageUrl": "prize_pics:LD_0005",
       "slotNo": 534
     },
     {
       "rank": "mega",
-      "name": "マグナとふしぎの少女\nオリジナルグッズ",
-      "imageUrl": "prize_pics:LD_0002",
+      "name": "Amazonギフト券 \n5000円",
+      "imageUrl": "prize_pics:LD_0003",
       "slotNo": 535
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nクフ王 1体",
-      "imageUrl": "prize_pics:LD_0006",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 536
     },
     {
@@ -3449,21 +3449,21 @@
       "slotNo": 537
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 538
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 539
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nクフ王 1体",
+      "imageUrl": "prize_pics:LD_0006",
       "slotNo": 540
     },
     {
@@ -3479,9 +3479,9 @@
       "slotNo": 542
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nミント 1体",
-      "imageUrl": "prize_pics:LD_0007",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 543
     },
     {
@@ -3491,9 +3491,9 @@
       "slotNo": 544
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nテスラ 1体",
-      "imageUrl": "prize_pics:LD_0008",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 545
     },
     {
@@ -3509,9 +3509,9 @@
       "slotNo": 547
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nテスラ 1体",
+      "imageUrl": "prize_pics:LD_0008",
       "slotNo": 548
     },
     {
@@ -3527,39 +3527,39 @@
       "slotNo": 550
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nハンニバル 1体",
-      "imageUrl": "prize_pics:LD_0005",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 551
-    },
-    {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nミント 1体",
-      "imageUrl": "prize_pics:LD_0007",
-      "slotNo": 552
-    },
-    {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nミント 1体",
-      "imageUrl": "prize_pics:LD_0007",
-      "slotNo": 553
-    },
-    {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nハンニバル 1体",
-      "imageUrl": "prize_pics:LD_0005",
-      "slotNo": 554
     },
     {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 555
+      "slotNo": 552
+    },
+    {
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 553
+    },
+    {
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 554
     },
     {
       "rank": "super",
-      "name": "マグナ・OOPARTS \nミント 1体",
-      "imageUrl": "prize_pics:LD_0007",
+      "name": "ぷくぷくシール スヌーピー \n紫ラベル",
+      "imageUrl": "prize_pics:LD_0012",
+      "slotNo": 555
+    },
+    {
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 556
     },
     {
@@ -3575,9 +3575,9 @@
       "slotNo": 558
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 559
     },
     {
@@ -3593,15 +3593,15 @@
       "slotNo": 561
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "Amazonギフト券 \n1000円",
+      "imageUrl": "prize_pics:LD_0010",
       "slotNo": 562
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \n好きなレジェンズ1体",
-      "imageUrl": "prize_pics:LD_0004",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 563
     },
     {
@@ -3629,15 +3629,15 @@
       "slotNo": 567
     },
     {
-      "rank": "super",
-      "name": "Amazonギフト券 \n1000円",
-      "imageUrl": "prize_pics:LD_0010",
-      "slotNo": 568
-    },
-    {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 568
+    },
+    {
+      "rank": "mega",
+      "name": "マグナとふしぎの少女\nオリジナルグッズ",
+      "imageUrl": "prize_pics:LD_0002",
       "slotNo": 569
     },
     {
@@ -3647,21 +3647,21 @@
       "slotNo": 570
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nテスラ 1体",
-      "imageUrl": "prize_pics:LD_0008",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 571
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 572
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 573
     },
     {
@@ -3671,9 +3671,9 @@
       "slotNo": 574
     },
     {
-      "rank": "big",
-      "name": "肉球シール\nどれか1つ",
-      "imageUrl": "prize_pics:LD_0024",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 575
     },
     {
@@ -3684,14 +3684,14 @@
     },
     {
       "rank": "super",
-      "name": "マグナ・OOPARTS \nクフ王 1体",
-      "imageUrl": "prize_pics:LD_0006",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 577
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "金のベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0004",
       "slotNo": 578
     },
     {
@@ -3702,14 +3702,14 @@
     },
     {
       "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "name": "ENJOY Sticker Set シナモン 水色",
+      "imageUrl": "prize_pics:LD_0035",
       "slotNo": 580
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 581
     },
     {
@@ -3731,9 +3731,9 @@
       "slotNo": 584
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nミント 1体",
+      "imageUrl": "prize_pics:LD_0007",
       "slotNo": 585
     },
     {
@@ -3743,15 +3743,15 @@
       "slotNo": 586
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 587
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nハンニバル 1体",
+      "imageUrl": "prize_pics:LD_0005",
       "slotNo": 588
     },
     {
@@ -3761,21 +3761,21 @@
       "slotNo": 589
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nテスラ 1体",
+      "imageUrl": "prize_pics:LD_0008",
       "slotNo": 590
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \n好きなレジェンズ1体",
-      "imageUrl": "prize_pics:LD_0004",
-      "slotNo": 591
-    },
-    {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 591
+    },
+    {
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 592
     },
     {
@@ -3797,9 +3797,9 @@
       "slotNo": 595
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \n好きなレジェンズ1体",
-      "imageUrl": "prize_pics:LD_0004",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 596
     },
     {
@@ -3821,21 +3821,21 @@
       "slotNo": 599
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 600
     },
     {
-      "rank": "super",
-      "name": "タイルシール \n日焼けキティ＆クロミ",
-      "imageUrl": "prize_pics:LD_0017",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 601
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nテスラ 1体",
-      "imageUrl": "prize_pics:LD_0008",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 602
     },
     {
@@ -3857,9 +3857,9 @@
       "slotNo": 605
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nテスラ 1体",
-      "imageUrl": "prize_pics:LD_0008",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 606
     },
     {
@@ -3869,27 +3869,27 @@
       "slotNo": 607
     },
     {
-      "rank": "super",
-      "name": "ぷくぷくシール スヌーピー \n赤ラベル",
-      "imageUrl": "prize_pics:LD_0013",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 608
+    },
+    {
+      "rank": "big",
+      "name": "ドバイチョコ",
+      "imageUrl": "prize_pics:LD_0020",
+      "slotNo": 609
     },
     {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 609
-    },
-    {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 610
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nクフ王 1体",
-      "imageUrl": "prize_pics:LD_0006",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 611
     },
     {
@@ -3899,9 +3899,9 @@
       "slotNo": 612
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nハンニバル 1体",
+      "imageUrl": "prize_pics:LD_0005",
       "slotNo": 613
     },
     {
@@ -3930,14 +3930,14 @@
     },
     {
       "rank": "super",
-      "name": "ぷくぷくシール スヌーピー \n紫ラベル",
-      "imageUrl": "prize_pics:LD_0012",
+      "name": "マグナ・OOPARTS \nハンニバル 1体",
+      "imageUrl": "prize_pics:LD_0005",
       "slotNo": 618
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \n好きなレジェンズ1体",
-      "imageUrl": "prize_pics:LD_0004",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 619
     },
     {
@@ -3977,27 +3977,27 @@
       "slotNo": 625
     },
     {
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 626
+    },
+    {
       "rank": "super",
       "name": "ベルテックス宝箱",
       "imageUrl": "prize_pics:LD_0009",
-      "slotNo": 626
+      "slotNo": 627
     },
     {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 627
-    },
-    {
-      "rank": "super",
-      "name": "タイルシール \n日焼けキティ",
-      "imageUrl": "prize_pics:LD_0016",
       "slotNo": 628
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 629
     },
     {
@@ -4007,15 +4007,15 @@
       "slotNo": 630
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 631
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nクフ王 1体",
-      "imageUrl": "prize_pics:LD_0006",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 632
     },
     {
@@ -4037,9 +4037,9 @@
       "slotNo": 635
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 636
     },
     {
@@ -4073,9 +4073,9 @@
       "slotNo": 641
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 642
     },
     {
@@ -4086,8 +4086,8 @@
     },
     {
       "rank": "super",
-      "name": "マグナ・OOPARTS \n好きなレジェンズ1体",
-      "imageUrl": "prize_pics:LD_0004",
+      "name": "マグナ・OOPARTS \nハンニバル 1体",
+      "imageUrl": "prize_pics:LD_0005",
       "slotNo": 644
     },
     {
@@ -4097,57 +4097,57 @@
       "slotNo": 645
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "big",
+      "name": "おしりシール \n居眠りパンダ",
+      "imageUrl": "prize_pics:LD_0021",
       "slotNo": 646
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nミント 1体",
+      "imageUrl": "prize_pics:LD_0007",
       "slotNo": 647
-    },
-    {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 648
-    },
-    {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 649
     },
     {
       "rank": "super",
       "name": "ベルテックス宝箱",
       "imageUrl": "prize_pics:LD_0009",
-      "slotNo": 650
+      "slotNo": 648
+    },
+    {
+      "rank": "super",
+      "name": "ぷくぷくシール スヌーピー \n紫ラベル",
+      "imageUrl": "prize_pics:LD_0012",
+      "slotNo": 649
     },
     {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 651
+      "slotNo": 650
     },
     {
       "rank": "super",
-      "name": "マグナ・OOPARTS \nミント 1体",
-      "imageUrl": "prize_pics:LD_0007",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
+      "slotNo": 651
+    },
+    {
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 652
     },
     {
       "rank": "super",
-      "name": "マグナ・OOPARTS \nミント 1体",
-      "imageUrl": "prize_pics:LD_0007",
+      "name": "マグナ・OOPARTS \nハンニバル 1体",
+      "imageUrl": "prize_pics:LD_0005",
       "slotNo": 653
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "big",
+      "name": "すしシール",
+      "imageUrl": "prize_pics:LD_0027",
       "slotNo": 654
     },
     {
@@ -4157,15 +4157,15 @@
       "slotNo": 655
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 656
-    },
-    {
       "rank": "super",
       "name": "ベルテックス宝箱",
       "imageUrl": "prize_pics:LD_0009",
+      "slotNo": 656
+    },
+    {
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 657
     },
     {
@@ -4182,8 +4182,8 @@
     },
     {
       "rank": "super",
-      "name": "マグナ・OOPARTS \nミント 1体",
-      "imageUrl": "prize_pics:LD_0007",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 660
     },
     {
@@ -4199,15 +4199,15 @@
       "slotNo": 662
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 663
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "mega",
+      "name": "マグナとふしぎの少女\nオリジナルグッズ",
+      "imageUrl": "prize_pics:LD_0002",
       "slotNo": 664
     },
     {
@@ -4259,21 +4259,21 @@
       "slotNo": 672
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ぷくぷくシール スヌーピー \nブルーラベル",
+      "imageUrl": "prize_pics:LD_0015",
       "slotNo": 673
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 674
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 675
     },
     {
@@ -4283,9 +4283,9 @@
       "slotNo": 676
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "金のベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0004",
       "slotNo": 677
     },
     {
@@ -4295,9 +4295,9 @@
       "slotNo": 678
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nクフ王 1体",
+      "imageUrl": "prize_pics:LD_0006",
       "slotNo": 679
     },
     {
@@ -4313,9 +4313,9 @@
       "slotNo": 681
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \n好きなレジェンズ1体",
-      "imageUrl": "prize_pics:LD_0004",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 682
     },
     {
@@ -4349,9 +4349,9 @@
       "slotNo": 687
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 688
     },
     {
@@ -4367,9 +4367,9 @@
       "slotNo": 690
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "タイルシール \nシナモン＆ポムプリなど",
+      "imageUrl": "prize_pics:LD_0018",
       "slotNo": 691
     },
     {
@@ -4385,27 +4385,27 @@
       "slotNo": 693
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 694
-    },
-    {
       "rank": "super",
       "name": "ベルテックス宝箱",
       "imageUrl": "prize_pics:LD_0009",
+      "slotNo": 694
+    },
+    {
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 695
     },
     {
-      "rank": "super",
-      "name": "Pitapuku　ハローキティ 白黒",
-      "imageUrl": "prize_pics:LD_0036",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 696
     },
     {
-      "rank": "super",
-      "name": "ENJOY Sticker Set シナモン 水色",
-      "imageUrl": "prize_pics:LD_0035",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 697
     },
     {
@@ -4421,15 +4421,15 @@
       "slotNo": 699
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 700
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nテスラ 1体",
-      "imageUrl": "prize_pics:LD_0008",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 701
     },
     {
@@ -4446,32 +4446,32 @@
     },
     {
       "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "name": "マグナ・OOPARTS \nミント 1体",
+      "imageUrl": "prize_pics:LD_0007",
       "slotNo": 704
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 705
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nテスラ 1体",
-      "imageUrl": "prize_pics:LD_0008",
+      "rank": "mega",
+      "name": "マグナとふしぎの少女\nオリジナルグッズ",
+      "imageUrl": "prize_pics:LD_0002",
       "slotNo": 706
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "mega",
+      "name": "Amazonギフト券 \n5000円",
+      "imageUrl": "prize_pics:LD_0003",
       "slotNo": 707
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "big",
+      "name": "おしりシール \n竹パンダ",
+      "imageUrl": "prize_pics:LD_0022",
       "slotNo": 708
     },
     {
@@ -4481,9 +4481,9 @@
       "slotNo": 709
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 710
     },
     {
@@ -4500,32 +4500,32 @@
     },
     {
       "rank": "super",
-      "name": "マグナ・OOPARTS \nハンニバル 1体",
-      "imageUrl": "prize_pics:LD_0005",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 713
-    },
-    {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nクフ王 1体",
-      "imageUrl": "prize_pics:LD_0006",
-      "slotNo": 714
-    },
-    {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nテスラ 1体",
-      "imageUrl": "prize_pics:LD_0008",
-      "slotNo": 715
-    },
-    {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 716
     },
     {
       "rank": "super",
       "name": "ベルテックス宝箱",
       "imageUrl": "prize_pics:LD_0009",
+      "slotNo": 714
+    },
+    {
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 715
+    },
+    {
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nミント 1体",
+      "imageUrl": "prize_pics:LD_0007",
+      "slotNo": 716
+    },
+    {
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 717
     },
     {
@@ -4536,14 +4536,14 @@
     },
     {
       "rank": "super",
-      "name": "マグナ・OOPARTS \nミント 1体",
-      "imageUrl": "prize_pics:LD_0007",
+      "name": "マグナ・OOPARTS \nテスラ 1体",
+      "imageUrl": "prize_pics:LD_0008",
       "slotNo": 719
     },
     {
       "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "name": "マグナ・OOPARTS \nテスラ 1体",
+      "imageUrl": "prize_pics:LD_0008",
       "slotNo": 720
     },
     {
@@ -4559,9 +4559,9 @@
       "slotNo": 722
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 723
     },
     {
@@ -4571,9 +4571,9 @@
       "slotNo": 724
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 725
     },
     {
@@ -4589,15 +4589,15 @@
       "slotNo": 727
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 728
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nミント 1体",
-      "imageUrl": "prize_pics:LD_0007",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 729
     },
     {
@@ -4619,9 +4619,9 @@
       "slotNo": 732
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nクフ王 1体",
-      "imageUrl": "prize_pics:LD_0006",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 733
     },
     {
@@ -4637,21 +4637,21 @@
       "slotNo": 735
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "金のベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0004",
       "slotNo": 736
     },
     {
       "rank": "super",
-      "name": "マグナ・OOPARTS \nハンニバル 1体",
-      "imageUrl": "prize_pics:LD_0005",
+      "name": "マグナ・OOPARTS \nテスラ 1体",
+      "imageUrl": "prize_pics:LD_0008",
       "slotNo": 737
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 738
     },
     {
@@ -4667,9 +4667,9 @@
       "slotNo": 740
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 741
     },
     {
@@ -4703,9 +4703,9 @@
       "slotNo": 746
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "big",
+      "name": "おしりシール \n居眠りパンダ",
+      "imageUrl": "prize_pics:LD_0021",
       "slotNo": 747
     },
     {
@@ -4733,9 +4733,9 @@
       "slotNo": 751
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nテスラ 1体",
+      "imageUrl": "prize_pics:LD_0008",
       "slotNo": 752
     },
     {
@@ -4775,9 +4775,9 @@
       "slotNo": 758
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nミント 1体",
-      "imageUrl": "prize_pics:LD_0007",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 759
     },
     {
@@ -4787,39 +4787,39 @@
       "slotNo": 760
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nミント 1体",
-      "imageUrl": "prize_pics:LD_0007",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 761
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "big",
+      "name": "肉球シール\nどれか1つ",
+      "imageUrl": "prize_pics:LD_0024",
       "slotNo": 762
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 763
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "mega",
+      "name": "Amazonギフト券 \n5000円",
+      "imageUrl": "prize_pics:LD_0003",
       "slotNo": 764
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
-      "slotNo": 765
-    },
-    {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 765
+    },
+    {
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nテスラ 1体",
+      "imageUrl": "prize_pics:LD_0008",
       "slotNo": 766
     },
     {
@@ -4829,15 +4829,15 @@
       "slotNo": 767
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 768
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "金のベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0004",
       "slotNo": 769
     },
     {
@@ -4847,39 +4847,39 @@
       "slotNo": 770
     },
     {
-      "rank": "big",
-      "name": "ペラペラシール\nどれか1つ",
-      "imageUrl": "prize_pics:LD_0026",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 771
-    },
-    {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nテスラ 1体",
-      "imageUrl": "prize_pics:LD_0008",
-      "slotNo": 772
     },
     {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 772
+    },
+    {
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 773
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \n好きなレジェンズ1体",
-      "imageUrl": "prize_pics:LD_0004",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 774
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nクフ王 1体",
-      "imageUrl": "prize_pics:LD_0006",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 775
     },
     {
-      "rank": "big",
-      "name": "肉球シール\nどれか1つ",
-      "imageUrl": "prize_pics:LD_0024",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 776
     },
     {
@@ -4901,9 +4901,9 @@
       "slotNo": 779
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nハンニバル 1体",
+      "imageUrl": "prize_pics:LD_0005",
       "slotNo": 780
     },
     {
@@ -4925,9 +4925,9 @@
       "slotNo": 783
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 784
     },
     {
@@ -4937,15 +4937,15 @@
       "slotNo": 785
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 786
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "Amazonギフト券 \n1000円",
+      "imageUrl": "prize_pics:LD_0010",
       "slotNo": 787
     },
     {
@@ -4961,21 +4961,21 @@
       "slotNo": 789
     },
     {
-      "rank": "big",
-      "name": "しまえなが？シール",
-      "imageUrl": "prize_pics:LD_0029",
-      "slotNo": 790
-    },
-    {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 790
+    },
+    {
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 791
     },
     {
       "rank": "super",
-      "name": "マグナ・OOPARTS \nクフ王 1体",
-      "imageUrl": "prize_pics:LD_0006",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 792
     },
     {
@@ -4985,9 +4985,9 @@
       "slotNo": 793
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 794
     },
     {
@@ -5009,9 +5009,9 @@
       "slotNo": 797
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ボンドロシール \nハローキティ",
+      "imageUrl": "prize_pics:LD_0031",
       "slotNo": 798
     },
     {
@@ -5021,9 +5021,9 @@
       "slotNo": 799
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nハンニバル 1体",
-      "imageUrl": "prize_pics:LD_0005",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 800
     },
     {
@@ -5033,15 +5033,15 @@
       "slotNo": 801
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \n好きなレジェンズ1体",
-      "imageUrl": "prize_pics:LD_0004",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 802
     },
     {
-      "rank": "mega",
-      "name": "Amazonギフト券 \n5000円",
-      "imageUrl": "prize_pics:LD_0003",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 803
     },
     {
@@ -5051,15 +5051,15 @@
       "slotNo": 804
     },
     {
-      "rank": "big",
-      "name": "どんぶりシール",
-      "imageUrl": "prize_pics:LD_0028",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 805
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nテスラ 1体",
+      "imageUrl": "prize_pics:LD_0008",
       "slotNo": 806
     },
     {
@@ -5081,39 +5081,39 @@
       "slotNo": 809
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 810
     },
     {
-      "rank": "super",
-      "name": "ぷくぷくシール スヌーピー \nブルーラベル",
-      "imageUrl": "prize_pics:LD_0015",
-      "slotNo": 811
-    },
-    {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 811
+    },
+    {
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 812
     },
     {
       "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "name": "マグナ・OOPARTS \nクフ王 1体",
+      "imageUrl": "prize_pics:LD_0006",
       "slotNo": 813
+    },
+    {
+      "rank": "super",
+      "name": "ぷくぷくシール スヌーピー \n赤ラベル",
+      "imageUrl": "prize_pics:LD_0013",
+      "slotNo": 814
     },
     {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 814
-    },
-    {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 815
     },
     {
@@ -5135,15 +5135,15 @@
       "slotNo": 818
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 819
     },
     {
-      "rank": "mega",
-      "name": "マグナとふしぎの少女\nオリジナルグッズ",
-      "imageUrl": "prize_pics:LD_0002",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 820
     },
     {
@@ -5159,15 +5159,15 @@
       "slotNo": 822
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nクフ王 1体",
-      "imageUrl": "prize_pics:LD_0006",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 823
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nクフ王 1体",
-      "imageUrl": "prize_pics:LD_0006",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 824
     },
     {
@@ -5177,9 +5177,9 @@
       "slotNo": 825
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ぷくぷくシール スヌーピー \nブルーラベル",
+      "imageUrl": "prize_pics:LD_0015",
       "slotNo": 826
     },
     {
@@ -5207,15 +5207,15 @@
       "slotNo": 830
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nミント 1体",
+      "imageUrl": "prize_pics:LD_0007",
       "slotNo": 831
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "big",
+      "name": "肉球シール\nどれか1つ",
+      "imageUrl": "prize_pics:LD_0024",
       "slotNo": 832
     },
     {
@@ -5243,15 +5243,15 @@
       "slotNo": 836
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 837
-    },
-    {
       "rank": "super",
       "name": "ベルテックス宝箱",
       "imageUrl": "prize_pics:LD_0009",
+      "slotNo": 837
+    },
+    {
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 838
     },
     {
@@ -5261,9 +5261,9 @@
       "slotNo": 839
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nクフ王 1体",
+      "imageUrl": "prize_pics:LD_0006",
       "slotNo": 840
     },
     {
@@ -5285,9 +5285,9 @@
       "slotNo": 843
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "Pitapuku　ハローキティ 白黒",
+      "imageUrl": "prize_pics:LD_0036",
       "slotNo": 844
     },
     {
@@ -5303,21 +5303,21 @@
       "slotNo": 846
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 847
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "金のベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0004",
       "slotNo": 848
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 849
     },
     {
@@ -5333,15 +5333,15 @@
       "slotNo": 851
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "Amazonギフト券 \n1000円",
+      "imageUrl": "prize_pics:LD_0010",
       "slotNo": 852
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 853
     },
     {
@@ -5351,15 +5351,15 @@
       "slotNo": 854
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nミント 1体",
-      "imageUrl": "prize_pics:LD_0007",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 855
     },
     {
-      "rank": "super",
-      "name": "Amazonギフト券 \n1000円",
-      "imageUrl": "prize_pics:LD_0010",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 856
     },
     {
@@ -5369,9 +5369,9 @@
       "slotNo": 857
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 858
     },
     {
@@ -5393,9 +5393,9 @@
       "slotNo": 861
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ENJOY Sticker Set クロミ 水色",
+      "imageUrl": "prize_pics:LD_0033",
       "slotNo": 862
     },
     {
@@ -5423,15 +5423,15 @@
       "slotNo": 866
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 867
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 868
     },
     {
@@ -5453,9 +5453,9 @@
       "slotNo": 871
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nクフ王 1体",
-      "imageUrl": "prize_pics:LD_0006",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 872
     },
     {
@@ -5465,9 +5465,9 @@
       "slotNo": 873
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 874
     },
     {
@@ -5477,9 +5477,9 @@
       "slotNo": 875
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "big",
+      "name": "おしりシール \nしろくま",
+      "imageUrl": "prize_pics:LD_0023",
       "slotNo": 876
     },
     {
@@ -5495,9 +5495,9 @@
       "slotNo": 878
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nテスラ 1体",
-      "imageUrl": "prize_pics:LD_0008",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 879
     },
     {
@@ -5507,21 +5507,21 @@
       "slotNo": 880
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "Amazonギフト券 \n1000円",
+      "imageUrl": "prize_pics:LD_0010",
       "slotNo": 881
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 882
     },
     {
       "rank": "super",
-      "name": "ぷくぷくシール スヌーピー \nブルーラベル",
-      "imageUrl": "prize_pics:LD_0015",
+      "name": "マグナ・OOPARTS \nテスラ 1体",
+      "imageUrl": "prize_pics:LD_0008",
       "slotNo": 883
     },
     {
@@ -5531,15 +5531,15 @@
       "slotNo": 884
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nクフ王 1体",
-      "imageUrl": "prize_pics:LD_0006",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 885
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 886
     },
     {
@@ -5549,15 +5549,15 @@
       "slotNo": 887
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nハンニバル 1体",
+      "imageUrl": "prize_pics:LD_0005",
       "slotNo": 888
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 889
     },
     {
@@ -5567,15 +5567,15 @@
       "slotNo": 890
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "Amazonギフト券 \n1000円",
+      "imageUrl": "prize_pics:LD_0010",
       "slotNo": 891
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 892
     },
     {
@@ -5585,45 +5585,45 @@
       "slotNo": 893
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 894
-    },
-    {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
-      "slotNo": 895
-    },
-    {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nハンニバル 1体",
-      "imageUrl": "prize_pics:LD_0005",
-      "slotNo": 896
-    },
-    {
       "rank": "super",
       "name": "マグナ・OOPARTS \nミント 1体",
       "imageUrl": "prize_pics:LD_0007",
+      "slotNo": 894
+    },
+    {
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 895
+    },
+    {
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 896
+    },
+    {
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 897
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 898
     },
     {
-      "rank": "super",
-      "name": "タイルシール \nモンチッチ",
-      "imageUrl": "prize_pics:LD_0019",
+      "rank": "big",
+      "name": "しまえなが？シール",
+      "imageUrl": "prize_pics:LD_0029",
       "slotNo": 899
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 900
     },
     {
@@ -5633,9 +5633,9 @@
       "slotNo": 901
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nクフ王 1体",
-      "imageUrl": "prize_pics:LD_0006",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 902
     },
     {
@@ -5645,15 +5645,15 @@
       "slotNo": 903
     },
     {
-      "rank": "mega",
-      "name": "Amazonギフト券 \n5000円",
-      "imageUrl": "prize_pics:LD_0003",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 904
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nテスラ 1体",
-      "imageUrl": "prize_pics:LD_0008",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 905
     },
     {
@@ -5669,9 +5669,9 @@
       "slotNo": 907
     },
     {
-      "rank": "super",
-      "name": "ぷくぷくシール スヌーピー \n赤ラベル",
-      "imageUrl": "prize_pics:LD_0013",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 908
     },
     {
@@ -5687,21 +5687,21 @@
       "slotNo": 910
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "Amazonギフト券 \n1000円",
+      "imageUrl": "prize_pics:LD_0010",
       "slotNo": 911
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nクフ王 1体",
-      "imageUrl": "prize_pics:LD_0006",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 912
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 913
     },
     {
@@ -5711,27 +5711,27 @@
       "slotNo": 914
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nミント 1体",
-      "imageUrl": "prize_pics:LD_0007",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 915
+    },
+    {
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
+      "slotNo": 916
     },
     {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 916
-    },
-    {
-      "rank": "mega",
-      "name": "マグナとふしぎの少女\nオリジナルグッズ",
-      "imageUrl": "prize_pics:LD_0002",
       "slotNo": 917
     },
     {
-      "rank": "super",
-      "name": "ぷくぷくシール スヌーピー \nピンクラベル",
-      "imageUrl": "prize_pics:LD_0014",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 918
     },
     {
@@ -5741,15 +5741,15 @@
       "slotNo": 919
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nハンニバル 1体",
-      "imageUrl": "prize_pics:LD_0005",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 920
     },
     {
-      "rank": "super",
-      "name": "Amazonギフト券 \n1000円",
-      "imageUrl": "prize_pics:LD_0010",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 921
     },
     {
@@ -5759,15 +5759,15 @@
       "slotNo": 922
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "金のベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0004",
       "slotNo": 923
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \n好きなレジェンズ1体",
-      "imageUrl": "prize_pics:LD_0004",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 924
     },
     {
@@ -5778,14 +5778,14 @@
     },
     {
       "rank": "super",
-      "name": "マグナ・OOPARTS \nテスラ 1体",
-      "imageUrl": "prize_pics:LD_0008",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 926
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "金のベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0004",
       "slotNo": 927
     },
     {
@@ -5801,9 +5801,9 @@
       "slotNo": 929
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \n好きなレジェンズ1体",
-      "imageUrl": "prize_pics:LD_0004",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 930
     },
     {
@@ -5813,15 +5813,15 @@
       "slotNo": 931
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \n好きなレジェンズ1体",
-      "imageUrl": "prize_pics:LD_0004",
-      "slotNo": 932
-    },
-    {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 932
+    },
+    {
+      "rank": "mega",
+      "name": "マグナとふしぎの少女\nオリジナルグッズ",
+      "imageUrl": "prize_pics:LD_0002",
       "slotNo": 933
     },
     {
@@ -5831,15 +5831,15 @@
       "slotNo": 934
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 935
     },
     {
-      "rank": "super",
-      "name": "ぷくぷくシール スヌーピー \nピンクラベル",
-      "imageUrl": "prize_pics:LD_0014",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 936
     },
     {
@@ -5861,9 +5861,9 @@
       "slotNo": 939
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nハンニバル 1体",
+      "imageUrl": "prize_pics:LD_0005",
       "slotNo": 940
     },
     {
@@ -5939,21 +5939,21 @@
       "slotNo": 952
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 953
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 954
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nテスラ 1体",
-      "imageUrl": "prize_pics:LD_0008",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 955
     },
     {
@@ -5981,15 +5981,15 @@
       "slotNo": 959
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 960
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nテスラ 1体",
-      "imageUrl": "prize_pics:LD_0008",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 961
     },
     {
@@ -5999,9 +5999,9 @@
       "slotNo": 962
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "金のベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0004",
       "slotNo": 963
     },
     {
@@ -6011,33 +6011,33 @@
       "slotNo": 964
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \nクフ王 1体",
-      "imageUrl": "prize_pics:LD_0006",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 965
+    },
+    {
+      "rank": "mega",
+      "name": "ベルテックス静岡\nSpecialグッズ",
+      "imageUrl": "prize_pics:LD_0001",
+      "slotNo": 966
     },
     {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 966
+      "slotNo": 967
     },
     {
       "rank": "super",
       "name": "ベルテックス宝箱",
       "imageUrl": "prize_pics:LD_0009",
-      "slotNo": 967
-    },
-    {
-      "rank": "mega",
-      "name": "Amazonギフト券 \n5000円",
-      "imageUrl": "prize_pics:LD_0003",
       "slotNo": 968
     },
     {
       "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "name": "マグナ・OOPARTS \nハンニバル 1体",
+      "imageUrl": "prize_pics:LD_0005",
       "slotNo": 969
     },
     {
@@ -6047,21 +6047,21 @@
       "slotNo": 970
     },
     {
-      "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 971
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nクフ王 1体",
+      "imageUrl": "prize_pics:LD_0006",
       "slotNo": 972
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nクフ王 1体",
+      "imageUrl": "prize_pics:LD_0006",
       "slotNo": 973
     },
     {
@@ -6071,9 +6071,9 @@
       "slotNo": 974
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 975
     },
     {
@@ -6083,9 +6083,9 @@
       "slotNo": 976
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "Amazonギフト券 \n1000円",
+      "imageUrl": "prize_pics:LD_0010",
       "slotNo": 977
     },
     {
@@ -6101,15 +6101,15 @@
       "slotNo": 979
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \n好きなレジェンズ1体",
-      "imageUrl": "prize_pics:LD_0004",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 980
     },
     {
       "rank": "super",
-      "name": "ぷくぷくシール スヌーピー \n赤ラベル",
-      "imageUrl": "prize_pics:LD_0013",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 981
     },
     {
@@ -6131,39 +6131,39 @@
       "slotNo": 984
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 985
-    },
-    {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
-      "slotNo": 986
-    },
-    {
       "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
-      "slotNo": 987
+      "name": "金のベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0004",
+      "slotNo": 985
     },
     {
       "rank": "super",
       "name": "マグナ・OOPARTS \nハンニバル 1体",
       "imageUrl": "prize_pics:LD_0005",
-      "slotNo": 988
+      "slotNo": 986
     },
     {
       "rank": "super",
-      "name": "ベルテックス宝箱",
-      "imageUrl": "prize_pics:LD_0009",
-      "slotNo": 989
+      "name": "マグナ・OOPARTS \nテスラ 1体",
+      "imageUrl": "prize_pics:LD_0008",
+      "slotNo": 987
     },
     {
       "rank": "normal",
       "name": "マグナ・キャラシール\n好きなの一つ",
       "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 988
+    },
+    {
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
+      "slotNo": 989
+    },
+    {
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nテスラ 1体",
+      "imageUrl": "prize_pics:LD_0008",
       "slotNo": 990
     },
     {
@@ -6173,9 +6173,9 @@
       "slotNo": 991
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 992
     },
     {
@@ -6197,9 +6197,9 @@
       "slotNo": 995
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "マグナ・OOPARTS \nテスラ 1体",
+      "imageUrl": "prize_pics:LD_0008",
       "slotNo": 996
     },
     {
@@ -6209,9 +6209,9 @@
       "slotNo": 997
     },
     {
-      "rank": "normal",
-      "name": "マグナ・キャラシール\n好きなの一つ",
-      "imageUrl": "prize_pics:LD_0030",
+      "rank": "super",
+      "name": "ベルテックス宝箱",
+      "imageUrl": "prize_pics:LD_0009",
       "slotNo": 998
     },
     {
@@ -6221,9 +6221,9 @@
       "slotNo": 999
     },
     {
-      "rank": "super",
-      "name": "マグナ・OOPARTS \n好きなレジェンズ1体",
-      "imageUrl": "prize_pics:LD_0004",
+      "rank": "normal",
+      "name": "マグナ・キャラシール\n好きなの一つ",
+      "imageUrl": "prize_pics:LD_0030",
       "slotNo": 1000
     }
   ],
