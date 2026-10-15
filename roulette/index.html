@@ -50,6 +50,7 @@
       </div>
       <div style="flex: 1;"></div>
       <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <button type="button" onClick="{{ toggleBgmBtn }}" style="{{ bgmBtnStyle }}" title="BGM ON/OFF"><span style="font-size: 18px; lineHeight: 1;">{{ bgmBtnLabel }}</span><span>{{ bgmBtnText }}</span></button>
         <button type="button" onClick="{{ goReel }}" style="padding: 10px 18px; border-radius: 999px; border: 3px solid #12245C; background: #FFFFFF; color: #12245C; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 3px 0 rgba(18,36,92,.15);" style-hover="background:#F3FBF4">抽選 <span style="font-size: 12px; font-weight: 700; color: #17C29A; marginLeft: 5px;">Draw</span></button>
         <button type="button" onClick="{{ goList }}" style="padding: 10px 18px; border-radius: 999px; border: 3px solid #12245C; background: #FFFFFF; color: #12245C; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 3px 0 rgba(18,36,92,.15);" style-hover="background:#F3FBF4">賞品リスト <span style="font-size: 12px; font-weight: 700; color: #17C29A; marginLeft: 5px;">Prizes</span></button>
         <button type="button" onClick="{{ goResults }}" style="padding: 10px 18px; border-radius: 999px; border: 3px solid #12245C; background: #FFFFFF; color: #12245C; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 3px 0 rgba(18,36,92,.15);" style-hover="background:#F3FBF4">結果 <span style="font-size: 12px; font-weight: 700; color: #17C29A; marginLeft: 5px;">Results</span></button>
@@ -499,8 +500,13 @@ class Component extends DCLogic {
   }
   audio(kind, loop, vol) {
     const src = this.files[kind]; if (!src) return null;
-    let a = this.audioEls[kind];
-    if (!a || a.dataset.src !== src) { a = new Audio(src); a.dataset.src = src; this.audioEls[kind] = a; }
+    const reg = window.__magnaAudio || (window.__magnaAudio = {});
+    let a = this.audioEls[kind] || reg[kind];
+    if (!a || a.dataset.src !== src) {
+      if (a) { try { a.pause(); } catch (e) {} }
+      a = new Audio(src); a.dataset.src = src;
+    }
+    this.audioEls[kind] = a; reg[kind] = a;
     a.loop = !!loop; a.volume = vol == null ? 1 : vol;
     return a;
   }
@@ -521,7 +527,12 @@ class Component extends DCLogic {
   startBgm(fromStart) {
     if (!this.state.settings.bgm) return;
     const v = this.state.settings.bgmVol / 100;
-    if (this.files.bgm) { const a = this.audio('bgm', true, v); if (fromStart) { try { a.currentTime = 0; } catch (e) {} } a.play().catch(() => {}); return; }
+    if (this.files.bgm) {
+      const a = this.audio('bgm', true, v);
+      if (fromStart) { try { a.currentTime = 0; } catch (e) {} }
+      a.play().then(() => { if (!this.state.settings.bgm) a.pause(); }).catch(() => {});
+      return;
+    }
     clearInterval(this._bgmIv);
     const notes = [392, 494, 587, 494];
     let i = 0;
@@ -536,7 +547,12 @@ class Component extends DCLogic {
       o.start(t); o.stop(t + 0.75);
     }, 700);
   }
-  stopBgm() { clearTimeout(this._bgmTo); clearInterval(this._bgmIv); const a = this.audioEls.bgm; if (a) { a.pause(); try { a.currentTime = 0; } catch (e) {} } }
+  stopBgm() {
+    clearTimeout(this._bgmTo); clearInterval(this._bgmIv);
+    const list = [this.audioEls.bgm, (window.__magnaAudio || {}).bgm];
+    document.querySelectorAll('audio').forEach(el => list.push(el));
+    list.forEach(a => { if (a) { try { a.pause(); a.currentTime = 0; } catch (e) {} } });
+  }
 
   /* ---------- reel ---------- */
   snapToCell() {
@@ -713,7 +729,7 @@ class Component extends DCLogic {
       const se = this.fanfare(p.rarity);
       clearTimeout(this._bgmTo);
       if (se) {
-        const resume = () => { se.removeEventListener('ended', resume); clearTimeout(this._bgmTo); this.startBgm(true); };
+        const resume = () => { se.removeEventListener('ended', resume); clearTimeout(this._bgmTo); if (this.state.settings.bgm) this.startBgm(true); };
         se.addEventListener('ended', resume);
         const ms = isFinite(se.duration) && se.duration ? se.duration * 1000 + 150 : 4000;
         this._bgmTo = setTimeout(resume, ms);
@@ -1025,7 +1041,16 @@ class Component extends DCLogic {
 
       seOn: s.settings.se, bgmOn: s.settings.bgm, bgmVol: s.settings.bgmVol, lightOn: s.settings.light,
       toggleSe: e => this.setSetting({ se: e.target.checked }),
-      toggleBgm: e => { const v = e.target.checked; this.setSetting({ bgm: v }); if (!v) this.stopBgm(); else this.startBgm(); },
+      toggleBgm: e => this.setBgmOn(e.target.checked),
+      toggleBgmBtn: () => this.setBgmOn(!s.settings.bgm),
+      bgmBtnLabel: s.settings.bgm ? '🔊' : '🔇',
+      bgmBtnText: s.settings.bgm ? 'BGM On' : 'BGM Off',
+      bgmBtnStyle: {
+        display: 'flex', alignItems: 'center', gap: '8px',
+        padding: '10px 18px', borderRadius: '999px', border: '3px solid #12245C',
+        background: '#FFFFFF', color: s.settings.bgm ? '#12245C' : '#7B88A4',
+        fontSize: '15px', fontWeight: 700, cursor: 'pointer', boxShadow: '0 3px 0 rgba(18,36,92,.15)'
+      },
       setBgmVol: e => { const v = parseInt(e.target.value, 10); this.setSetting({ bgmVol: v }); const a = this.audioEls.bgm; if (a) a.volume = v / 100; },
       toggleLight: e => this.setSetting({ light: e.target.checked }),
       onAudioBgm: e => this.setAudioFile('bgm', e), onAudioReel: e => this.setAudioFile('reel', e),
@@ -1054,6 +1079,10 @@ class Component extends DCLogic {
     };
   }
 
+  setBgmOn(v) {
+    if (!v) this.stopBgm();
+    this.setState(s => ({ settings: Object.assign({}, s.settings, { bgm: v }) }), () => { if (v) this.ensureBgm(); });
+  }
   setSetting(patch) { this.setState(s => ({ settings: Object.assign({}, s.settings, patch) })); }
   setAudioFile(kind, e) {
     const f = e.target.files && e.target.files[0]; if (!f) return;
