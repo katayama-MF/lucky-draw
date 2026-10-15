@@ -1,6 +1,6 @@
 // 既定の賞品リスト（ブラウザに保存データが無いときだけ使う）
 // 出典：Googleスプレッドシート「クイズ大会賞品リスト」タブ 20261031（2026/10/15 取得）
-// 画像は prize_pics/pNN.webp（賞品番号ごと）。Drive「prize/old」とレジェンズ図鑑の画像から賞品名に合わせて選んだもの
+// 画像は prize_pics/pNN.webp（賞品番号ごと）。Drive「prize/old」・過去クイズ大会の番号付き一覧画像（タオル・Tシャツ・ハンカチ）・歯ブラシのラフ・英検チャレンジロゴ・レジェンズ図鑑の画像から賞品名に合わせて選んだもの
 // 更新するときはアプリの「スプレッドシートから取り込む」で取り込み直すか、このファイルを作り直す
 window.MAGNA_DEFAULT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1r6CgACphjmes-pbKV6Aw2zf55LxQJhWIHKgHDW4yZ50/edit#gid=20261031";
 window.MAGNA_DEFAULT_PRIZES = [
@@ -559,7 +559,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0022.png"
+"imageFile": "LD_0022.png",
+"image": "prize_pics/p56.webp"
 },
 {
 "no": 57,
@@ -568,7 +569,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0023.png"
+"imageFile": "LD_0023.png",
+"image": "prize_pics/p57.webp"
 },
 {
 "no": 58,
@@ -717,7 +719,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "BIG",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0068.png"
+"imageFile": "LD_0068.png",
+"image": "prize_pics/p72.webp"
 },
 {
 "no": 73,
