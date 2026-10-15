@@ -121,7 +121,7 @@
           <div style="font-size: 17px; font-weight: 800;">スプレッドシートから取り込む</div>
           <div style="font-size: 12px; font-weight: 700; color: #17C29A;">Import from Google Sheets</div>
         </div>
-        <div style="font-size: 14px; font-weight: 500; color: #4A5A80; lineHeight: 1.7;">1行目を見出しにして「番号 / 賞品名 / 補足 / レア度 / 使う / 全員」の列を用意してください。共有設定を「リンクを知っている全員が閲覧可」にしたURLを貼り、取り込みを押します。</div>
+        <div style="font-size: 14px; font-weight: 500; color: #4A5A80; lineHeight: 1.7;">1行目を見出しにして「番号 / 賞品名 / 補足 / レア度 / 使う / 全員」の列を用意してください（「賞品番号」「レート」「全員に」の見出しも読めます）。共有設定を「リンクを知っている全員が閲覧可」にしたURLを貼り、取り込みを押します。</div>
         <div style="display: flex; gap: 10px; flexWrap: wrap; marginTop: 12px;">
           <input type="text" value="{{ sheetUrl }}" onChange="{{ onSheetUrl }}" placeholder="https://docs.google.com/spreadsheets/d/…" style="flex: 1; minWidth: 280px; padding: 12px 14px; borderRadius: 12px; border: 2px solid #CFE0D6; font-size: 14px; font-weight: 700; color: #12245C;">
           <button type="button" onClick="{{ importSheet }}" style="padding: 12px 22px; borderRadius: 999px; border: 3px solid #17C29A; background: #17C29A; color: #fff; font-weight: 800; font-size: 15px; cursor: pointer; boxShadow: 0 3px 0 rgba(23,194,154,.3);">取り込む <span style="font-size: 12px; color: #E6FFF7; marginLeft: 5px;">Import</span></button>
@@ -139,7 +139,7 @@
       </div>
       <div onDragOver="{{ onDragOver }}" onDrop="{{ onDropImages }}" style="margin: 14px 0 22px; padding: 22px; border-radius: 20px; border: 3px dashed #17C29A; background: repeating-linear-gradient(45deg, #FFFFFF 0 14px, #F2FBF7 14px 28px); text-align: center;">
         <div style="font-size: 17px; font-weight: 800;">ここに画像をまとめてドロップ</div>
-        <div style="font-size: 14px; font-weight: 500; color: #4A5A80; margin-top: 6px;">ファイル名の数字を賞品番号として割り当てます（例 LD_0001.png → 番号1）。長辺760pxに縮小して保存。</div>
+        <div style="font-size: 14px; font-weight: 500; color: #4A5A80; margin-top: 6px;">スプシの「画像ファイル名」列で賞品に割り当てます。列が無いときは、ファイル名の数字を賞品番号とみなします（例 LD_0001.png → 番号1）。長辺760pxに縮小して保存。</div>
         <label style="display: inline-block; margin-top: 12px; padding: 9px 18px; border-radius: 999px; border: 3px solid #12245C; background: #fff; font-weight: 700; font-size: 14px; cursor: pointer;">ファイルを選ぶ<input type="file" accept="image/*" multiple="{{ true }}" onChange="{{ onPickImages }}" style="display: none;"></label>
       </div>
 
@@ -796,12 +796,19 @@ class Component extends DCLogic {
   async ingest(files, forceNo) {
     const list = Array.from(files || []);
     const updates = {};
+    // シートの「画像ファイル名」列で割り当てる。列が無い・一致しないときはファイル名の数字＝賞品番号
+    const key = n => String(n || '').normalize('NFC').trim().toLowerCase().replace(/\.[a-z0-9]+$/, '');
+    const byFile = {};
+    this.state.prizes.forEach(p => { if (p.imageFile) { const k = key(p.imageFile); (byFile[k] = byFile[k] || []).push(p.no); } });
     for (const f of list) {
       if (!/^image\//.test(f.type)) continue;
-      const m = f.name.match(/(\d+)/);
-      const no = forceNo != null ? forceNo : (m ? parseInt(m[1], 10) : null);
-      if (!no) continue;
-      updates[no] = await this.shrink(f);
+      let nos;
+      if (forceNo != null) nos = [forceNo];
+      else if (byFile[key(f.name)]) nos = byFile[key(f.name)];
+      else { const m = f.name.match(/(\d+)/); nos = m ? [parseInt(m[1], 10)] : []; }
+      if (!nos.length || !nos[0]) continue;
+      const data = await this.shrink(f);
+      nos.forEach(no => { updates[no] = data; });
     }
     if (!Object.keys(updates).length) return;
     this.setState(s => ({ prizes: s.prizes.map(p => updates[p.no] ? Object.assign({}, p, { image: updates[p.no] }) : p) }));
@@ -834,7 +841,7 @@ class Component extends DCLogic {
     const norm = v => String(v || '').trim().toLowerCase().replace(/\s/g, '');
     const head = rows[0].map(norm);
     const find = keys => head.findIndex(h => keys.some(k => h.indexOf(k) !== -1));
-    let idx = { no: find(['番号', 'no', '#']), name: find(['賞品名', '商品名', 'name', 'prize']), note: find(['補足', 'メモ', 'note']), rarity: find(['レア', 'rarity']), enabled: find(['使う', '有効', 'enable', 'use']), all: find(['全員', 'everyone', 'all']) };
+    let idx = { no: find(['番号', 'no', '#']), name: find(['賞品名', '商品名', 'name', 'prize']), note: find(['補足', 'メモ', 'note']), rarity: find(['レア', 'rarity', 'レート', 'rate']), enabled: find(['使う', '有効', 'enable', 'use']), all: find(['全員', 'everyone', 'all']), file: find(['画像ファイル', 'imagefile', 'image']) };
     let body = rows.slice(1);
     if (idx.no === -1 && idx.name === -1) { idx = { no: 0, name: 1, note: 2, rarity: 3, enabled: 4, all: 5 }; body = rows; }
     const truthy = v => { const t = String(v || '').trim().toLowerCase(); return t !== '' && t !== 'false' && t !== '0' && t !== 'no' && t !== 'off' && t !== 'いいえ' && t !== '×' && t !== 'ｘ'; };
@@ -852,6 +859,7 @@ class Component extends DCLogic {
         enabled: idx.enabled >= 0 ? truthy(at(r, idx.enabled)) : true,
         all: idx.all >= 0 ? truthy(at(r, idx.all)) : false
       });
+      if (idx.file >= 0) parsed[parsed.length - 1].imageFile = String(at(r, idx.file) || '').trim();
     });
     if (!parsed.length) { this.sheetMsg('賞品の行が見つかりませんでした。列見出しをご確認ください。', false); return; }
     this.setState(s => {
