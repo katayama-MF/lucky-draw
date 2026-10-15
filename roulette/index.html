@@ -375,8 +375,10 @@ class Component extends DCLogic {
     super(props);
     const init = this.load();
     // 保存データに賞品名が1件も無いときは、default-prizes.js の既定リストで始める
-    const saved = (init.prizes || []).some(p => p && p.name) ? init.prizes : null;
     const seed = Array.isArray(window.MAGNA_DEFAULT_PRIZES) ? window.MAGNA_DEFAULT_PRIZES.map(p => Object.assign({ image: null, won: false, at: null }, p)) : null;
+    let saved = (init.prizes || []).some(p => p && p.name) ? init.prizes : null;
+    // 保存データで画像が空の賞品は、既定リストの同じ番号の画像を補う
+    if (saved && seed) saved = saved.map(p => (p && !p.image) ? Object.assign({}, p, { image: (seed.find(x => x.no === p.no) || {}).image || null }) : p);
     this.state = {
       prizes: saved || seed || this.makePrizes(75),
       sheetUrl: window.MAGNA_DEFAULT_SHEET_URL || '',
