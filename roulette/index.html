@@ -121,7 +121,7 @@
           <div style="font-size: 17px; font-weight: 800;">スプレッドシートから取り込む</div>
           <div style="font-size: 12px; font-weight: 700; color: #17C29A;">Import from Google Sheets</div>
         </div>
-        <div style="font-size: 14px; font-weight: 500; color: #4A5A80; lineHeight: 1.7;">1行目を見出しにして「番号 / 賞品名 / 補足 / レア度 / 使う / 全員」の列を用意してください（「賞品番号」「レート」「全員に」の見出しも読めます）。共有設定を「リンクを知っている全員が閲覧可」にしたURLを貼り、取り込みを押します。</div>
+        <div style="font-size: 14px; font-weight: 500; color: #4A5A80; lineHeight: 1.7;">1行目を見出しにして「番号 / 賞品名 / 補足 / レア度 / 使う / 全員」の列を用意してください（「賞品番号」「レート」「全員に」の見出しも読めます）。シートのURLを貼って「取り込む」を押します（Claudeで開いているときは共有設定の変更不要。それ以外は「リンクを知っている全員が閲覧可」が必要）。</div>
         <div style="display: flex; gap: 10px; flexWrap: wrap; marginTop: 12px;">
           <input type="text" value="{{ sheetUrl }}" onChange="{{ onSheetUrl }}" placeholder="https://docs.google.com/spreadsheets/d/…" style="flex: 1; minWidth: 280px; padding: 12px 14px; borderRadius: 12px; border: 2px solid #CFE0D6; font-size: 14px; font-weight: 700; color: #12245C;">
           <button type="button" onClick="{{ importSheet }}" style="padding: 12px 22px; borderRadius: 999px; border: 3px solid #17C29A; background: #17C29A; color: #fff; font-weight: 800; font-size: 15px; cursor: pointer; boxShadow: 0 3px 0 rgba(23,194,154,.3);">取り込む <span style="font-size: 12px; color: #E6FFF7; marginLeft: 5px;">Import</span></button>
@@ -882,9 +882,38 @@ class Component extends DCLogic {
     const url = (this.state.sheetUrl || '').trim();
     const m = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
     if (!m) { this.sheetMsg('スプレッドシートのURLを貼ってください。', false); return; }
+    const id = m[1];
     const gid = (url.match(/[#&?]gid=(\d+)/) || [])[1];
-    const base = 'https://docs.google.com/spreadsheets/d/' + m[1] + '/gviz/tq?tqx=out:csv' + (gid ? '&gid=' + gid : '');
     this.sheetMsg('読み込み中…', true);
+    // 1) Claudeのアーティファクトで開いているとき：Google Sheets 連携で読む（共有設定の変更は不要）
+    const mcp = (window.claude && typeof window.claude.use === 'function') ? await window.claude.use('mcp').catch(() => null) : null;
+    if (mcp) {
+      try {
+        const meta = (await mcp.callTool('Google Sheets', 'get_spreadsheet', { spreadsheetId: id, fields: ['sheets.properties.sheetId', 'sheets.properties.title'] })).payload || {};
+        const sheets = (meta.sheets || []).map(x => x.properties || {});
+        const tab = sheets.find(x => gid != null && String(x.sheetId) === String(gid)) || sheets[0];
+        if (!tab || !tab.title) throw { code: 'no_tab' };
+        const vals = (await mcp.callTool('Google Sheets', 'get_values', { spreadsheetId: id, range: "'" + String(tab.title).replace(/'/g, "''") + "'!A1:Z1000" })).payload || {};
+        const rows = (vals.values || []).map(r => r.map(v => v == null ? '' : String(v)));
+        this.applySheetRows(rows);
+        return;
+      } catch (e) {
+        const code = e && e.code;
+        const msg = {
+          server_not_connected: 'Google Sheets がClaudeに連携されていません。claude.ai の 設定 → コネクタ で追加してください。',
+          needs_reauth: 'Google Sheets の連携が切れています。claude.ai の 設定 → コネクタ で再接続してください。',
+          not_in_manifest: 'このページで Google Sheets の利用が許可されていません。右上の権限設定から許可してください。',
+          approval_required: 'Google Sheets の読み取りを許可してから、もう一度「取り込む」を押してください。',
+          selection_required: 'Google Sheets の連携が複数あります。どれを使うか選んでから、もう一度押してください。',
+          no_tab: 'シートのタブが見つかりませんでした。URLを確認してください。',
+          tool_error: 'シートを読めませんでした。URLと、このアカウントで開けるシートかを確認してください。'
+        }[code];
+        if (msg) { this.sheetMsg(msg, false); return; }
+        // それ以外（一時的な失敗など）は下の公開URL方式で試す
+      }
+    }
+    // 2) それ以外の環境：「リンクを知っている全員が閲覧可」のシートを直接読む
+    const base = 'https://docs.google.com/spreadsheets/d/' + id + '/gviz/tq?tqx=out:csv' + (gid ? '&gid=' + gid : '');
     try {
       const res = await fetch(base);
       if (!res.ok) throw new Error(res.status);
@@ -895,6 +924,7 @@ class Component extends DCLogic {
       this.sheetMsg('読み込めませんでした。共有を「リンクを知っている全員が閲覧可」にするか、CSVを書き出して読み込んでください。', false);
     }
   }
+
   updatePrize(no, patch) {
     this.setState(s => ({ prizes: s.prizes.map(p => p.no === no ? Object.assign({}, p, patch) : p) }));
   }
