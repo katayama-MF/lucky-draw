@@ -1,5 +1,6 @@
 // 既定の賞品リスト（ブラウザに保存データが無いときだけ使う）
 // 出典：Googleスプレッドシート「クイズ大会賞品リスト」タブ 20261031（2026/10/15 取得）
+// 画像は prize_pics/pNN.webp（賞品番号ごと）。Drive「prize/old」とレジェンズ図鑑の画像から賞品名に合わせて選んだもの
 // 更新するときはアプリの「スプレッドシートから取り込む」で取り込み直すか、このファイルを作り直す
 window.MAGNA_DEFAULT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1r6CgACphjmes-pbKV6Aw2zf55LxQJhWIHKgHDW4yZ50/edit#gid=20261031";
 window.MAGNA_DEFAULT_PRIZES = [
@@ -10,7 +11,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "MEGA",
 "enabled": true,
 "all": true,
-"imageFile": "LD_0001.png"
+"imageFile": "LD_0001.png",
+"image": "prize_pics/p01.webp"
 },
 {
 "no": 2,
@@ -19,7 +21,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "MEGA",
 "enabled": true,
 "all": true,
-"imageFile": "LD_0002.png"
+"imageFile": "LD_0002.png",
+"image": "prize_pics/p02.webp"
 },
 {
 "no": 3,
@@ -28,7 +31,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "MEGA",
 "enabled": true,
 "all": true,
-"imageFile": "LD_0003.png"
+"imageFile": "LD_0003.png",
+"image": "prize_pics/p03.webp"
 },
 {
 "no": 4,
@@ -37,7 +41,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "BIG",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0004.png"
+"imageFile": "LD_0004.png",
+"image": "prize_pics/p04.webp"
 },
 {
 "no": 5,
@@ -46,7 +51,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "BIG",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0005.png"
+"imageFile": "LD_0005.png",
+"image": "prize_pics/p05.webp"
 },
 {
 "no": 6,
@@ -55,7 +61,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "BIG",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0006.png"
+"imageFile": "LD_0006.png",
+"image": "prize_pics/p06.webp"
 },
 {
 "no": 7,
@@ -64,7 +71,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "MEGA",
 "enabled": true,
 "all": true,
-"imageFile": "LD_0007.jpg"
+"imageFile": "LD_0007.jpg",
+"image": "prize_pics/p07.webp"
 },
 {
 "no": 8,
@@ -73,7 +81,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "BIG",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0008.png"
+"imageFile": "LD_0008.png",
+"image": "prize_pics/p08.webp"
 },
 {
 "no": 9,
@@ -82,7 +91,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "BIG",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0009.png"
+"imageFile": "LD_0009.png",
+"image": "prize_pics/p09.webp"
 },
 {
 "no": 10,
@@ -91,7 +101,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "BIG",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0010.png"
+"imageFile": "LD_0010.png",
+"image": "prize_pics/p10.webp"
 },
 {
 "no": 11,
@@ -100,7 +111,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0046.png"
+"imageFile": "LD_0046.png",
+"image": "prize_pics/p11.webp"
 },
 {
 "no": 12,
@@ -109,7 +121,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0024.png"
+"imageFile": "LD_0024.png",
+"image": "prize_pics/p12.webp"
 },
 {
 "no": 13,
@@ -118,7 +131,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0047.png"
+"imageFile": "LD_0047.png",
+"image": "prize_pics/p13.webp"
 },
 {
 "no": 14,
@@ -127,7 +141,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0032.png"
+"imageFile": "LD_0032.png",
+"image": "prize_pics/p14.webp"
 },
 {
 "no": 15,
@@ -136,7 +151,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0026.png"
+"imageFile": "LD_0026.png",
+"image": "prize_pics/p15.webp"
 },
 {
 "no": 16,
@@ -145,7 +161,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0031.png"
+"imageFile": "LD_0031.png",
+"image": "prize_pics/p16.webp"
 },
 {
 "no": 17,
@@ -154,7 +171,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0048.png"
+"imageFile": "LD_0048.png",
+"image": "prize_pics/p17.webp"
 },
 {
 "no": 18,
@@ -163,7 +181,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0034.jpg"
+"imageFile": "LD_0034.jpg",
+"image": "prize_pics/p18.webp"
 },
 {
 "no": 19,
@@ -172,7 +191,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0027.png"
+"imageFile": "LD_0027.png",
+"image": "prize_pics/p19.webp"
 },
 {
 "no": 20,
@@ -181,7 +201,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0033.png"
+"imageFile": "LD_0033.png",
+"image": "prize_pics/p20.webp"
 },
 {
 "no": 21,
@@ -190,7 +211,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0049.png"
+"imageFile": "LD_0049.png",
+"image": "prize_pics/p21.webp"
 },
 {
 "no": 22,
@@ -199,7 +221,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0011.png"
+"imageFile": "LD_0011.png",
+"image": "prize_pics/p22.webp"
 },
 {
 "no": 23,
@@ -208,7 +231,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0042.png"
+"imageFile": "LD_0042.png",
+"image": "prize_pics/p23.webp"
 },
 {
 "no": 24,
@@ -217,7 +241,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0028.png"
+"imageFile": "LD_0028.png",
+"image": "prize_pics/p24.webp"
 },
 {
 "no": 25,
@@ -226,7 +251,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0041.png"
+"imageFile": "LD_0041.png",
+"image": "prize_pics/p25.webp"
 },
 {
 "no": 26,
@@ -235,7 +261,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0036.jpg"
+"imageFile": "LD_0036.jpg",
+"image": "prize_pics/p26.webp"
 },
 {
 "no": 27,
@@ -244,7 +271,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0051.png"
+"imageFile": "LD_0051.png",
+"image": "prize_pics/p27.webp"
 },
 {
 "no": 28,
@@ -253,7 +281,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0056.png"
+"imageFile": "LD_0056.png",
+"image": "prize_pics/p28.webp"
 },
 {
 "no": 29,
@@ -262,7 +291,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "BIG",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0071.png"
+"imageFile": "LD_0071.png",
+"image": "prize_pics/p29.webp"
 },
 {
 "no": 30,
@@ -271,7 +301,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0012.png"
+"imageFile": "LD_0012.png",
+"image": "prize_pics/p30.webp"
 },
 {
 "no": 31,
@@ -280,7 +311,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0044.png"
+"imageFile": "LD_0044.png",
+"image": "prize_pics/p31.webp"
 },
 {
 "no": 32,
@@ -289,7 +321,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "BIG",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0025.png"
+"imageFile": "LD_0025.png",
+"image": "prize_pics/p32.webp"
 },
 {
 "no": 33,
@@ -298,7 +331,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0029.png"
+"imageFile": "LD_0029.png",
+"image": "prize_pics/p33.webp"
 },
 {
 "no": 34,
@@ -307,7 +341,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0043.png"
+"imageFile": "LD_0043.png",
+"image": "prize_pics/p34.webp"
 },
 {
 "no": 35,
@@ -316,7 +351,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0037.png"
+"imageFile": "LD_0037.png",
+"image": "prize_pics/p35.webp"
 },
 {
 "no": 36,
@@ -325,7 +361,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0052.png"
+"imageFile": "LD_0052.png",
+"image": "prize_pics/p36.webp"
 },
 {
 "no": 37,
@@ -334,7 +371,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0057.jpg"
+"imageFile": "LD_0057.jpg",
+"image": "prize_pics/p37.webp"
 },
 {
 "no": 38,
@@ -343,7 +381,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "BIG",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0072.png"
+"imageFile": "LD_0072.png",
+"image": "prize_pics/p38.webp"
 },
 {
 "no": 39,
@@ -352,7 +391,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0013.jpg"
+"imageFile": "LD_0013.jpg",
+"image": "prize_pics/p39.webp"
 },
 {
 "no": 40,
@@ -361,7 +401,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "BIG",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0015.png"
+"imageFile": "LD_0015.png",
+"image": "prize_pics/p40.webp"
 },
 {
 "no": 41,
@@ -370,7 +411,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0016.png"
+"imageFile": "LD_0016.png",
+"image": "prize_pics/p41.webp"
 },
 {
 "no": 42,
@@ -388,7 +430,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0062.png"
+"imageFile": "LD_0062.png",
+"image": "prize_pics/p43.webp"
 },
 {
 "no": 44,
@@ -397,7 +440,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "BIG",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0060.png"
+"imageFile": "LD_0060.png",
+"image": "prize_pics/p44.webp"
 },
 {
 "no": 45,
@@ -406,7 +450,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0066.png"
+"imageFile": "LD_0066.png",
+"image": "prize_pics/p45.webp"
 },
 {
 "no": 46,
@@ -415,7 +460,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0061.png"
+"imageFile": "LD_0061.png",
+"image": "prize_pics/p46.webp"
 },
 {
 "no": 47,
@@ -424,7 +470,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0038.png"
+"imageFile": "LD_0038.png",
+"image": "prize_pics/p47.webp"
 },
 {
 "no": 48,
@@ -433,7 +480,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0053.png"
+"imageFile": "LD_0053.png",
+"image": "prize_pics/p48.webp"
 },
 {
 "no": 49,
@@ -442,7 +490,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0058.png"
+"imageFile": "LD_0058.png",
+"image": "prize_pics/p49.webp"
 },
 {
 "no": 50,
@@ -451,7 +500,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "BIG",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0073.png"
+"imageFile": "LD_0073.png",
+"image": "prize_pics/p50.webp"
 },
 {
 "no": 51,
@@ -460,7 +510,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0014.png"
+"imageFile": "LD_0014.png",
+"image": "prize_pics/p51.webp"
 },
 {
 "no": 52,
@@ -469,7 +520,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "BIG",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0020.png"
+"imageFile": "LD_0020.png",
+"image": "prize_pics/p52.webp"
 },
 {
 "no": 53,
@@ -478,7 +530,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0017.png"
+"imageFile": "LD_0017.png",
+"image": "prize_pics/p53.webp"
 },
 {
 "no": 54,
@@ -496,7 +549,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0021.png"
+"imageFile": "LD_0021.png",
+"image": "prize_pics/p55.webp"
 },
 {
 "no": 56,
@@ -523,7 +577,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0064.png"
+"imageFile": "LD_0064.png",
+"image": "prize_pics/p58.webp"
 },
 {
 "no": 59,
@@ -532,7 +587,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "BIG",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0070.png"
+"imageFile": "LD_0070.png",
+"image": "prize_pics/p59.webp"
 },
 {
 "no": 60,
@@ -541,7 +597,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0067.png"
+"imageFile": "LD_0067.png",
+"image": "prize_pics/p60.webp"
 },
 {
 "no": 61,
@@ -550,7 +607,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "BIG",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0030.png"
+"imageFile": "LD_0030.png",
+"image": "prize_pics/p61.webp"
 },
 {
 "no": 62,
@@ -559,7 +617,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0063.png"
+"imageFile": "LD_0063.png",
+"image": "prize_pics/p62.webp"
 },
 {
 "no": 63,
@@ -568,7 +627,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "BIG",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0035.png"
+"imageFile": "LD_0035.png",
+"image": "prize_pics/p63.webp"
 },
 {
 "no": 64,
@@ -577,7 +637,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0039.png"
+"imageFile": "LD_0039.png",
+"image": "prize_pics/p64.webp"
 },
 {
 "no": 65,
@@ -586,7 +647,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "BIG",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0040.png"
+"imageFile": "LD_0040.png",
+"image": "prize_pics/p65.webp"
 },
 {
 "no": 66,
@@ -595,7 +657,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "BIG",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0045.png"
+"imageFile": "LD_0045.png",
+"image": "prize_pics/p66.webp"
 },
 {
 "no": 67,
@@ -604,7 +667,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0054.png"
+"imageFile": "LD_0054.png",
+"image": "prize_pics/p67.webp"
 },
 {
 "no": 68,
@@ -613,7 +677,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "BIG",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0050.png"
+"imageFile": "LD_0050.png",
+"image": "prize_pics/p68.webp"
 },
 {
 "no": 69,
@@ -622,7 +687,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "BIG",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0055.png"
+"imageFile": "LD_0055.png",
+"image": "prize_pics/p69.webp"
 },
 {
 "no": 70,
@@ -631,7 +697,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "NORMAL",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0059.jpg"
+"imageFile": "LD_0059.jpg",
+"image": "prize_pics/p70.webp"
 },
 {
 "no": 71,
@@ -640,7 +707,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "BIG",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0065.png"
+"imageFile": "LD_0065.png",
+"image": "prize_pics/p71.webp"
 },
 {
 "no": 72,
@@ -658,7 +726,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "BIG",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0069.png"
+"imageFile": "LD_0069.png",
+"image": "prize_pics/p73.webp"
 },
 {
 "no": 74,
@@ -667,7 +736,8 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "BIG",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0074.png"
+"imageFile": "LD_0074.png",
+"image": "prize_pics/p74.webp"
 },
 {
 "no": 75,
