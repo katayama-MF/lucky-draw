@@ -746,6 +746,7 @@ window.MAGNA_DEFAULT_PRIZES = [
 "rarity": "BIG",
 "enabled": true,
 "all": false,
-"imageFile": "LD_0075.png"
+"imageFile": "LD_0075.png",
+"image": "prize_pics/p75.webp"
 }
 ];
