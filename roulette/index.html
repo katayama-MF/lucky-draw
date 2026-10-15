@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
+<script src="./default-prizes.js"></script>
 </head>
 <body>
 <x-dc>
@@ -373,8 +374,12 @@ class Component extends DCLogic {
   constructor(props) {
     super(props);
     const init = this.load();
+    // 保存データに賞品名が1件も無いときは、default-prizes.js の既定リストで始める
+    const saved = (init.prizes || []).some(p => p && p.name) ? init.prizes : null;
+    const seed = Array.isArray(window.MAGNA_DEFAULT_PRIZES) ? window.MAGNA_DEFAULT_PRIZES.map(p => Object.assign({ image: null, won: false, at: null }, p)) : null;
     this.state = {
-      prizes: init.prizes || this.makePrizes(75),
+      prizes: saved || seed || this.makePrizes(75),
+      sheetUrl: window.MAGNA_DEFAULT_SHEET_URL || '',
       results: init.results || [],
       settings: Object.assign({ se: true, bgm: true, bgmVol: Math.round((this.props.bgmDefaultVolume ?? 30)), light: true }, init.settings || {}),
       showNames: init.showNames !== false,
