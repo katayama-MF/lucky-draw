@@ -49,7 +49,8 @@ Googleスプレッドシート「クイズ大会賞品リスト」の該当日�
 | 番号 | 賞品番号 |
 | 賞品名 | 賞品名 |
 | レア度 | レート（MEGA / BIG / NORMAL） |
-| 補足 | 補足 |
+| 補足（画面に出す文） | ひとこと（画面に出す）。この列が無いときだけ「補足」を使う |
+| — | 補足（運営メモ。画面には出さない） |
 | 全員 | 全員に |
 | 使う | （なし） |
 | — | 画像ファイル名（LD_0001.png 等、Driveフォルダ） |
@@ -63,5 +64,5 @@ Googleスプレッドシート「クイズ大会賞品リスト」の該当日�
 - `index.html` … アプリ本体（Claude Design の `.dc.html` 形式。`support.js` が実行環境）
 - `support.js` … Claude Design のランタイム（React を unpkg から読み込む）
 - `_ds/` … マグナスクール Design System のトークン・コンポーネント
-- `assets/` … ロゴ、BGM、効果音
+- `assets/` … ロゴ、BGM、効果音（開封SE：NORMAL `normal.ogg`／BIG `fanfare_big.wav`／MEGA `fanfare_mega.ogg`。いずれも旧版 LUCKY DRAW の音源）
 - `docs/spec-v3.md` … 仕様案 v3

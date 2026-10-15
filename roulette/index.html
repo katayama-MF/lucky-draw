@@ -208,7 +208,7 @@
       </div>
       <div style="padding: 20px; background: #fff; border: 3px solid #E4EFE8; borderRadius: 18px; display: grid; gap: 14px;">
         <div style="font-size: 17px; font-weight: 800;">音源の差し替え</div>
-        <div style="font-size: 14px; font-weight: 500; color: #4A5A80;">初期状態はブラウザ内で合成した仮の音です。BGM.ogg／normal.ogg／rateReelMega.ogg などを読み込むと差し替わります（このセッション内で有効）。</div>
+        <div style="font-size: 14px; font-weight: 500; color: #4A5A80;">初期状態は assets/ の音（BGM.ogg／normal.ogg／fanfare_big.wav／fanfare_mega.ogg）。ここでファイルを読み込むと差し替わります（このセッション内で有効）。</div>
         <div style="display: grid; gap: 10px;">
           <label style="display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 700;"><span style="width: 150px;">BGM</span><input type="file" accept="audio/*" onChange="{{ onAudioBgm }}"></label>
           <label style="display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 700;"><span style="width: 150px;">リール音</span><input type="file" accept="audio/*" onChange="{{ onAudioReel }}"></label>
@@ -381,6 +381,9 @@ class Component extends DCLogic {
     let saved = (init.prizes || []).some(p => p && p.name) ? init.prizes : null;
     // 保存データで画像が空の賞品は、既定リストの同じ番号の画像を補う
     if (saved && seed) saved = saved.map(p => (p && !p.image) ? Object.assign({}, p, { image: (seed.find(x => x.no === p.no) || {}).image || null }) : p);
+    // 以前の取り込みで運営メモ（補足列）が画面用の文に入っていたら、既定のひとことに置き換える
+    const memo = /確認待ち|補充案|付与|在庫|確認）|単品案|セット案|制作予定/;
+    if (saved && seed) saved = saved.map(p => { const d = p && seed.find(x => x.no === p.no && x.name === p.name); return (d && (!p.note || memo.test(p.note) || /^\s*参加者全員に[！!]?\s*$/.test(p.note))) ? Object.assign({}, p, { note: d.note }) : p; });
     this.state = {
       prizes: saved || seed || this.makePrizes(75),
       sheetUrl: window.MAGNA_DEFAULT_SHEET_URL || '',
@@ -406,7 +409,7 @@ class Component extends DCLogic {
     this.previewRef = React.createRef();
     this.offset = 0;
     this.speed = 0;
-    this.files = { bgm: 'assets/BGM.ogg', normal: 'assets/normal.ogg', big: 'assets/rateReelBig.mp3', mega: 'assets/rateReelMega.wav' };
+    this.files = { bgm: 'assets/BGM.ogg', normal: 'assets/normal.ogg', big: 'assets/fanfare_big.wav', mega: 'assets/fanfare_mega.ogg' };
     this.audioEls = {};
   }
 
@@ -850,7 +853,7 @@ class Component extends DCLogic {
     const norm = v => String(v || '').trim().toLowerCase().replace(/\s/g, '');
     const head = rows[0].map(norm);
     const find = keys => head.findIndex(h => keys.some(k => h.indexOf(k) !== -1));
-    let idx = { no: find(['番号', 'no', '#']), name: find(['賞品名', '商品名', 'name', 'prize']), note: find(['補足', 'メモ', 'note']), rarity: find(['レア', 'rarity', 'レート', 'rate']), enabled: find(['使う', '有効', 'enable', 'use']), all: find(['全員', 'everyone', 'all']), file: find(['画像ファイル', 'imagefile', 'image']) };
+    let idx = { no: find(['番号', 'no', '#']), name: find(['賞品名', '商品名', 'name', 'prize']), note: (find(['ひとこと', 'キャッチ', 'catch']) !== -1 ? find(['ひとこと', 'キャッチ', 'catch']) : find(['補足', 'メモ', 'note'])), rarity: find(['レア', 'rarity', 'レート', 'rate']), enabled: find(['使う', '有効', 'enable', 'use']), all: find(['全員', 'everyone', 'all']), file: find(['画像ファイル', 'imagefile', 'image']) };
     let body = rows.slice(1);
     if (idx.no === -1 && idx.name === -1) { idx = { no: 0, name: 1, note: 2, rarity: 3, enabled: 4, all: 5 }; body = rows; }
     const truthy = v => { const t = String(v || '').trim().toLowerCase(); return t !== '' && t !== 'false' && t !== '0' && t !== 'no' && t !== 'off' && t !== 'いいえ' && t !== '×' && t !== 'ｘ'; };
