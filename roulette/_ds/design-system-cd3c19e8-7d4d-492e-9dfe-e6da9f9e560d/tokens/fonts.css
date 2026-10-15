@@ -1,0 +1,10 @@
+/* =========================================================================
+   マグナスクール — Webfonts
+   Brand voice: rounded, friendly, pop. We use "M PLUS Rounded 1c", a rounded
+   Japanese gothic that matches the kids-EdTech tone, with heavy weights for
+   impactful headings. (SUBSTITUTION: the source LP used the system stack
+   Hiragino Sans / Yu Gothic / Meiryo. See readme.md → VISUAL FOUNDATIONS.)
+   ========================================================================= */
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800;900&family=Baloo+2:wght@600;700;800&display=swap');
+
+/* Baloo 2 = rounded display face for Latin / numerals in playful headings. */

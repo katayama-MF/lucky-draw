@@ -1,0 +1,85 @@
+/* =========================================================================
+   マグナスクール — Color tokens
+   Bright, friendly, pop palette for a kids' English EdTech brand.
+   Base hues: yellow / pink / mint (+ sky, purple accents) on white.
+   ========================================================================= */
+:root {
+  /* ---- Brand base hues ---- */
+  --magna-yellow:        #fbbf24;  /* signature sunny yellow */
+  --magna-yellow-deep:   #f59e0b;  /* amber — method course, emphasis */
+  --magna-yellow-deeper: #d97706;  /* darker amber for text on light */
+  --magna-pink:          #ec4899;  /* signature pink — party course, primary accent */
+  --magna-pink-deep:     #db2777;
+  --magna-pink-deeper:   #be185d;  /* pink text on light */
+  --magna-mint:          #2DB39A;  /* brand mint/teal — data, "app" */
+  --magna-mint-light:    #34c4a8;
+  --magna-mint-deep:     #0c5e50;
+  --magna-sky:           #38bdf8;  /* light sky blue */
+  --magna-sky-deep:      #0ea5e9;
+  --magna-blue:          #2563eb;  /* link / info blue */
+  --magna-navy:          #1e3a8a;  /* deep hero text */
+  --magna-purple:        #8b5cf6;  /* eiken / tertiary accent */
+  --magna-purple-deep:   #7c3aed;
+  --magna-green:         #10b981;  /* success / "話せる" */
+  --magna-red:           #ef4444;  /* campaign / limited-time */
+
+  /* ---- Soft tints (card & section backgrounds) ---- */
+  --yellow-soft:   #fef3c7;
+  --yellow-soft-2: #fff9c3;
+  --yellow-wash:   #fefce8;
+  --pink-soft:     #fce7f3;
+  --pink-wash:     #fdf2f8;
+  --mint-soft:     #d7f5ee;
+  --mint-wash:     #f0fdf4;
+  --sky-soft:      #e0f2fe;
+  --sky-wash:      #eff6ff;
+  --purple-soft:   #ede9fe;
+  --green-soft:    #dcfce7;
+
+  /* ---- Ink (text) ---- */
+  --ink:    #1a2332;  /* primary text */
+  --ink-2:  #4a5568;  /* secondary text */
+  --ink-3:  #7a8699;  /* muted / captions */
+  --ink-inverse: #ffffff;
+
+  /* ---- Surfaces & lines ---- */
+  --surface:      #ffffff;  /* cards */
+  --bg:           #f6f8fb;  /* page background */
+  --bg-alt:       #f8fafc;  /* nested panels */
+  --line:         #e3e8ef;  /* hairline borders */
+  --line-strong:  #cbd5e1;
+
+  /* ---- Course color coding (semantic) ---- */
+  --course-method:      var(--magna-yellow-deep);
+  --course-method-ink:  #92400e;
+  --course-method-soft: var(--yellow-soft);
+  --course-party:       var(--magna-pink);
+  --course-party-ink:   #831843;
+  --course-party-soft:  var(--pink-soft);
+  --course-eiken:       var(--magna-purple);
+  --course-eiken-ink:   #4c1d95;
+  --course-eiken-soft:  var(--purple-soft);
+
+  /* ---- Signature gradients ---- */
+  --grad-primary:  linear-gradient(135deg, #ec4899, #f59e0b);   /* @kind color */
+  --grad-party:    linear-gradient(135deg, #ec4899, #db2777);   /* @kind color */
+  --grad-method:   linear-gradient(135deg, #f59e0b, #d97706);   /* @kind color */
+  --grad-eiken:    linear-gradient(135deg, #8b5cf6, #7c3aed);   /* @kind color */
+  --grad-mint:     linear-gradient(90deg, #2DB39A, #34c4a8);    /* @kind color */
+  --grad-sunny:    linear-gradient(180deg, #fefce8, #fff9c3);   /* @kind color */
+
+  /* Playful multi-radial "confetti" wash used on hero / intro sections */
+  --wash-playful:
+    radial-gradient(circle at 15% 25%, rgba(251, 191, 36, 0.18), transparent 45%),
+    radial-gradient(circle at 85% 75%, rgba(236, 72, 153, 0.18), transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.12), transparent 60%),
+    linear-gradient(135deg, #fefce8 0%, #fff9c3 50%, #fef3c7 100%); /* @kind color */
+
+  /* ---- Semantic aliases ---- */
+  --text-heading:  var(--ink);
+  --text-body:     var(--ink);
+  --text-muted:    var(--ink-3);
+  --accent:        var(--magna-pink);
+  --accent-2:      var(--magna-yellow-deep);
+  --surface-card:  var(--surface);
+}

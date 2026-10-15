@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/design-system-cd3c19e8-7d4d-492e-9dfe-e6da9f9e560d/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/design-system-cd3c19e8-7d4d-492e-9dfe-e6da9f9e560d/tokens/colors.css">
+<link rel="stylesheet" href="_ds/design-system-cd3c19e8-7d4d-492e-9dfe-e6da9f9e560d/tokens/typography.css">
+<link rel="stylesheet" href="_ds/design-system-cd3c19e8-7d4d-492e-9dfe-e6da9f9e560d/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/design-system-cd3c19e8-7d4d-492e-9dfe-e6da9f9e560d/styles.css">
+<script src="_ds/design-system-cd3c19e8-7d4d-492e-9dfe-e6da9f9e560d/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Bungee&display=swap">
+<style>
+  html, body { margin: 0; padding: 0; }
+  body { font-family: "Zen Maru Gothic", sans-serif; color: #12245C; background: #FFFDF6; }
+  * { box-sizing: border-box; }
+  a { color: #17C29A; text-decoration: none; }
+  a:hover { color: #0F9C7C; }
+  input, select, button, textarea { font-family: inherit; }
+  button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focus-visible { outline: 4px solid #F5A623; outline-offset: 3px; }
+  @keyframes mg-shake { 0%,100% { transform: translate(0,0) rotate(0deg); } 20% { transform: translate(-10px,0) rotate(-3deg); } 40% { transform: translate(10px,0) rotate(3deg); } 60% { transform: translate(-8px,0) rotate(-2deg); } 80% { transform: translate(8px,0) rotate(2deg); } }
+  @keyframes mg-shake-strong { 0%,100% { transform: translate(0,0) rotate(0deg) scale(1); } 15% { transform: translate(-18px,-6px) rotate(-6deg) scale(1.03); } 35% { transform: translate(18px,4px) rotate(6deg) scale(1.03); } 55% { transform: translate(-16px,-4px) rotate(-5deg) scale(1.04); } 75% { transform: translate(16px,4px) rotate(5deg) scale(1.03); } }
+  @keyframes mg-pop { 0% { transform: scale(.6); opacity: 0; } 60% { transform: scale(1.06); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+  @keyframes mg-flash { 0% { transform: scale(.2); opacity: 0; } 40% { transform: scale(1); opacity: .95; } 100% { transform: scale(1.35); opacity: 0; } }
+  @keyframes mg-conf { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(105vh) rotate(540deg); opacity: 1; } }
+  @keyframes mg-stopflash { 0% { opacity: .85; transform: scale(1); } 100% { opacity: 0; transform: scale(1.04); } }
+  @keyframes mg-stopkick { 0% { transform: scale(1); } 30% { transform: scale(.965); } 100% { transform: scale(1); } }
+  @keyframes mg-qm { 0%, 49% { opacity: 1; } 50%, 100% { opacity: .25; } }
+  @keyframes mg-ring { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
+  @keyframes mg-hit { 0%, 100% { box-shadow: 0 0 0 9999px rgba(255,253,246,.42); border-color: #FF5A5A; } 50% { box-shadow: 0 0 0 9999px rgba(255,253,246,.42), 0 0 46px 14px rgba(245,166,35,.75); border-color: #F5A623; } }
+  @keyframes mg-badge { 0% { transform: translate(-50%, 14px) scale(.7); opacity: 0; } 60% { transform: translate(-50%, 0) scale(1.08); opacity: 1; } 100% { transform: translate(-50%, 0) scale(1); opacity: 1; } }
+  @keyframes mg-lid { 0% { transform: rotate(0deg); } 100% { transform: rotate(-104deg); } }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+</style>
+</helmet>
+
+<div style="min-height: 100vh; display: flex; flex-direction: column; background: linear-gradient(170deg, #FFFDF6 0%, #F3FBF4 45%, #DCF3EA 100%);">
+
+  <sc-if value="{{ showChrome }}" hint-placeholder-val="{{ true }}">
+    <header style="display: flex; align-items: center; gap: 16px; padding: 14px 22px; background: linear-gradient(100deg, #12245C 0%, #1B3A86 55%, #17786A 100%); borderBottom: 4px solid #F5A623; color: #FFFFFF; position: sticky; top: 0; zIndex: 30; flexWrap: wrap;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <img src="assets/magna-title-logo.png" alt="マグナとふしぎの少女" style="height: 88px; width: auto; display: block; filter: brightness(0) invert(1);">
+        <div style="font-size: 22px; font-weight: 900; letter-spacing: .02em; lineHeight: 1.25; color: #FFFFFF; textShadow: 0 2px 0 rgba(0,0,0,.18);">マグナお楽しみ抽選システム</div>
+      </div>
+      <div style="flex: 1;"></div>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <button type="button" onClick="{{ goReel }}" style="padding: 10px 18px; border-radius: 999px; border: 3px solid #12245C; background: #FFFFFF; color: #12245C; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 3px 0 rgba(18,36,92,.15);" style-hover="background:#F3FBF4">抽選 <span style="font-size: 12px; font-weight: 700; color: #17C29A; marginLeft: 5px;">Draw</span></button>
+        <button type="button" onClick="{{ goList }}" style="padding: 10px 18px; border-radius: 999px; border: 3px solid #12245C; background: #FFFFFF; color: #12245C; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 3px 0 rgba(18,36,92,.15);" style-hover="background:#F3FBF4">賞品リスト <span style="font-size: 12px; font-weight: 700; color: #17C29A; marginLeft: 5px;">Prizes</span></button>
+        <button type="button" onClick="{{ goResults }}" style="padding: 10px 18px; border-radius: 999px; border: 3px solid #12245C; background: #FFFFFF; color: #12245C; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 3px 0 rgba(18,36,92,.15);" style-hover="background:#F3FBF4">結果 <span style="font-size: 12px; font-weight: 700; color: #17C29A; marginLeft: 5px;">Results</span></button>
+        <button type="button" onClick="{{ goSettings }}" style="padding: 10px 18px; border-radius: 999px; border: 3px solid #12245C; background: #FFFFFF; color: #12245C; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 3px 0 rgba(18,36,92,.15);" style-hover="background:#F3FBF4">設定 <span style="font-size: 12px; font-weight: 700; color: #17C29A; marginLeft: 5px;">Settings</span></button>
+      </div>
+    </header>
+  </sc-if>
+
+  <sc-if value="{{ isReel }}" hint-placeholder-val="{{ true }}">
+    <main style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px; padding: 34px 20px 46px;">
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <div style="display: flex; flex-direction: column; align-items: center; lineHeight: 1.15;">
+          <span style="font-size: 17px; font-weight: 700; color: #4A5A80;">残り</span>
+          <span style="font-size: 12px; font-weight: 700; color: #9FB1C9;">Left</span>
+        </div>
+        <span style="font-family: Bungee, sans-serif; font-size: 44px; color: #17C29A; line-height: 1;">{{ remainingCount }}</span>
+        <div style="display: flex; flex-direction: column; align-items: center; lineHeight: 1.15;">
+          <span style="font-size: 17px; font-weight: 700; color: #4A5A80;">／ {{ activeCount }}件</span>
+          <span style="font-size: 12px; font-weight: 700; color: #9FB1C9;">of {{ activeCount }} prizes</span>
+        </div>
+      </div>
+
+      <div style="{{ reelBoxStyle }}">
+        <div ref="{{ stripRef }}" style="position: absolute; top: 0; left: 0; height: 100%; display: flex; align-items: center; willChange: transform;">
+          <sc-for list="{{ reelCells }}" as="cell" hint-placeholder-count="6">
+            <div style="width: 200px; flex: 0 0 200px; text-align: center; font-family: Bungee, sans-serif; font-size: 128px; line-height: 1; color: #12245C;">{{ cell.n }}</div>
+          </sc-for>
+        </div>
+        <div style="{{ hitFrameStyle }}"></div>
+        <sc-if value="{{ isConfirmed }}" hint-placeholder-val="{{ false }}">
+          <div style="position: absolute; top: 0; bottom: 0; left: 50%; width: 208px; marginLeft: -104px; border: 6px solid #F5A623; borderRadius: 20px; pointerEvents: none; animation: mg-ring .7s ease-out 2 both;"></div>
+          <div style="position: absolute; bottom: 14px; left: 50%; padding: 8px 26px; borderRadius: 999px; background: #FF5A5A; color: #fff; fontSize: 22px; fontWeight: 900; pointerEvents: none; boxShadow: 0 4px 0 rgba(18,36,92,.2); animation: mg-badge .45s cubic-bezier(.2,1.4,.4,1) both;">LOCKED IN!</div>
+        </sc-if>
+        <div style="{{ hitLabelStyle }}">{{ hitLabel }}</div>
+        <sc-if value="{{ stopHit }}" hint-placeholder-val="{{ false }}">
+          <div style="position: absolute; inset: 0; background: #FFFFFF; pointerEvents: none; animation: mg-stopflash .38s ease-out both;"></div>
+        </sc-if>
+      </div>
+
+      <sc-if value="{{ isEmptyReel }}" hint-placeholder-val="{{ false }}">
+        <div style="padding: 14px 22px; border-radius: 16px; border: 2px dashed #17C29A; background: #FFFFFF; font-size: 16px; font-weight: 700; color: #12245C;">有効な賞品がありません。「賞品リスト」で番号をONにしてください。</div>
+      </sc-if>
+
+      <div style="display: flex; align-items: center; gap: 18px; flex-wrap: wrap; justify-content: center;">
+        <button type="button" onClick="{{ mainAction }}" disabled="{{ mainDisabled }}" style="{{ mainBtnStyle }}">{{ mainLabel }}</button>
+        <button type="button" onClick="{{ openPreview }}" disabled="{{ previewDisabled }}" style="{{ previewBtnStyle }}">商品をチェック <span style="font-size: 14px; font-weight: 700; color: #17C29A; marginLeft: 6px;">Check the prizes</span></button>
+      </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isList }}" hint-placeholder-val="{{ false }}">
+    <main style="flex: 1; padding: 26px 22px 60px; max-width: 1180px; width: 100%; margin: 0 auto;">
+      <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 8px;">
+        <div><div style="font-family: Bungee, sans-serif; font-size: 13px; color: #17C29A; lineHeight: 1;">PRIZE LIST</div><h2 style="font-size: 26px; font-weight: 900; margin: 2px 0 0;">賞品リスト</h2></div>
+        <span style="font-size: 15px; font-weight: 700; color: #4A5A80;">有効 {{ activeCount }}件</span>
+        <div style="flex: 1;"></div>
+        <button type="button" onClick="{{ saveNow }}" style="padding: 10px 22px; border-radius: 999px; border: 3px solid #12245C; background: #12245C; color: #fff; font-weight: 800; font-size: 15px; cursor: pointer; box-shadow: 0 3px 0 rgba(18,36,92,.25);">保存 <span style="font-size: 12px; font-weight: 700; color: #8FE3CE; marginLeft: 5px;">Save</span></button>
+        <button type="button" onClick="{{ addPrize }}" style="padding: 10px 18px; border-radius: 999px; border: 3px solid #17C29A; background: #17C29A; color: #fff; font-weight: 800; font-size: 15px; cursor: pointer; box-shadow: 0 3px 0 rgba(23,194,154,.3);">枠を追加</button>
+        <button type="button" onClick="{{ enableAll }}" style="padding: 10px 18px; border-radius: 999px; border: 3px solid #12245C; background: #fff; color: #12245C; font-weight: 700; font-size: 15px; cursor: pointer;">すべてON</button>
+        <button type="button" onClick="{{ disableAll }}" style="padding: 10px 18px; border-radius: 999px; border: 3px solid #12245C; background: #fff; color: #12245C; font-weight: 700; font-size: 15px; cursor: pointer;">すべてOFF</button>
+      </div>
+
+      <sc-if value="{{ saveMsg }}" hint-placeholder-val="{{ false }}">
+        <div style="marginTop: 10px; padding: 10px 16px; borderRadius: 12px; background: #F3FBF4; border: 2px solid #17C29A; font-size: 14px; font-weight: 700; color: #12245C; display: inline-block;">{{ saveMsg }}</div>
+      </sc-if>
+      <div style="margin: 14px 0 0; padding: 20px; borderRadius: 20px; background: #fff; border: 3px solid #E4EFE8;">
+        <div style="display: flex; alignItems: baseline; gap: 10px; marginBottom: 4px;">
+          <div style="font-size: 17px; font-weight: 800;">スプレッドシートから取り込む</div>
+          <div style="font-size: 12px; font-weight: 700; color: #17C29A;">Import from Google Sheets</div>
+        </div>
+        <div style="font-size: 14px; font-weight: 500; color: #4A5A80; lineHeight: 1.7;">1行目を見出しにして「番号 / 賞品名 / 補足 / レア度 / 使う / 全員」の列を用意してください。共有設定を「リンクを知っている全員が閲覧可」にしたURLを貼り、取り込みを押します。</div>
+        <div style="display: flex; gap: 10px; flexWrap: wrap; marginTop: 12px;">
+          <input type="text" value="{{ sheetUrl }}" onChange="{{ onSheetUrl }}" placeholder="https://docs.google.com/spreadsheets/d/…" style="flex: 1; minWidth: 280px; padding: 12px 14px; borderRadius: 12px; border: 2px solid #CFE0D6; font-size: 14px; font-weight: 700; color: #12245C;">
+          <button type="button" onClick="{{ importSheet }}" style="padding: 12px 22px; borderRadius: 999px; border: 3px solid #17C29A; background: #17C29A; color: #fff; font-weight: 800; font-size: 15px; cursor: pointer; boxShadow: 0 3px 0 rgba(23,194,154,.3);">取り込む <span style="font-size: 12px; color: #E6FFF7; marginLeft: 5px;">Import</span></button>
+          <label style="padding: 12px 20px; borderRadius: 999px; border: 3px solid #12245C; background: #fff; color: #12245C; font-weight: 800; font-size: 15px; cursor: pointer;">CSVファイル<input type="file" accept=".csv,text/csv" onChange="{{ onCsvFile }}" style="display: none;"></label>
+        </div>
+        <details style="marginTop: 12px;">
+          <summary style="font-size: 14px; font-weight: 700; color: #12245C; cursor: pointer;">うまく読めないときは、シートをコピーして貼り付け</summary>
+          <textarea value="{{ pasteText }}" onChange="{{ onPasteText }}" placeholder="番号	賞品名	補足	レア度	使う	全員
+1	Nintendo Switch	好きなの1つえらべる！	MEGA	TRUE	FALSE" style="width: 100%; height: 130px; marginTop: 10px; padding: 12px; borderRadius: 12px; border: 2px solid #CFE0D6; font-size: 13px; fontFamily: monospace; color: #12245C;"></textarea>
+          <button type="button" onClick="{{ importPaste }}" style="marginTop: 10px; padding: 10px 20px; borderRadius: 999px; border: 3px solid #12245C; background: #fff; color: #12245C; font-weight: 800; font-size: 14px; cursor: pointer;">貼り付けた内容を取り込む</button>
+        </details>
+        <sc-if value="{{ sheetMsg }}" hint-placeholder-val="{{ false }}">
+          <div style="{{ sheetMsgStyle }}">{{ sheetMsg }}</div>
+        </sc-if>
+      </div>
+      <div onDragOver="{{ onDragOver }}" onDrop="{{ onDropImages }}" style="margin: 14px 0 22px; padding: 22px; border-radius: 20px; border: 3px dashed #17C29A; background: repeating-linear-gradient(45deg, #FFFFFF 0 14px, #F2FBF7 14px 28px); text-align: center;">
+        <div style="font-size: 17px; font-weight: 800;">ここに画像をまとめてドロップ</div>
+        <div style="font-size: 14px; font-weight: 500; color: #4A5A80; margin-top: 6px;">ファイル名の数字を賞品番号として割り当てます（例 LD_0001.png → 番号1）。長辺760pxに縮小して保存。</div>
+        <label style="display: inline-block; margin-top: 12px; padding: 9px 18px; border-radius: 999px; border: 3px solid #12245C; background: #fff; font-weight: 700; font-size: 14px; cursor: pointer;">ファイルを選ぶ<input type="file" accept="image/*" multiple="{{ true }}" onChange="{{ onPickImages }}" style="display: none;"></label>
+      </div>
+
+      <div style="display: grid; gap: 12px;">
+        <sc-for list="{{ rows }}" as="row" hint-placeholder-count="4">
+          <div style="display: grid; gridTemplateColumns: 74px 96px 1fr 1fr 132px 96px 132px 52px; gap: 12px; align-items: center; padding: 12px 14px; background: #fff; border: 3px solid #E4EFE8; borderRadius: 16px;">
+            <div style="font-family: Bungee, sans-serif; font-size: 30px; color: #12245C; text-align: center;">{{ row.no }}</div>
+            <label style="display: block; height: 74px; border-radius: 12px; overflow: hidden; cursor: pointer; border: 2px solid #E4EFE8; background: repeating-linear-gradient(45deg, #FFF9E8 0 8px, #FDF1D2 8px 16px);">
+              <sc-if value="{{ row.image }}" hint-placeholder-val="{{ false }}">
+                <div style="{{ row.imageStyle }}"></div>
+              </sc-if>
+              <input type="file" accept="image/*" onChange="{{ row.onImage }}" style="display: none;">
+            </label>
+            <input type="text" value="{{ row.name }}" onChange="{{ row.onName }}" placeholder="賞品名" style="padding: 11px 12px; border-radius: 12px; border: 2px solid #CFE0D6; font-size: 15px; font-weight: 700; color: #12245C; width: 100%;">
+            <input type="text" value="{{ row.note }}" onChange="{{ row.onNote }}" placeholder="補足（例 好きなの1つえらべる！）" style="padding: 11px 12px; border-radius: 12px; border: 2px solid #CFE0D6; font-size: 14px; font-weight: 500; color: #12245C; width: 100%;">
+            <select value="{{ row.rarity }}" onChange="{{ row.onRarity }}" style="padding: 11px 10px; border-radius: 12px; border: 2px solid #CFE0D6; font-size: 14px; font-weight: 700; color: #12245C; width: 100%;">
+              <option value="NORMAL">NORMAL</option>
+              <option value="BIG">BIG</option>
+              <option value="MEGA">MEGA</option>
+            </select>
+            <label style="display: flex; align-items: center; gap: 7px; font-size: 14px; font-weight: 700; cursor: pointer;"><input type="checkbox" checked="{{ row.enabled }}" onChange="{{ row.onEnabled }}" style="width: 20px; height: 20px;">使う</label>
+            <label style="display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; cursor: pointer;"><input type="checkbox" checked="{{ row.all }}" onChange="{{ row.onAll }}" style="width: 20px; height: 20px;">全員に！</label>
+            <button type="button" onClick="{{ row.onDelete }}" style="padding: 9px 0; border-radius: 10px; border: 2px solid #FF5A5A; background: #fff; color: #FF5A5A; font-weight: 800; font-size: 13px; cursor: pointer;">削除</button>
+          </div>
+        </sc-for>
+      </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isResults }}" hint-placeholder-val="{{ false }}">
+    <main style="flex: 1; padding: 26px 22px 60px; max-width: 900px; width: 100%; margin: 0 auto;">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 18px; flex-wrap: wrap;">
+        <div><div style="font-family: Bungee, sans-serif; font-size: 13px; color: #17C29A; lineHeight: 1;">RESULTS</div><h2 style="font-size: 26px; font-weight: 900; margin: 2px 0 0;">抽選結果</h2></div>
+        <div style="flex: 1;"></div>
+        <button type="button" onClick="{{ exportCsv }}" style="padding: 10px 18px; border-radius: 999px; border: 3px solid #17C29A; background: #17C29A; color: #fff; font-weight: 800; font-size: 15px; cursor: pointer;">CSV書き出し</button>
+      </div>
+      <div style="display: grid; gap: 10px;">
+        <sc-for list="{{ results }}" as="r" hint-placeholder-count="3">
+          <div style="display: grid; gridTemplateColumns: 60px 90px 1fr 120px; gap: 12px; align-items: center; padding: 14px; background: #fff; border: 3px solid #E4EFE8; borderRadius: 14px; font-size: 16px; font-weight: 700;">
+            <span style="font-family: Bungee, sans-serif; color: #17C29A;">{{ r.order }}</span>
+            <span style="font-family: Bungee, sans-serif; font-size: 24px;">{{ r.no }}</span>
+            <span>{{ r.name }}</span>
+            <span style="font-size: 14px; font-weight: 500; color: #4A5A80;">{{ r.time }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+        <div style="padding: 26px; text-align: center; font-size: 16px; font-weight: 700; color: #4A5A80;">まだ抽選していません。</div>
+      </sc-if>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isSettings }}" hint-placeholder-val="{{ false }}">
+    <main style="flex: 1; padding: 26px 22px 60px; max-width: 760px; width: 100%; margin: 0 auto; display: grid; gap: 16px;">
+      <div><div style="font-family: Bungee, sans-serif; font-size: 13px; color: #17C29A; lineHeight: 1;">SETTINGS</div><h2 style="font-size: 26px; font-weight: 900; margin: 2px 0 0;">設定</h2></div>
+      <div style="padding: 20px; background: #fff; border: 3px solid #E4EFE8; borderRadius: 18px; display: grid; gap: 16px;">
+        <label style="display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 700; cursor: pointer;"><input type="checkbox" checked="{{ seOn }}" onChange="{{ toggleSe }}" style="width: 22px; height: 22px;">効果音（SE）</label>
+        <label style="display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 700; cursor: pointer;"><input type="checkbox" checked="{{ bgmOn }}" onChange="{{ toggleBgm }}" style="width: 22px; height: 22px;">BGM</label>
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <span style="font-size: 15px; font-weight: 700; width: 110px;">BGM音量</span>
+          <input type="range" min="0" max="100" step="1" value="{{ bgmVol }}" onChange="{{ setBgmVol }}" onInput="{{ setBgmVol }}" style="flex: 1;">
+          <span style="font-family: Bungee, sans-serif; font-size: 16px; width: 56px; text-align: right;">{{ bgmVol }}%</span>
+        </div>
+        <label style="display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 700; cursor: pointer;"><input type="checkbox" checked="{{ lightOn }}" onChange="{{ toggleLight }}" style="width: 22px; height: 22px;">軽量化モード（Zoom配信では推奨）</label>
+      </div>
+      <div style="padding: 20px; background: #fff; border: 3px solid #E4EFE8; borderRadius: 18px; display: grid; gap: 14px;">
+        <div style="font-size: 17px; font-weight: 800;">音源の差し替え</div>
+        <div style="font-size: 14px; font-weight: 500; color: #4A5A80;">初期状態はブラウザ内で合成した仮の音です。BGM.ogg／normal.ogg／rateReelMega.ogg などを読み込むと差し替わります（このセッション内で有効）。</div>
+        <div style="display: grid; gap: 10px;">
+          <label style="display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 700;"><span style="width: 150px;">BGM</span><input type="file" accept="audio/*" onChange="{{ onAudioBgm }}"></label>
+          <label style="display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 700;"><span style="width: 150px;">リール音</span><input type="file" accept="audio/*" onChange="{{ onAudioReel }}"></label>
+          <label style="display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 700;"><span style="width: 150px;">開封SE NORMAL</span><input type="file" accept="audio/*" onChange="{{ onAudioNormal }}"></label>
+          <label style="display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 700;"><span style="width: 150px;">ファンファーレ BIG</span><input type="file" accept="audio/*" onChange="{{ onAudioBig }}"></label>
+          <label style="display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 700;"><span style="width: 150px;">ファンファーレ MEGA</span><input type="file" accept="audio/*" onChange="{{ onAudioMega }}"></label>
+        </div>
+      </div>
+      <div style="padding: 20px; background: #fff; border: 3px solid #E4EFE8; borderRadius: 18px; display: flex; gap: 12px; flex-wrap: wrap;">
+        <button type="button" onClick="{{ exportJson }}" style="padding: 11px 20px; border-radius: 999px; border: 3px solid #12245C; background: #fff; font-weight: 800; font-size: 15px; cursor: pointer; color: #12245C;">JSON書き出し</button>
+        <label style="padding: 11px 20px; border-radius: 999px; border: 3px solid #12245C; background: #fff; font-weight: 800; font-size: 15px; cursor: pointer; color: #12245C;">JSON読み込み<input type="file" accept=".json,application/json" onChange="{{ importJson }}" style="display: none;"></label>
+        <button type="button" onClick="{{ resetResults }}" style="padding: 11px 20px; border-radius: 999px; border: 3px solid #FF5A5A; background: #fff; color: #FF5A5A; font-weight: 800; font-size: 15px; cursor: pointer;">抽選結果をリセット</button>
+      </div>
+      <div style="font-size: 13px; font-weight: 500; color: #7B88A4;">※賞品・画像・結果・設定はこの端末に自動保存されます。画像が多いと保存容量の上限に達する場合があります。</div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ previewOpen }}" hint-placeholder-val="{{ false }}">
+    <div ref="{{ previewRef }}" style="position: fixed; inset: 0; zIndex: 60; background: linear-gradient(170deg, #FFFDF6 0%, #DCF3EA 100%); overflow: auto; padding: 22px 22px 40px;">
+      <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap; position: sticky; top: -22px; padding: 12px 0; background: rgba(255,253,246,.95);">
+        <div><div style="font-family: Bungee, sans-serif; font-size: 14px; color: #17C29A; lineHeight: 1;">TODAY'S PRIZES</div><h2 style="font-size: 28px; font-weight: 900; margin: 2px 0 0;">きょうの賞品</h2></div>
+        <span style="font-size: 16px; font-weight: 700; color: #17C29A;">全{{ activeCount }}件</span>
+        <div style="flex: 1;"></div>
+        <button type="button" onClick="{{ togglePreviewMode }}" style="padding: 10px 20px; border-radius: 999px; border: 3px solid #17C29A; background: #17C29A; color: #fff; font-weight: 800; font-size: 15px; cursor: pointer; box-shadow: 0 3px 0 rgba(23,194,154,.3);">{{ modeLabel }}</button>
+        <button type="button" onClick="{{ toggleNames }}" style="padding: 10px 18px; border-radius: 999px; border: 3px solid #12245C; background: #fff; color: #12245C; font-weight: 700; font-size: 15px; cursor: pointer;">{{ namesLabel }}</button>
+        <button type="button" onClick="{{ toggleFullscreen }}" style="padding: 10px 18px; border-radius: 999px; border: 3px solid #12245C; background: #fff; color: #12245C; font-weight: 700; font-size: 15px; cursor: pointer;">全画面</button>
+        <button type="button" onClick="{{ closePreview }}" style="padding: 10px 22px; border-radius: 999px; border: 3px solid #FF5A5A; background: #FF5A5A; color: #fff; font-weight: 900; font-size: 15px; cursor: pointer;">閉じる（Esc）</button>
+      </div>
+      <sc-if value="{{ isSlideMode }}" hint-placeholder-val="{{ true }}">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 6px 0 10px;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <span style="font-family: Bungee, sans-serif; font-size: 46px; color: #12245C;">No.{{ slideItem.no }}</span>
+            <span style="{{ slideItem.rarityStyle }}">{{ slideItem.rarity }}</span>
+          </div>
+          <div style="width: 100%; maxWidth: 1180px; height: 62vh; minHeight: 320px; borderRadius: 24px; overflow: hidden; border: 6px solid #12245C; background: repeating-linear-gradient(45deg, #FFF9E8 0 14px, #FDF1D2 14px 28px); box-shadow: 0 10px 0 rgba(18,36,92,.14);">
+            <sc-if value="{{ slideItem.image }}" hint-placeholder-val="{{ false }}">
+              <div style="{{ slideItem.imageStyle }}"></div>
+            </sc-if>
+          </div>
+          <sc-if value="{{ showNames }}" hint-placeholder-val="{{ true }}">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+              <div style="font-size: 40px; font-weight: 900; text-align: center; lineHeight: 1.25; textWrap: pretty;">{{ slideItem.name }}</div>
+              <div style="font-size: 20px; font-weight: 700; color: #4A5A80; text-align: center;">{{ slideItem.note }}</div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ slideItem.all }}" hint-placeholder-val="{{ false }}">
+            <div style="padding: 9px 24px; borderRadius: 999px; background: #F5A623; color: #fff; font-size: 22px; font-weight: 900; box-shadow: 0 4px 0 rgba(18,36,92,.15);">参加者全員に！</div>
+          </sc-if>
+          <div style="display: flex; align-items: center; gap: 22px; marginTop: 6px;">
+            <button type="button" onClick="{{ prevSlide }}" style="width: 88px; height: 88px; borderRadius: 999px; border: 5px solid #12245C; background: #fff; color: #12245C; font-size: 34px; font-weight: 900; cursor: pointer; box-shadow: 0 5px 0 rgba(18,36,92,.18);">◀</button>
+            <div style="font-family: Bungee, sans-serif; font-size: 26px; color: #4A5A80; minWidth: 120px; text-align: center;">{{ slidePos }}</div>
+            <button type="button" onClick="{{ nextSlide }}" style="width: 88px; height: 88px; borderRadius: 999px; border: 5px solid #12245C; background: #17C29A; color: #fff; font-size: 34px; font-weight: 900; cursor: pointer; box-shadow: 0 5px 0 rgba(18,36,92,.18);">▶</button>
+          </div>
+          <div style="font-size: 14px; font-weight: 500; color: #7B88A4;">← → かスペースで進む　／　「一覧で見る」で全部まとめて表示</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isGridMode }}" hint-placeholder-val="{{ false }}">
+      <div style="display: grid; gridTemplateColumns: repeat(auto-fill, minmax(210px, 1fr)); gap: 16px; marginTop: 14px;">
+        <sc-for list="{{ previewItems }}" as="item" hint-placeholder-count="8">
+          <div style="background: #fff; border: 4px solid #E4EFE8; borderRadius: 18px; padding: 12px; box-shadow: 0 4px 0 rgba(18,36,92,.08);">
+            <div style="display: flex; align-items: center; gap: 8px; marginBottom: 8px;">
+              <span style="font-family: Bungee, sans-serif; font-size: 26px; color: #12245C;">{{ item.no }}</span>
+              <span style="{{ item.rarityStyle }}">{{ item.rarity }}</span>
+            </div>
+            <div style="position: relative; width: 100%; aspectRatio: 1 / 1; borderRadius: 12px; overflow: hidden; background: repeating-linear-gradient(45deg, #FFF9E8 0 10px, #FDF1D2 10px 20px);">
+              <sc-if value="{{ item.image }}" hint-placeholder-val="{{ false }}">
+                <div style="{{ item.imageStyle }}"></div>
+              </sc-if>
+              <sc-if value="{{ item.wonMark }}" hint-placeholder-val="{{ false }}">
+                <div style="position: absolute; inset: 0; background: rgba(18,36,92,.6); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 900;">出ました</div>
+              </sc-if>
+            </div>
+            <sc-if value="{{ showNames }}" hint-placeholder-val="{{ true }}">
+              <div style="marginTop: 10px;">
+                <div style="font-size: 17px; font-weight: 800; lineHeight: 1.35; textWrap: pretty;">{{ item.name }}</div>
+                <div style="font-size: 13px; font-weight: 500; color: #4A5A80; marginTop: 3px;">{{ item.note }}</div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ item.all }}" hint-placeholder-val="{{ false }}">
+              <div style="marginTop: 8px; display: inline-block; padding: 5px 12px; borderRadius: 999px; background: #F5A623; color: #fff; font-size: 13px; font-weight: 900;">参加者全員に！</div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ revealOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; inset: 0; zIndex: 70; background: linear-gradient(170deg, #FFFDF6 0%, #DCF3EA 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; padding: 30px;">
+      <sc-for list="{{ confetti }}" as="c" hint-placeholder-count="0">
+        <div style="{{ c.style }}"></div>
+      </sc-for>
+
+      <sc-if value="{{ chestVisible }}" hint-placeholder-val="{{ false }}">
+        <div style="position: relative; display: flex; flex-direction: column; align-items: center; gap: 18px;">
+          <div style="{{ flashStyle }}"></div>
+          <div style="{{ chestStyle }}">
+            <div style="{{ lidStyle }}">
+              <div style="position: absolute; left: 50%; top: 42px; width: 34px; height: 34px; marginLeft: -17px; borderRadius: 8px; background: #F5A623; border: 4px solid #12245C;"></div>
+            </div>
+            <div style="position: absolute; left: 0; bottom: 0; width: 300px; height: 150px; borderRadius: 0 0 18px 18px; background: #E8853B; border: 6px solid #12245C; borderTop: none;">
+              <div style="position: absolute; left: 50%; top: 0; width: 46px; height: 100%; marginLeft: -23px; background: #F5A623; borderLeft: 5px solid #12245C; borderRight: 5px solid #12245C;"></div>
+            </div>
+          </div>
+          <div style="font-family: Bungee, sans-serif; font-size: 34px; color: #12245C;">No.{{ currentNo }}</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ prizeVisible }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 16px; animation: mg-pop .45s cubic-bezier(.2,1.3,.4,1) both; max-width: 1000px; width: 100%;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <span style="font-family: Bungee, sans-serif; font-size: 46px; color: #12245C;">No.{{ currentNo }}</span>
+            <span style="{{ currentRarityStyle }}">{{ currentRarity }}</span>
+          </div>
+          <div style="width: 100%; maxWidth: 640px; aspectRatio: 4 / 3; borderRadius: 24px; overflow: hidden; border: 6px solid #12245C; background: repeating-linear-gradient(45deg, #FFF9E8 0 14px, #FDF1D2 14px 28px); box-shadow: 0 10px 0 rgba(18,36,92,.14);">
+            <sc-if value="{{ currentImage }}" hint-placeholder-val="{{ false }}">
+              <div style="{{ currentImageStyle }}"></div>
+            </sc-if>
+          </div>
+          <div style="font-size: 46px; font-weight: 900; text-align: center; lineHeight: 1.2; textWrap: pretty;">{{ currentName }}</div>
+          <div style="font-size: 22px; font-weight: 700; color: #4A5A80; text-align: center;">{{ currentNote }}</div>
+          <sc-if value="{{ currentAll }}" hint-placeholder-val="{{ false }}">
+            <div style="padding: 10px 26px; borderRadius: 999px; background: #F5A623; color: #fff; font-size: 24px; font-weight: 900; box-shadow: 0 4px 0 rgba(18,36,92,.15);">参加者全員に！</div>
+          </sc-if>
+          <button type="button" onClick="{{ nextDraw }}" style="marginTop: 6px; padding: 20px 60px; borderRadius: 999px; border: 5px solid #12245C; background: #12245C; color: #fff; font-size: 30px; font-weight: 900; cursor: pointer; box-shadow: 0 6px 0 rgba(18,36,92,.28);">NEXT 次へ</button>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ audioNotice }}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; inset: 0; zIndex: 90; background: rgba(18,36,92,.55); display: flex; align-items: center; justify-content: center; padding: 24px;">
+      <div style="max-width: 560px; background: #fff; border: 5px solid #12245C; borderRadius: 24px; padding: 28px; box-shadow: 0 8px 0 rgba(18,36,92,.2);">
+        <div style="font-size: 24px; font-weight: 900; marginBottom: 12px;">Zoomで音を届けるには</div>
+        <div style="font-size: 17px; font-weight: 500; lineHeight: 1.7; color: #253A6B;">画面共有を始めるときに「コンピューターの音声を共有」をONにしてください。BGMと効果音は既定音量30%です。</div>
+        <button type="button" onClick="{{ dismissNotice }}" style="marginTop: 20px; width: 100%; padding: 16px; borderRadius: 999px; border: 4px solid #17C29A; background: #17C29A; color: #fff; font-size: 20px; font-weight: 900; cursor: pointer;">はじめる</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showChrome }}" hint-placeholder-val="{{ true }}">
+    <footer style="display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 26px 22px 34px;">
+      <div style="font-family: Bungee, sans-serif; font-size: 15px; letter-spacing: .1em; color: #17C29A;">PRESENTED BY</div>
+      <img src="assets/magna-logo.png" alt="マグナ English School" style="width: 100%; max-width: 460px; height: auto; display: block;">
+      <div style="font-size: 13px; font-weight: 500; color: #7B88A4;">1〜75の賞品番号を抽選します。参加者に番号はふりません。</div>
+    </footer>
+  </sc-if>
+
+  <sc-if value="{{ isLive }}" hint-placeholder-val="{{ false }}">
+    <button type="button" onClick="{{ toggleLive }}" style="position: fixed; bottom: 16px; right: 18px; zIndex: 50; padding: 12px 20px; borderRadius: 999px; border: 3px solid #12245C; background: rgba(255,255,255,.92); color: #12245C; font-size: 15px; font-weight: 800; cursor: pointer; box-shadow: 0 3px 0 rgba(18,36,92,.15);" style-hover="background:#FFFFFF">編集モードへ戻る（F）</button>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;bgmDefaultVolume&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:30,&quot;min&quot;:0,&quot;max&quot;:100,&quot;step&quot;:5,&quot;unit&quot;:&quot;%&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;音&quot;},&quot;teaseIntensity&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;標準&quot;,&quot;options&quot;:[&quot;短め&quot;,&quot;標準&quot;,&quot;長め&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;演出&quot;}}">
+const KEY = 'magna-roulette-v3';
+const CELL = 200;
+const RARITY = { NORMAL: '#17C29A', BIG: '#FF5A5A', MEGA: '#F5A623' };
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    const init = this.load();
+    this.state = {
+      prizes: init.prizes || this.makePrizes(75),
+      results: init.results || [],
+      settings: Object.assign({ se: true, bgm: true, bgmVol: Math.round((this.props.bgmDefaultVolume ?? 30)), light: true }, init.settings || {}),
+      showNames: init.showNames !== false,
+      view: 'reel',
+      phase: 'idle',
+      live: false,
+      previewOpen: false,
+      revealOpen: false,
+      chestVisible: false,
+      prizeVisible: false,
+      chestAnim: '',
+      flashOn: false,
+      confetti: [],
+      currentNo: null,
+      previewMode: 'slide',
+      slideIndex: 0,
+      audioNotice: true
+    };
+    this.stripRef = React.createRef();
+    this.previewRef = React.createRef();
+    this.offset = 0;
+    this.speed = 0;
+    this.files = { bgm: 'assets/BGM.ogg', normal: 'assets/normal.ogg', big: 'assets/rateReelBig.mp3', mega: 'assets/rateReelMega.wav' };
+    this.audioEls = {};
+  }
+
+  makePrizes(n) {
+    return Array.from({ length: n }, (_, i) => ({ no: i + 1, name: '', note: '', rarity: 'NORMAL', enabled: true, all: false, image: null, won: false, at: null }));
+  }
+
+  load() {
+    try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { return {}; }
+  }
+
+  saveNow() {
+    clearTimeout(this._sv);
+    const { prizes, results, settings, showNames } = this.state;
+    try {
+      localStorage.setItem(KEY, JSON.stringify({ prizes, results, settings, showNames }));
+      this.setState({ saveMsg: '保存しました（Saved）' });
+    } catch (e) {
+      this.setState({ saveMsg: '保存できません：画像が多すぎます。JSON書き出しをお使いください。' });
+    }
+    clearTimeout(this._msgTo);
+    this._msgTo = setTimeout(() => this.setState({ saveMsg: '' }), 3200);
+  }
+  persist() {
+    clearTimeout(this._sv);
+    this._sv = setTimeout(() => {
+      const { prizes, results, settings, showNames } = this.state;
+      try { localStorage.setItem(KEY, JSON.stringify({ prizes, results, settings, showNames })); } catch (e) { /* quota */ }
+    }, 400);
+  }
+
+  componentDidMount() {
+    this._key = (e) => this.onKey(e);
+    window.addEventListener('keydown', this._key);
+    this._resize = () => { if (this.state.phase === 'idle' && !this.state.revealOpen) this.snapToCell(); };
+    window.addEventListener('resize', this._resize);
+    requestAnimationFrame(() => this.snapToCell());
+    this._bgmWatch = setInterval(() => this.ensureBgm(), 2500);
+  }
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this._key);
+    window.removeEventListener('resize', this._resize);
+    clearInterval(this._bgmWatch);
+    cancelAnimationFrame(this._raf);
+    clearTimeout(this._to);
+    clearInterval(this._roll);
+    this.stopReelSound();
+    this.stopBgm();
+  }
+  componentDidUpdate(pp, ps) {
+    if (!ps || ps.prizes !== this.state.prizes || ps.results !== this.state.results || ps.settings !== this.state.settings || ps.showNames !== this.state.showNames) this.persist();
+  }
+
+  onKey(e) {
+    const k = e.key;
+    if (k === ' ' || k === 'Spacebar') {
+      if (this.state.audioNotice) return;
+      e.preventDefault();
+      if (this.state.previewOpen) { if (this.state.previewMode !== 'grid') this.moveSlide(1); return; }
+      this.doMain();
+    } else if (k === 'ArrowRight' || k === 'ArrowLeft') {
+      if (this.state.previewOpen && this.state.previewMode !== 'grid') { e.preventDefault(); this.moveSlide(k === 'ArrowRight' ? 1 : -1); }
+    } else if (k === 'Escape') {
+      if (this.state.previewOpen) this.closePreview();
+      else if (this.state.revealOpen && this.state.prizeVisible) this.nextDraw();
+    } else if (k === 'f' || k === 'F') {
+      this.setState(s => ({ live: !s.live, view: 'reel' }));
+    } else if (k === 'p' || k === 'P') {
+      if (!this.state.previewOpen) this.openPreview(); else this.closePreview();
+    }
+  }
+
+  remaining() { return this.state.prizes.filter(p => p.enabled && !p.won); }
+  active() { return this.state.prizes.filter(p => p.enabled); }
+
+  /* ---------- audio (synth by default, replaceable files) ---------- */
+  ctx() {
+    if (!this._ctx) { const A = window.AudioContext || window.webkitAudioContext; this._ctx = new A(); }
+    if (this._ctx.state === 'suspended') this._ctx.resume();
+    return this._ctx;
+  }
+  blip(freq, dur, vol, type) {
+    if (!this.state.settings.se) return;
+    const c = this.ctx(), o = c.createOscillator(), g = c.createGain();
+    o.type = type || 'square'; o.frequency.value = freq;
+    g.gain.value = 0; o.connect(g); g.connect(c.destination);
+    const t = c.currentTime;
+    g.gain.linearRampToValueAtTime(vol, t + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.start(t); o.stop(t + dur + 0.02);
+  }
+  startReelSound() {
+    if (this.files.reel) { const a = this.audio('reel', true, 0.5); if (a) { a.currentTime = 0; a.play().catch(() => {}); } return; }
+    clearInterval(this._reelIv);
+    this._reelIv = setInterval(() => this.blip(880, 0.06, 0.09), 95);
+  }
+  stopReelSound() {
+    clearInterval(this._reelIv);
+    const a = this.audioEls.reel; if (a) { a.pause(); }
+  }
+  audio(kind, loop, vol) {
+    const src = this.files[kind]; if (!src) return null;
+    let a = this.audioEls[kind];
+    if (!a || a.dataset.src !== src) { a = new Audio(src); a.dataset.src = src; this.audioEls[kind] = a; }
+    a.loop = !!loop; a.volume = vol == null ? 1 : vol;
+    return a;
+  }
+  fanfare(rarity) {
+    if (!this.state.settings.se) return;
+    const kind = rarity === 'MEGA' ? 'mega' : rarity === 'BIG' ? 'big' : 'normal';
+    if (this.files[kind]) { const a = this.audio(kind, false, 0.9); a.currentTime = 0; a.play().catch(() => {}); return a; }
+    const seq = rarity === 'MEGA' ? [523, 659, 784, 1047, 1319] : rarity === 'BIG' ? [523, 659, 784, 1047] : [659, 880];
+    seq.forEach((f, i) => setTimeout(() => this.blip(f, 0.35, 0.16, 'triangle'), i * 110));
+  }
+  ensureBgm() {
+    const s = this.state;
+    if (!s.settings.bgm || s.phase === 'spinning' || s.suspense) return;
+    const a = this.audioEls.bgm;
+    if (this.files.bgm && a && !a.paused) return;
+    this.startBgm(!a || a.paused);
+  }
+  startBgm(fromStart) {
+    if (!this.state.settings.bgm) return;
+    const v = this.state.settings.bgmVol / 100;
+    if (this.files.bgm) { const a = this.audio('bgm', true, v); if (fromStart) { try { a.currentTime = 0; } catch (e) {} } a.play().catch(() => {}); return; }
+    clearInterval(this._bgmIv);
+    const notes = [392, 494, 587, 494];
+    let i = 0;
+    this._bgmIv = setInterval(() => {
+      if (!this.state.settings.bgm) return;
+      const c = this.ctx(), o = c.createOscillator(), g = c.createGain();
+      o.type = 'sine'; o.frequency.value = notes[i++ % notes.length];
+      g.gain.value = 0; o.connect(g); g.connect(c.destination);
+      const t = c.currentTime, peak = 0.05 * (this.state.settings.bgmVol / 100);
+      g.gain.linearRampToValueAtTime(peak, t + 0.05);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.7);
+      o.start(t); o.stop(t + 0.75);
+    }, 700);
+  }
+  stopBgm() { clearTimeout(this._bgmTo); clearInterval(this._bgmIv); const a = this.audioEls.bgm; if (a) { a.pause(); try { a.currentTime = 0; } catch (e) {} } }
+
+  /* ---------- reel ---------- */
+  snapToCell() {
+    const el = this.stripRef.current;
+    if (!el || !el.parentElement) return;
+    const C = el.parentElement.clientWidth / 2;
+    const k = Math.max(0, Math.round((this.offset + C - CELL / 2) / CELL));
+    this.offset = k * CELL - C + CELL / 2;
+    this.applyOffset();
+  }
+  applyOffset() {
+    const el = this.stripRef.current;
+    if (el) el.style.transform = 'translateX(' + (-this.offset) + 'px)';
+  }
+  loopLen() { const n = this.remaining().length || 1; return n * CELL; }
+  start() {
+    if (!this.remaining().length) return;
+    this.setState({ phase: 'spinning' });
+    this.stopBgm();
+    this.startReelSound();
+    this.speed = 1900;
+    this._last = performance.now();
+    const tick = (now) => {
+      const dt = Math.min(0.05, (now - this._last) / 1000); this._last = now;
+      this.offset = (this.offset + this.speed * dt) % this.loopLen();
+      this.applyOffset();
+      this._raf = requestAnimationFrame(tick);
+    };
+    this._raf = requestAnimationFrame(tick);
+  }
+  stop() {
+    cancelAnimationFrame(this._raf);
+    const rem = this.remaining();
+    if (!rem.length) return;
+    const C = (this.stripRef.current && this.stripRef.current.parentElement ? this.stripRef.current.parentElement.clientWidth : 1000) / 2;
+    const from = this.offset;
+
+    // 当選番号は押した瞬間の位置と無関係に抽選（目押し不能）
+    const winner = rem[Math.floor(Math.random() * rem.length)];
+    const winIdx = rem.indexOf(winner);
+
+    // 直近の当選番号位置に着地（余分な周回はしない）
+    const k0 = Math.ceil((from + C - CELL / 2) / CELL) + 12;
+    const kMod = ((k0 % rem.length) + rem.length) % rem.length;
+    const k = k0 + (((winIdx - kMod) % rem.length) + rem.length) % rem.length;
+    const target = k * CELL - C + CELL / 2;
+
+    // 確定までの演出パターンをランダムに選ぶ
+    const r = Math.random();
+    // レア賞品は特別な焦らし：MEGAは2コマ通り過ぎて2回戻る／BIGは高確率で1コマ戻る
+    const pat = winner.rarity === 'MEGA' ? 'mega'
+      : winner.rarity === 'BIG' ? (r < 0.75 ? 'nearmiss' : 'long')
+      : r < 0.22 ? 'snap' : r < 0.62 ? 'creep' : r < 0.84 ? 'nearmiss' : 'long';
+    const crawlCells = pat === 'snap' ? 0 : pat === 'long' ? 4 : pat === 'mega' ? 3 : 2 + Math.floor(Math.random() * 2);
+    const overshoot = pat === 'mega' ? 2 : pat === 'nearmiss' ? 1 : 0;   // 通り過ぎてから戻るコマ数
+    const mid = target + overshoot * CELL - crawlCells * CELL;
+
+    // 等速で近くまで走ってから、固定距離だけ減速（回転中より速くならない／間延びしない）
+    const decelDist = Math.min((pat === 'snap' ? 8 : 5) * CELL, Math.max(0, mid - from));
+    const cruiseTo = mid - decelDist;
+    const cruiseDur = Math.max(0, (cruiseTo - from) / this.speed);
+    const decelDur = decelDist ? Math.max(0.5, 3 * decelDist / this.speed) : 0;
+
+    const ease = (t, p) => 1 - Math.pow(1 - t, p);
+    const runLinear = (from0, to0, dur, done) => {
+      if (dur <= 0.01) { done(); return; }
+      const t0 = performance.now();
+      let lastCell = Math.floor((from0 + C) / CELL);
+      const step = (now) => {
+        const t = Math.min(1, (now - t0) / (dur * 1000));
+        this.offset = from0 + (to0 - from0) * t;
+        this.applyOffset();
+        const ci = Math.floor((this.offset + C) / CELL);
+        if (ci !== lastCell) { lastCell = ci; this.blip(1180, 0.04, 0.05); }
+        if (t < 1) { this._raf = requestAnimationFrame(step); return; }
+        done();
+      };
+      this._raf = requestAnimationFrame(step);
+    };
+    const run = (from0, to0, dur, done) => {
+      const t0 = performance.now();
+      let lastCell = Math.floor((from0 + C) / CELL);
+      const step = (now) => {
+        const t = Math.min(1, (now - t0) / (dur * 1000));
+        this.offset = from0 + (to0 - from0) * ease(t, 3);
+        this.applyOffset();
+        const ci = Math.floor((this.offset + C) / CELL);
+        if (ci !== lastCell) { lastCell = ci; this.blip(1180, 0.05, 0.06); }
+        if (t < 1) { this._raf = requestAnimationFrame(step); return; }
+        done();
+      };
+      this._raf = requestAnimationFrame(step);
+    };
+
+    this.stopReelSound();
+    let i = 0;
+    const crawlNext = () => {
+      if (i >= crawlCells) {
+        const confirm = () => {
+          const hold = (pat === 'snap' ? 800 : 900) + Math.random() * 900;
+          this._to = setTimeout(() => {
+            this.blip(1320, 0.3, 0.22, 'triangle');
+            this.setState({ suspense: false, phase: 'stopped', currentNo: winner.no });
+          }, hold);
+        };
+        if (overshoot) {
+          // 通り過ぎて「あっ」→1コマずつゆっくり戻る
+          let back = overshoot;
+          const stepBack = () => {
+            if (back === 0) { confirm(); return; }
+            const wait = back === overshoot ? 520 + Math.random() * 460 : 380 + Math.random() * 420;
+            this._to = setTimeout(() => {
+              this.blip(520, 0.12, 0.12, 'triangle');
+              back--;
+              run(this.offset, target + back * CELL, 0.85 + Math.random() * 0.4, stepBack);
+            }, wait);
+          };
+          stepBack();
+          return;
+        }
+        confirm();
+        return;
+      }
+      i++;
+      const isLast = i === crawlCells && !overshoot;
+      const base = pat === 'long' ? 0.7 : 1;
+      const hold = (isLast ? 340 + Math.random() * 400 : 140 + Math.random() * 280) * base;
+      const move = (isLast ? 0.6 + Math.random() * 0.35 : 0.38 + Math.random() * 0.25) * base;
+      this._to = setTimeout(() => {
+        this.blip(700, 0.08, 0.1, 'triangle');
+        run(this.offset, mid + i * CELL, move, crawlNext);
+      }, hold);
+    };
+    // STOPを押した合図：低→高の二段ヒット音＋画面フラッシュ
+    this.blip(320, 0.16, 0.26, 'square');
+    setTimeout(() => this.blip(660, 0.3, 0.22, 'triangle'), 90);
+    this.setState({ suspense: true, stopHit: true });
+    clearTimeout(this._hitTo);
+    this._hitTo = setTimeout(() => this.setState({ stopHit: false }), 420);
+    runLinear(from, cruiseTo, cruiseDur, () => {
+      run(cruiseTo, mid, decelDur, () => { this.setState({ suspense: true }); this._to = setTimeout(crawlNext, pat === 'snap' ? 60 : 200); });
+    });
+  }
+
+  /* ---------- reveal ---------- */
+  sleep(ms) { return new Promise(r => { this._to = setTimeout(r, ms); }); }
+  async reveal() {
+    const p = this.current();
+    if (!p) return;
+    const light = this.state.settings.light || (this.props.teaseIntensity === '短め');
+    const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.setState({ revealOpen: true, chestVisible: true, prizeVisible: false, chestAnim: '', chestOpen: false, flashOn: false, confetti: [] });
+    if (reduced) { this.openChest(p, true); return; }
+    const tease = this.props.teaseIntensity ?? '標準';
+    const scale = tease === '長め' ? 1.5 : tease === '短め' ? 0.6 : 1;
+    const plan = p.rarity === 'MEGA' ? [500, 380, 520, 460, 620] : p.rarity === 'BIG' ? [480, 340, 560] : [520];
+    for (let i = 0; i < plan.length; i++) {
+      const strong = p.rarity === 'MEGA';
+      if (i % 2 === 0) {
+        this.setState({ chestAnim: (strong ? 'mg-shake-strong ' : 'mg-shake ') + (plan[i] * scale / 1000) + 's ease-in-out' });
+      } else {
+        this.setState({ chestAnim: '' });
+      }
+      await this.sleep(plan[i] * scale);
+    }
+    this.openChest(p, light);
+  }
+  openChest(p, light) {
+    this.setState({ chestAnim: '', flashOn: true, chestOpen: true });
+    const pieces = (light || p.rarity === 'NORMAL') ? [] : this.makeConfetti(p.rarity === 'MEGA' ? 26 : 16);
+    setTimeout(() => {
+      // 宝箱が開いて賞品画像が出るのと同時にSE
+      this.setState({ chestVisible: false, prizeVisible: true, flashOn: false, confetti: pieces });
+      const se = this.fanfare(p.rarity);
+      clearTimeout(this._bgmTo);
+      if (se) {
+        const resume = () => { se.removeEventListener('ended', resume); clearTimeout(this._bgmTo); this.startBgm(true); };
+        se.addEventListener('ended', resume);
+        const ms = isFinite(se.duration) && se.duration ? se.duration * 1000 + 150 : 4000;
+        this._bgmTo = setTimeout(resume, ms);
+      } else {
+        this._bgmTo = setTimeout(() => this.startBgm(true), 1600);
+      }
+    }, 620);
+  }
+  makeConfetti(n) {
+    const cols = ['#17C29A', '#FF5A5A', '#F5A623', '#12245C'];
+    return Array.from({ length: n }, (_, i) => ({
+      id: i,
+      style: {
+        position: 'fixed', top: 0, left: (2 + (i * 96 / n) + Math.random() * 4) + 'vw',
+        width: '26px', height: '38px', borderRadius: '5px',
+        background: cols[i % cols.length],
+        animation: 'mg-conf ' + (2.2 + Math.random() * 1.4) + 's linear ' + (Math.random() * 0.5) + 's infinite',
+        zIndex: 1, pointerEvents: 'none'
+      }
+    }));
+  }
+  current() { return this.state.prizes.find(p => p.no === this.state.currentNo) || null; }
+
+  nextDraw() {
+    clearTimeout(this._to);
+    const no = this.state.currentNo;
+    const now = new Date();
+    this.setState(s => ({
+      prizes: s.prizes.map(p => p.no === no ? Object.assign({}, p, { won: true, at: now.toISOString() }) : p),
+      results: s.results.concat([{ order: s.results.length + 1, no: no, name: (this.current() && this.current().name) || '（未設定）', time: now.toLocaleTimeString('ja-JP') }]),
+      revealOpen: false, prizeVisible: false, chestVisible: false, confetti: [], phase: 'idle', currentNo: null
+    }), () => {
+      // 当たった番号の「次の番号」を中央に置いて再スタート
+      const rem = this.remaining();
+      const idx = rem.findIndex(p => p.no > no);
+      const at = idx === -1 ? 0 : idx;
+      const el = this.stripRef.current;
+      const C = (el && el.parentElement ? el.parentElement.clientWidth : 1000) / 2;
+      this.offset = rem.length ? (at + rem.length) * CELL - C + CELL / 2 : 0;
+      requestAnimationFrame(() => this.snapToCell());
+    });
+  }
+
+  doMain() {
+    const ph = this.state.phase;
+    if (this.state.revealOpen) { if (this.state.prizeVisible) this.nextDraw(); return; }
+    if (ph === 'idle') this.start();
+    else if (ph === 'spinning') this.stop();
+    else if (ph === 'stopped') this.reveal();
+  }
+
+  /* ---------- images ---------- */
+  async shrink(file) {
+    const url = URL.createObjectURL(file);
+    try {
+      const img = await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = url; });
+      const max = 760, s = Math.min(1, max / Math.max(img.width, img.height));
+      const c = document.createElement('canvas');
+      c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      return c.toDataURL('image/jpeg', 0.86);
+    } finally { URL.revokeObjectURL(url); }
+  }
+  async ingest(files, forceNo) {
+    const list = Array.from(files || []);
+    const updates = {};
+    for (const f of list) {
+      if (!/^image\//.test(f.type)) continue;
+      const m = f.name.match(/(\d+)/);
+      const no = forceNo != null ? forceNo : (m ? parseInt(m[1], 10) : null);
+      if (!no) continue;
+      updates[no] = await this.shrink(f);
+    }
+    if (!Object.keys(updates).length) return;
+    this.setState(s => ({ prizes: s.prizes.map(p => updates[p.no] ? Object.assign({}, p, { image: updates[p.no] }) : p) }));
+  }
+
+  /* ---------- スプレッドシート取り込み ---------- */
+  parseDelimited(text) {
+    const rows = [];
+    let row = [], cell = '', q = false;
+    const t = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    const tab = (t.split('\n')[0] || '').indexOf('\t') !== -1;
+    const sep = tab ? '\t' : ',';
+    for (let i = 0; i < t.length; i++) {
+      const c = t[i];
+      if (q) {
+        if (c === '"' && t[i + 1] === '"') { cell += '"'; i++; }
+        else if (c === '"') q = false;
+        else cell += c;
+      } else if (c === '"') q = true;
+      else if (c === sep) { row.push(cell); cell = ''; }
+      else if (c === '\n') { row.push(cell); rows.push(row); row = []; cell = ''; }
+      else cell += c;
+    }
+    row.push(cell);
+    if (row.some(v => v !== '')) rows.push(row);
+    return rows.filter(r => r.some(v => String(v).trim() !== ''));
+  }
+  applySheetRows(rows) {
+    if (!rows.length) { this.sheetMsg('読み取れる行がありませんでした。', false); return; }
+    const norm = v => String(v || '').trim().toLowerCase().replace(/\s/g, '');
+    const head = rows[0].map(norm);
+    const find = keys => head.findIndex(h => keys.some(k => h.indexOf(k) !== -1));
+    let idx = { no: find(['番号', 'no', '#']), name: find(['賞品名', '商品名', 'name', 'prize']), note: find(['補足', 'メモ', 'note']), rarity: find(['レア', 'rarity']), enabled: find(['使う', '有効', 'enable', 'use']), all: find(['全員', 'everyone', 'all']) };
+    let body = rows.slice(1);
+    if (idx.no === -1 && idx.name === -1) { idx = { no: 0, name: 1, note: 2, rarity: 3, enabled: 4, all: 5 }; body = rows; }
+    const truthy = v => { const t = String(v || '').trim().toLowerCase(); return t !== '' && t !== 'false' && t !== '0' && t !== 'no' && t !== 'off' && t !== 'いいえ' && t !== '×' && t !== 'ｘ'; };
+    const at = (r, i) => (i >= 0 && i < r.length ? r[i] : '');
+    const parsed = [];
+    body.forEach((r, i) => {
+      const rawNo = String(at(r, idx.no)).replace(/[^\d]/g, '');
+      const no = rawNo ? parseInt(rawNo, 10) : (parsed.length + 1);
+      const name = String(at(r, idx.name) || '').trim();
+      if (!no || (!name && !rawNo)) return;
+      const rr = String(at(r, idx.rarity) || '').trim().toUpperCase();
+      parsed.push({
+        no, name, note: String(at(r, idx.note) || '').trim(),
+        rarity: rr === 'MEGA' || rr === 'BIG' ? rr : 'NORMAL',
+        enabled: idx.enabled >= 0 ? truthy(at(r, idx.enabled)) : true,
+        all: idx.all >= 0 ? truthy(at(r, idx.all)) : false
+      });
+    });
+    if (!parsed.length) { this.sheetMsg('賞品の行が見つかりませんでした。列見出しをご確認ください。', false); return; }
+    this.setState(s => {
+      const byNo = {};
+      parsed.forEach(p => { byNo[p.no] = p; });
+      const kept = s.prizes.filter(p => byNo[p.no]).map(p => Object.assign({}, p, byNo[p.no]));
+      const keptNos = kept.map(p => p.no);
+      const added = parsed.filter(p => keptNos.indexOf(p.no) === -1)
+        .map(p => Object.assign({ image: null, won: false, at: null }, p));
+      const prizes = kept.concat(added).sort((a, b) => a.no - b.no);
+      return { prizes };
+    }, () => { this.saveNow(); this.sheetMsg(parsed.length + '件を取り込みました（画像はそのまま残ります）。', true); });
+  }
+  sheetMsg(msg, ok) {
+    clearTimeout(this._shTo);
+    this.setState({ sheetMsg: msg, sheetOk: !!ok });
+    this._shTo = setTimeout(() => this.setState({ sheetMsg: '' }), 6000);
+  }
+  async importSheet() {
+    const url = (this.state.sheetUrl || '').trim();
+    const m = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+    if (!m) { this.sheetMsg('スプレッドシートのURLを貼ってください。', false); return; }
+    const gid = (url.match(/[#&?]gid=(\d+)/) || [])[1];
+    const base = 'https://docs.google.com/spreadsheets/d/' + m[1] + '/gviz/tq?tqx=out:csv' + (gid ? '&gid=' + gid : '');
+    this.sheetMsg('読み込み中…', true);
+    try {
+      const res = await fetch(base);
+      if (!res.ok) throw new Error(res.status);
+      const text = await res.text();
+      if (/^\s*</.test(text)) throw new Error('html');
+      this.applySheetRows(this.parseDelimited(text));
+    } catch (e) {
+      this.sheetMsg('読み込めませんでした。共有を「リンクを知っている全員が閲覧可」にするか、CSVを書き出して読み込んでください。', false);
+    }
+  }
+  updatePrize(no, patch) {
+    this.setState(s => ({ prizes: s.prizes.map(p => p.no === no ? Object.assign({}, p, patch) : p) }));
+  }
+
+  csv() {
+    const rows = [['抽選順', '賞品番号', '賞品名', '時刻']].concat(this.state.results.map(r => [r.order, r.no, r.name, r.time]));
+    const body = rows.map(r => r.map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',')).join('\r\n');
+    this.download('\ufeff' + body, 'lottery-results.csv', 'text/csv');
+  }
+  download(text, name, type) {
+    const b = new Blob([text], { type: type + ';charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(b); a.download = name; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  }
+
+  imgStyle(src, fit) {
+    return { width: '100%', height: '100%', backgroundImage: src ? 'url(' + src + ')' : 'none', backgroundSize: fit || 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' };
+  }
+  rarityChip(r) {
+    return { display: 'inline-block', padding: '4px 12px', borderRadius: '999px', background: RARITY[r] || RARITY.NORMAL, color: '#fff', fontFamily: 'Bungee, sans-serif', fontSize: '13px', letterSpacing: '.04em' };
+  }
+
+  renderVals() {
+    const s = this.state;
+    const rem = this.remaining();
+    const active = this.active();
+    const cur = this.current();
+    const showChrome = !s.live && !s.previewOpen && !s.revealOpen;
+
+    const reps = Math.max(4, Math.ceil(4000 / Math.max(1, rem.length * CELL)) + 1);
+    const reelCells = [];
+    for (let r = 0; r < reps; r++) rem.forEach((p, i) => reelCells.push({ n: p.no, key: r + '-' + i }));
+
+    const labels = { idle: 'START', spinning: 'STOP', stopped: '賞品を見る', revealed: '次へ' };
+    const hints = {
+      idle: rem.length ? 'スペースかSTARTでリールが回ります。' : '賞品リストで使う番号をONにしてください。',
+      spinning: 'もう一度押すと、その位置で止まります。',
+      stopped: '番号が確定しました。「賞品を見る」で宝箱が開きます。',
+      revealed: '「次へ」で、この番号をリールから外します。'
+    };
+    const phase = s.revealOpen ? 'revealed' : s.phase;
+    const colorByPhase = { idle: '#17C29A', spinning: '#FF5A5A', stopped: '#F5A623', revealed: '#12245C' };
+    const settling = s.suspense && s.phase === 'spinning';
+    const mainBtn = {
+      padding: '24px 72px', borderRadius: '999px', border: '5px solid #12245C',
+      background: settling ? '#B9C4D4' : colorByPhase[phase], color: '#fff', fontFamily: phase === 'idle' || phase === 'spinning' ? 'Bungee, sans-serif' : '"Zen Maru Gothic", sans-serif',
+      fontSize: '38px', fontWeight: 900, letterSpacing: '.02em', cursor: settling ? 'default' : 'pointer',
+      borderColor: settling ? '#8E9CB2' : '#12245C',
+      boxShadow: '0 7px 0 rgba(18,36,92,.25)', minWidth: '340px'
+    };
+
+    const previewItems = active.map(p => ({
+      no: p.no, name: p.name || '（未設定）', note: p.note || '', rarity: p.rarity,
+      rarityStyle: this.rarityChip(p.rarity), image: p.image, imageStyle: this.imgStyle(p.image), all: p.all, wonMark: p.won
+    }));
+
+    const rows = s.prizes.map(p => ({
+      no: p.no, name: p.name, note: p.note, rarity: p.rarity, enabled: p.enabled, all: p.all, image: p.image, imageStyle: this.imgStyle(p.image, 'cover'),
+      onName: e => this.updatePrize(p.no, { name: e.target.value }),
+      onNote: e => this.updatePrize(p.no, { note: e.target.value }),
+      onRarity: e => this.updatePrize(p.no, { rarity: e.target.value }),
+      onEnabled: e => this.updatePrize(p.no, { enabled: e.target.checked }),
+      onAll: e => this.updatePrize(p.no, { all: e.target.checked }),
+      onImage: e => this.ingest(e.target.files, p.no),
+      onDelete: () => this.setState(st => ({ prizes: st.prizes.filter(x => x.no !== p.no) }))
+    }));
+
+    return {
+      showChrome, isLive: s.live,
+      isReel: s.view === 'reel', isList: s.view === 'list' && !s.live, isResults: s.view === 'results' && !s.live, isSettings: s.view === 'settings' && !s.live,
+      goReel: () => this.setState({ view: 'reel' }), goList: () => this.setState({ view: 'list' }),
+      goResults: () => this.setState({ view: 'results' }), goSettings: () => this.setState({ view: 'settings' }),
+      toggleLive: () => this.setState(st => ({ live: !st.live, view: 'reel' })),
+
+      isConfirmed: s.phase === 'stopped' && !s.revealOpen,
+      stopHit: !!s.stopHit,
+      reelBoxStyle: {
+        position: 'relative', width: '100%', maxWidth: '1100px', height: '260px', borderRadius: '26px',
+        background: '#FFFFFF', border: '5px solid #12245C', boxShadow: '0 8px 0 rgba(18,36,92,.13)', overflow: 'hidden',
+        animation: s.stopHit ? 'mg-stopkick .32s ease-out both' : 'none'
+      },
+      hitFrameStyle: {
+        position: 'absolute', top: 0, bottom: 0, left: '50%', width: '208px', marginLeft: '-104px',
+        border: '6px solid ' + ((s.phase === 'stopped' && !s.revealOpen) ? '#FF5A5A' : '#38BDF8'),
+        borderRadius: '20px', pointerEvents: 'none',
+        boxShadow: '0 0 0 9999px rgba(255,253,246,.42)',
+        animation: (s.phase === 'stopped' && !s.revealOpen) ? 'mg-hit .55s ease-in-out 3' : 'none'
+      },
+      hitLabel: s.suspense ? '?????' : s.phase === 'spinning' ? 'Spinning…' : s.phase === 'stopped' ? 'Locked in' : 'Ready',
+      hitLabelStyle: {
+        position: 'absolute', top: '10px', left: '50%', transform: 'translateX(-50%)',
+        fontSize: '15px', fontWeight: 800, letterSpacing: '.02em', pointerEvents: 'none',
+        color: (s.phase === 'stopped' && !s.revealOpen) ? '#FF5A5A' : s.suspense ? '#F5A623' : '#0EA5E9',
+        fontSize: s.suspense ? '22px' : '15px',
+        animation: s.suspense ? 'mg-qm .45s steps(1,end) infinite' : 'none'
+      },
+      stripRef: this.stripRef, reelCells,
+      remainingCount: rem.length, activeCount: active.length, isEmptyReel: rem.length === 0,
+      mainAction: () => this.doMain(), mainLabel: labels[phase], mainBtnStyle: mainBtn,
+      mainDisabled: settling || (rem.length === 0 && phase === 'idle'),
+      hintText: hints[phase], spaceHint: labels[phase],
+      previewBtnStyle: {
+        padding: '16px 34px', borderRadius: '999px', border: '4px solid #12245C',
+        background: '#fff', color: '#12245C', fontSize: '20px', fontWeight: 800, cursor: 'pointer',
+        boxShadow: '0 5px 0 rgba(18,36,92,.16)', opacity: (s.phase === 'spinning' || s.revealOpen) ? 0.4 : 1
+      },
+      previewDisabled: s.phase === 'spinning' || s.revealOpen,
+
+      previewOpen: s.previewOpen, previewRef: this.previewRef, previewItems, showNames: s.showNames,
+      isSlideMode: s.previewMode !== 'grid', isGridMode: s.previewMode === 'grid',
+      modeLabel: s.previewMode === 'grid' ? 'スライドに戻る' : '一覧で見る',
+      togglePreviewMode: () => this.setState(st => ({ previewMode: st.previewMode === 'grid' ? 'slide' : 'grid' })),
+      slideItem: previewItems[Math.min(s.slideIndex, Math.max(0, previewItems.length - 1))] || { no: '–', name: '賞品がありません', note: '', rarity: 'NORMAL', rarityStyle: this.rarityChip('NORMAL'), image: null, imageStyle: this.imgStyle(null), all: false },
+      slidePos: previewItems.length ? (Math.min(s.slideIndex, previewItems.length - 1) + 1) + ' / ' + previewItems.length : '0 / 0',
+      prevSlide: () => this.moveSlide(-1), nextSlide: () => this.moveSlide(1),
+      namesLabel: s.showNames ? '賞品名を隠す' : '賞品名を出す',
+      openPreview: () => this.openPreview(), closePreview: () => this.closePreview(),
+      toggleNames: () => this.setState(st => ({ showNames: !st.showNames })),
+      toggleFullscreen: () => {
+        const el = this.previewRef.current;
+        if (!el) return;
+        if (document.fullscreenElement) document.exitFullscreen(); else el.requestFullscreen && el.requestFullscreen();
+      },
+
+      saveNow: () => this.saveNow(), saveMsg: s.saveMsg || '',
+      sheetUrl: s.sheetUrl || '', onSheetUrl: e => this.setState({ sheetUrl: e.target.value }),
+      pasteText: s.pasteText || '', onPasteText: e => this.setState({ pasteText: e.target.value }),
+      importSheet: () => this.importSheet(),
+      importPaste: () => this.applySheetRows(this.parseDelimited(this.state.pasteText || '')),
+      onCsvFile: e => {
+        const f = e.target.files && e.target.files[0]; if (!f) return;
+        const r = new FileReader();
+        r.onload = () => this.applySheetRows(this.parseDelimited(String(r.result || '')));
+        r.readAsText(f);
+      },
+      sheetMsg: s.sheetMsg || '',
+      sheetMsgStyle: {
+        marginTop: '12px', padding: '10px 16px', borderRadius: '12px', display: 'inline-block',
+        background: s.sheetOk ? '#F3FBF4' : '#FFF1F1',
+        border: '2px solid ' + (s.sheetOk ? '#17C29A' : '#FF5A5A'),
+        fontSize: '14px', fontWeight: 700, color: '#12245C', textWrap: 'pretty'
+      },
+      rows, addPrize: () => this.setState(st => ({ prizes: st.prizes.concat([{ no: (st.prizes.reduce((m, p) => Math.max(m, p.no), 0) + 1), name: '', note: '', rarity: 'NORMAL', enabled: true, all: false, image: null, won: false, at: null }]) })),
+      enableAll: () => this.setState(st => ({ prizes: st.prizes.map(p => Object.assign({}, p, { enabled: true })) })),
+      disableAll: () => this.setState(st => ({ prizes: st.prizes.map(p => Object.assign({}, p, { enabled: false })) })),
+      onDragOver: e => { e.preventDefault(); },
+      onDropImages: e => { e.preventDefault(); this.ingest(e.dataTransfer.files); },
+      onPickImages: e => this.ingest(e.target.files),
+
+      results: s.results, noResults: s.results.length === 0, exportCsv: () => this.csv(),
+
+      seOn: s.settings.se, bgmOn: s.settings.bgm, bgmVol: s.settings.bgmVol, lightOn: s.settings.light,
+      toggleSe: e => this.setSetting({ se: e.target.checked }),
+      toggleBgm: e => { const v = e.target.checked; this.setSetting({ bgm: v }); if (!v) this.stopBgm(); else this.startBgm(); },
+      setBgmVol: e => { const v = parseInt(e.target.value, 10); this.setSetting({ bgmVol: v }); const a = this.audioEls.bgm; if (a) a.volume = v / 100; },
+      toggleLight: e => this.setSetting({ light: e.target.checked }),
+      onAudioBgm: e => this.setAudioFile('bgm', e), onAudioReel: e => this.setAudioFile('reel', e),
+      onAudioNormal: e => this.setAudioFile('normal', e), onAudioBig: e => this.setAudioFile('big', e), onAudioMega: e => this.setAudioFile('mega', e),
+      exportJson: () => this.download(JSON.stringify({ prizes: s.prizes, results: s.results, settings: s.settings, showNames: s.showNames }, null, 2), 'magna-roulette.json', 'application/json'),
+      importJson: e => {
+        const f = e.target.files && e.target.files[0]; if (!f) return;
+        const r = new FileReader();
+        r.onload = () => { try { const d = JSON.parse(r.result); this.setState({ prizes: d.prizes || s.prizes, results: d.results || [], settings: Object.assign({}, s.settings, d.settings || {}), showNames: d.showNames !== false }); } catch (err) { alert('読み込めませんでした'); } };
+        r.readAsText(f);
+      },
+      resetResults: () => { if (confirm('抽選結果と当選済みをリセットします。よろしいですか？')) { this.setState(st => ({ results: [], prizes: st.prizes.map(p => Object.assign({}, p, { won: false, at: null })), phase: 'idle', currentNo: null })); this.offset = 0; } },
+
+      revealOpen: s.revealOpen, chestVisible: s.chestVisible, prizeVisible: s.prizeVisible,
+      confetti: s.confetti,
+      chestStyle: { position: 'relative', width: '300px', height: '250px', animation: s.chestAnim || 'none' },
+      lidStyle: { position: 'absolute', left: 0, bottom: '150px', width: '300px', height: '100px', borderRadius: '18px 18px 0 0', background: '#F5A623', border: '6px solid #12245C', transformOrigin: '6px 100%', animation: s.chestOpen ? 'mg-lid .5s cubic-bezier(.3,1.4,.5,1) both' : 'none' },
+      flashStyle: { position: 'absolute', left: '50%', top: '40%', width: '620px', height: '620px', marginLeft: '-310px', marginTop: '-310px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(245,166,35,.95) 0%, rgba(245,166,35,.35) 45%, rgba(245,166,35,0) 70%)', pointerEvents: 'none', opacity: 0, animation: s.flashOn ? 'mg-flash .7s ease-out both' : 'none' },
+      currentNo: s.currentNo, currentName: (cur && cur.name) || '（未設定）', currentNote: (cur && cur.note) || '',
+      currentImage: cur && cur.image, currentImageStyle: this.imgStyle(cur && cur.image), currentAll: cur && cur.all, currentRarity: (cur && cur.rarity) || 'NORMAL',
+      currentRarityStyle: this.rarityChip((cur && cur.rarity) || 'NORMAL'),
+      nextDraw: () => this.nextDraw(),
+
+      audioNotice: s.audioNotice,
+      dismissNotice: () => { this.setState({ audioNotice: false }); this.ctx(); this.startBgm(); }
+    };
+  }
+
+  setSetting(patch) { this.setState(s => ({ settings: Object.assign({}, s.settings, patch) })); }
+  setAudioFile(kind, e) {
+    const f = e.target.files && e.target.files[0]; if (!f) return;
+    this.files[kind] = URL.createObjectURL(f);
+    if (kind === 'bgm') { this.stopBgm(); this.startBgm(); }
+  }
+  moveSlide(d) {
+    const n = this.active().length;
+    if (!n) return;
+    this.setState(s => ({ slideIndex: ((s.slideIndex + d) % n + n) % n }));
+  }
+  openPreview() {
+    if (this.state.phase === 'spinning') { cancelAnimationFrame(this._raf); this.stopReelSound(); }
+    if (this.state.revealOpen) return;
+    this.setState({ previewOpen: true, previewMode: 'slide', slideIndex: 0, phase: this.state.phase === 'spinning' ? 'idle' : this.state.phase });
+  }
+  closePreview() {
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+    this.setState({ previewOpen: false });
+    requestAnimationFrame(() => { this.snapToCell(); this.ensureBgm(); });
+    requestAnimationFrame(() => this.applyOffset());
+  }
+}
+
+</script>
+</body>
+</html>

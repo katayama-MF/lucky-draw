@@ -1,0 +1,51 @@
+/* =========================================================================
+   マグナスクール — Typography tokens
+   Headings are impactful (heavy weight); body is comfortably large & bold
+   for parents (avoid thin, small text). Latin display uses Baloo 2.
+   ========================================================================= */
+:root {
+  /* ---- Families ---- */
+  --font-base: "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", "Hiragino Sans",
+               "Yu Gothic", "Meiryo", -apple-system, system-ui, sans-serif;
+  --font-display: "Baloo 2", "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN",
+               sans-serif;               /* Latin display / big numerals */
+
+  /* semantic aliases */
+  --font-heading: var(--font-base);
+  --font-body:    var(--font-base);
+
+  /* ---- Weights ---- */
+  --fw-normal:   400;   /* @kind font */
+  --fw-medium:   500;   /* @kind font */
+  --fw-bold:     700;   /* @kind font */
+  --fw-heavy:    800;   /* @kind font */
+  --fw-black:    900;   /* @kind font */
+
+  /* ---- Font sizes (mobile-first scale) ---- */
+  --fs-caption: 11px;   /* notes, disclaimers */
+  --fs-small:   12px;
+  --fs-body:    13px;   /* base body on SP */
+  --fs-body-lg: 14px;
+  --fs-lead:    15px;
+  --fs-h3:      16px;
+  --fs-h2:      22px;   /* section titles */
+  --fs-h1:      26px;   /* hero title */
+  --fs-display: 32px;   /* extra-large emphasis */
+  --fs-stat:    40px;   /* stat numbers */
+  --fs-stat-xl: 64px;   /* killer stat */
+
+  /* ---- Line heights ---- */
+  --lh-tight:   1.2;    /* @kind font */
+  --lh-snug:    1.4;    /* @kind font */
+  --lh-normal:  1.6;    /* @kind font */
+  --lh-relaxed: 1.75;   /* @kind font */
+
+  /* ---- Letter spacing ---- */
+  --ls-tight:  -0.02em; /* @kind font */
+  --ls-normal: 0;       /* @kind font */
+  --ls-eyebrow: 0.1em;  /* @kind font */
+
+  /* semantic aliases */
+  --text-body-size:    var(--fs-body-lg);
+  --text-heading-size: var(--fs-h2);
+}

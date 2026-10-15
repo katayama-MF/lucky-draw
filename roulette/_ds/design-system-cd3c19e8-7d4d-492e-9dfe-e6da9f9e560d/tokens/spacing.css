@@ -1,0 +1,49 @@
+/* =========================================================================
+   マグナスクール — Spacing, radii, shadows, borders
+   Soft rounded cards + "pop" (hard-offset) shadows are the signature look.
+   ========================================================================= */
+:root {
+  /* ---- Spacing scale ---- */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-7:  28px;
+  --space-8:  36px;
+  --space-9:  40px;
+  --space-10: 48px;
+  --space-12: 60px;
+
+  /* section padding (mobile / desktop) */
+  --section-pad-sp: 36px 16px;
+  --section-pad-pc: 60px 80px;
+
+  /* ---- Corner radii (soft, rounded) ---- */
+  --radius-sm:   8px;
+  --radius:      12px;
+  --radius-lg:   16px;
+  --radius-xl:   20px;
+  --radius-2xl:  28px;   /* phone screen */
+  --radius-pill: 999px;
+
+  /* ---- Shadows ---- */
+  /* "Pop" / sticker shadows: hard vertical offset, no blur */
+  --shadow-pop-sm: 0 3px 0 rgba(0,0,0,0.08);
+  --shadow-pop:    0 4px 0 rgba(0,0,0,0.08);
+  --shadow-pop-ink: 0 3px 0 var(--ink);       /* outlined-button press look */
+  /* Soft ambient card shadows */
+  --shadow-xs:   0 1px 3px rgba(0,0,0,0.04);
+  --shadow-sm:   0 2px 8px rgba(0,0,0,0.06);
+  --shadow-card: 0 3px 10px rgba(0,0,0,0.05);
+  --shadow-md:   0 6px 20px rgba(0,0,0,0.08);
+  --shadow-pink: 0 6px 24px rgba(236, 72, 153, 0.15);
+  --shadow-float: 0 -4px 12px rgba(0,0,0,0.08);  /* sticky bottom bar */
+
+  /* ---- Borders ---- */
+  --border-hair:   1px solid var(--line);
+  --border-card:   2px solid var(--line);
+  --border-dashed: 2px dashed var(--magna-pink);
+  --border-accent: 3px solid var(--magna-yellow);
+}
