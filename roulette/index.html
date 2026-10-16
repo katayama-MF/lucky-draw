@@ -246,10 +246,11 @@
               <span style="padding: 6px 18px; borderRadius: 999px; background: #F5A623; color: #fff; font-size: 20px; font-weight: 900; box-shadow: 0 3px 0 rgba(18,36,92,.15);">参加者全員に！</span>
             </sc-if>
           </div>
-          <div style="width: 100%; maxWidth: 1180px; height: 48vh; minHeight: 280px; borderRadius: 24px; overflow: hidden; border: 6px solid #12245C; background: repeating-linear-gradient(45deg, #FFF9E8 0 14px, #FDF1D2 14px 28px); box-shadow: 0 10px 0 rgba(18,36,92,.14);">
+          <div style="position: relative; width: 100%; maxWidth: 1180px; height: 48vh; minHeight: 280px; borderRadius: 24px; overflow: hidden; border: 6px solid #12245C; background: repeating-linear-gradient(45deg, #FFF9E8 0 14px, #FDF1D2 14px 28px); box-shadow: 0 10px 0 rgba(18,36,92,.14);">
             <sc-if value="{{ slideItem.image }}" hint-placeholder-val="{{ false }}">
               <div style="{{ slideItem.imageStyle }}"></div>
             </sc-if>
+            <div ref="{{ slideModelRef }}" style="position: absolute; inset: 0; pointerEvents: none;"></div>
           </div>
           <div style="height: 250px; flexShrink: 0; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 14px; marginTop: -46px; position: relative; zIndex: 2;">
             <sc-if value="{{ showNames }}" hint-placeholder-val="{{ true }}">
@@ -327,10 +328,11 @@
             <span style="font-family: Bungee, sans-serif; font-size: 46px; color: #12245C;">No.{{ currentNo }}</span>
             <span style="{{ currentRarityStyle }}">{{ currentRarity }}</span>
           </div>
-          <div style="width: 100%; maxWidth: 640px; aspectRatio: 4 / 3; borderRadius: 24px; overflow: hidden; border: 6px solid #12245C; background: repeating-linear-gradient(45deg, #FFF9E8 0 14px, #FDF1D2 14px 28px); box-shadow: 0 10px 0 rgba(18,36,92,.14);">
+          <div style="position: relative; width: 100%; maxWidth: 640px; aspectRatio: 4 / 3; borderRadius: 24px; overflow: hidden; border: 6px solid #12245C; background: repeating-linear-gradient(45deg, #FFF9E8 0 14px, #FDF1D2 14px 28px); box-shadow: 0 10px 0 rgba(18,36,92,.14);">
             <sc-if value="{{ currentImage }}" hint-placeholder-val="{{ false }}">
               <div style="{{ currentImageStyle }}"></div>
             </sc-if>
+            <div ref="{{ openModelRef }}" style="position: absolute; inset: 0; pointerEvents: none;"></div>
           </div>
           <div style="font-size: 46px; font-weight: 900; text-align: center; lineHeight: 1.2; textWrap: pretty;">{{ currentName }}</div>
           <div style="font-size: 22px; font-weight: 700; color: #4A5A80; text-align: center;">{{ currentNote }}</div>
@@ -372,6 +374,19 @@ const KEY = 'magna-roulette-v3';
 const CELL = 200;
 const RARITY = { NORMAL: '#17C29A', BIG: '#FF5A5A', MEGA: '#F5A623' };
 
+// レジェンズ3D：賞品名にキーワードが入っている賞品は、画像の上に3Dモデル（攻撃モーション）を重ねる。
+// GLB はレジェンズ図鑑の3D（図鑑番号 zNN）を base64 テキストで同梱（アーティファクトは .glb を配信できないため）。長い名前を先に並べる（「天下人家康」を「家康」より先に）。
+const MODEL_VIEWER_URL = 'https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js';
+const LEGEND_MODELS = [
+  { key: '天下人家康', file: 'prize_models/z74.glb.txt', gold: true },
+  { key: 'ドラキュラ', file: 'prize_models/z19.glb.txt' },
+  { key: 'ハンニバル', file: 'prize_models/z61.glb.txt' },
+  { key: 'クフ王', file: 'prize_models/z64.glb.txt' },
+  { key: '夏目漱石', file: 'prize_models/z66.glb.txt' },
+  { key: 'テスラ', file: 'prize_models/z71.glb.txt' },
+  { key: 'ネイスミス', file: 'prize_models/z73.glb.txt' }
+];
+
 class Component extends DCLogic {
   constructor(props) {
     super(props);
@@ -407,6 +422,8 @@ class Component extends DCLogic {
     };
     this.stripRef = React.createRef();
     this.previewRef = React.createRef();
+    this.slideModelRef = React.createRef();
+    this.openModelRef = React.createRef();
     this.offset = 0;
     this.speed = 0;
     this.files = { bgm: 'assets/BGM.ogg', normal: 'assets/normal.ogg', big: 'assets/fanfare_big.wav', mega: 'assets/fanfare_mega.ogg' };
@@ -448,6 +465,9 @@ class Component extends DCLogic {
     window.addEventListener('resize', this._resize);
     requestAnimationFrame(() => this.snapToCell());
     this._bgmWatch = setInterval(() => this.ensureBgm(), 2500);
+    // レジェンズ3Dを先に読み込んでおく（本番で待たせないため）
+    setTimeout(() => { this.loadMV().catch(() => {}); LEGEND_MODELS.forEach(m => this.glbUrl(m.file).catch(() => {})); }, 1500);
+    this.syncModels();
   }
   componentWillUnmount() {
     window.removeEventListener('keydown', this._key);
@@ -461,6 +481,74 @@ class Component extends DCLogic {
   }
   componentDidUpdate(pp, ps) {
     if (!ps || ps.prizes !== this.state.prizes || ps.results !== this.state.results || ps.settings !== this.state.settings || ps.showNames !== this.state.showNames) this.persist();
+    this.syncModels();
+  }
+
+  // ---- レジェンズ3D（賞品名で判定。3Dが読めないときは画像のまま） ----
+  modelFor(p) {
+    if (!p || !p.name) return null;
+    return LEGEND_MODELS.find(m => String(p.name).includes(m.key)) || null;
+  }
+  loadMV() {
+    if (window.customElements && customElements.get('model-viewer')) return Promise.resolve();
+    if (this._mvP) return this._mvP;
+    this._mvP = new Promise((res, rej) => {
+      const sc = document.createElement('script'); sc.type = 'module'; sc.src = MODEL_VIEWER_URL;
+      sc.onload = () => customElements.whenDefined('model-viewer').then(res); sc.onerror = () => { this._mvP = null; rej(); };
+      document.head.appendChild(sc);
+    });
+    return this._mvP;
+  }
+  glbUrl(file) {
+    const c = this._glb || (this._glb = {});
+    if (!c[file]) c[file] = fetch(file).then(r => { if (!r.ok) throw new Error(r.status); return r.text(); }).then(tx => {
+      const b64 = tx.charAt(0) === '{' ? JSON.parse(tx).glb : tx.trim();
+      const bin = atob(b64); const u8 = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+      return URL.createObjectURL(new Blob([u8], { type: 'model/gltf-binary' }));
+    }).catch(e => { delete c[file]; throw e; });
+    return c[file];
+  }
+  syncModels() {
+    const s = this.state;
+    const active = s.prizes.filter(p => p.enabled);
+    const slideP = s.previewOpen && s.previewMode !== 'grid' ? active[Math.min(s.slideIndex, Math.max(0, active.length - 1))] : null;
+    const openP = s.revealOpen && s.prizeVisible ? s.prizes.find(p => p.no === s.currentNo) : null;
+    this.mountModel(this.slideModelRef.current, slideP);
+    this.mountModel(this.openModelRef.current, openP);
+  }
+  mountModel(slot, prize) {
+    if (!slot) return;
+    const want = this.modelFor(prize);
+    const cur = slot._m3d;
+    if (cur && want && cur.file === want.file) return;
+    if (cur) { cur.el && cur.el.remove(); slot._m3d = null; slot.style.background = 'transparent'; }
+    if (!want) return;
+    const tag = { file: want.file, el: null };
+    slot._m3d = tag;
+    Promise.all([this.loadMV(), this.glbUrl(want.file)]).then(([, url]) => {
+      if (slot._m3d !== tag || !slot.isConnected) return;
+      const mv = document.createElement('model-viewer');
+      mv.setAttribute('src', url);
+      mv.setAttribute('autoplay', '');
+      mv.setAttribute('animation-name', want.clip || 'attack');
+      mv.setAttribute('shadow-intensity', '1');
+      mv.setAttribute('exposure', '1.1');
+      mv.setAttribute('interaction-prompt', 'none');
+      mv.setAttribute('disable-zoom', '');
+      mv.setAttribute('camera-orbit', '0deg 78deg 135%');
+      mv.setAttribute('camera-target', 'auto auto auto');
+      mv.style.cssText = 'width:100%;height:100%;background:transparent;--poster-color:transparent;--progress-bar-color:transparent;';
+      mv.addEventListener('load', () => {
+        if (slot._m3d !== tag) return;
+        // 読めたら下の画像を隠す
+        slot.style.background = 'repeating-linear-gradient(45deg, #FFF9E8 0 14px, #FDF1D2 14px 28px)';
+        if (want.gold && mv.model) mv.model.materials.forEach(m => { try { m.pbrMetallicRoughness.setBaseColorFactor([1, 0.8, 0.28, 1]); m.pbrMetallicRoughness.setMetallicFactor(0.55); m.pbrMetallicRoughness.setRoughnessFactor(0.35); } catch (e) {} });
+      });
+      mv.addEventListener('error', () => { mv.remove(); if (slot._m3d === tag) { slot._m3d = null; slot.style.background = 'transparent'; } });
+      tag.el = mv;
+      slot.appendChild(mv);
+    }).catch(() => { if (slot._m3d === tag) slot._m3d = null; });
   }
 
   onKey(e) {
@@ -1061,7 +1149,7 @@ class Component extends DCLogic {
       },
       previewDisabled: s.phase === 'spinning' || s.revealOpen,
 
-      previewOpen: s.previewOpen, previewRef: this.previewRef, previewItems, showNames: s.showNames,
+      previewOpen: s.previewOpen, previewRef: this.previewRef, slideModelRef: this.slideModelRef, openModelRef: this.openModelRef, previewItems, showNames: s.showNames,
       isSlideMode: s.previewMode !== 'grid', isGridMode: s.previewMode === 'grid',
       modeLabel: s.previewMode === 'grid' ? 'スライドに戻る' : '一覧で見る',
       togglePreviewMode: () => this.setState(st => ({ previewMode: st.previewMode === 'grid' ? 'slide' : 'grid' })),
