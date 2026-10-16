@@ -242,23 +242,23 @@
           <div style="display: flex; align-items: center; gap: 14px;">
             <span style="font-family: Bungee, sans-serif; font-size: 46px; color: #12245C;">No.{{ slideItem.no }}</span>
             <span style="{{ slideItem.rarityStyle }}">{{ slideItem.rarity }}</span>
+            <sc-if value="{{ slideItem.all }}" hint-placeholder-val="{{ false }}">
+              <span style="padding: 6px 18px; borderRadius: 999px; background: #F5A623; color: #fff; font-size: 20px; font-weight: 900; box-shadow: 0 3px 0 rgba(18,36,92,.15);">参加者全員に！</span>
+            </sc-if>
           </div>
           <div style="width: 100%; maxWidth: 1180px; height: 48vh; minHeight: 280px; borderRadius: 24px; overflow: hidden; border: 6px solid #12245C; background: repeating-linear-gradient(45deg, #FFF9E8 0 14px, #FDF1D2 14px 28px); box-shadow: 0 10px 0 rgba(18,36,92,.14);">
             <sc-if value="{{ slideItem.image }}" hint-placeholder-val="{{ false }}">
               <div style="{{ slideItem.imageStyle }}"></div>
             </sc-if>
           </div>
-          <sc-if value="{{ showNames }}" hint-placeholder-val="{{ true }}">
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 14px; marginTop: -46px; position: relative; zIndex: 2;">
+          <div style="height: 250px; flexShrink: 0; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 14px; marginTop: -46px; position: relative; zIndex: 2;">
+            <sc-if value="{{ showNames }}" hint-placeholder-val="{{ true }}">
               <div style="{{ slideItem.namePlateStyle }}">{{ slideItem.name }}</div>
               <sc-if value="{{ slideItem.note }}" hint-placeholder-val="{{ true }}">
                 <div style="maxWidth: 1100px; padding: 8px 22px; borderRadius: 14px; background: #fff; border: 3px solid #12245C; font-size: 22px; font-weight: 800; color: #12245C; text-align: center; box-shadow: 0 4px 0 rgba(18,36,92,.15);">{{ slideItem.note }}</div>
               </sc-if>
-            </div>
-          </sc-if>
-          <sc-if value="{{ slideItem.all }}" hint-placeholder-val="{{ false }}">
-            <div style="padding: 9px 24px; borderRadius: 999px; background: #F5A623; color: #fff; font-size: 22px; font-weight: 900; box-shadow: 0 4px 0 rgba(18,36,92,.15);">参加者全員に！</div>
-          </sc-if>
+            </sc-if>
+          </div>
           <div style="display: flex; align-items: center; gap: 22px; marginTop: 6px;">
             <button type="button" onClick="{{ prevSlide }}" style="width: 88px; height: 88px; borderRadius: 999px; border: 5px solid #12245C; background: #fff; color: #12245C; font-size: 34px; font-weight: 900; cursor: pointer; box-shadow: 0 5px 0 rgba(18,36,92,.18);">◀</button>
             <div style="font-family: Bungee, sans-serif; font-size: 26px; color: #4A5A80; minWidth: 120px; text-align: center;">{{ slidePos }}</div>
