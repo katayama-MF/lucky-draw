@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
+<script src="./default-prizes.js"></script>
 </head>
 <body>
 <x-dc>
@@ -121,7 +122,7 @@
           <div style="font-size: 17px; font-weight: 800;">スプレッドシートから取り込む</div>
           <div style="font-size: 12px; font-weight: 700; color: #17C29A;">Import from Google Sheets</div>
         </div>
-        <div style="font-size: 14px; font-weight: 500; color: #4A5A80; lineHeight: 1.7;">1行目を見出しにして「番号 / 賞品名 / 補足 / レア度 / 使う / 全員」の列を用意してください（「賞品番号」「レート」「全員に」の見出しも読めます）。共有設定を「リンクを知っている全員が閲覧可」にしたURLを貼り、取り込みを押します。</div>
+        <div style="font-size: 14px; font-weight: 500; color: #4A5A80; lineHeight: 1.7;">1行目を見出しにして「番号 / 賞品名 / 補足 / レア度 / 使う / 全員」の列を用意してください（「賞品番号」「レート」「全員に」の見出しも読めます）。シートのURLを貼って「取り込む」を押します（Claudeで開いているときは共有設定の変更不要。それ以外は「リンクを知っている全員が閲覧可」が必要）。</div>
         <div style="display: flex; gap: 10px; flexWrap: wrap; marginTop: 12px;">
           <input type="text" value="{{ sheetUrl }}" onChange="{{ onSheetUrl }}" placeholder="https://docs.google.com/spreadsheets/d/…" style="flex: 1; minWidth: 280px; padding: 12px 14px; borderRadius: 12px; border: 2px solid #CFE0D6; font-size: 14px; font-weight: 700; color: #12245C;">
           <button type="button" onClick="{{ importSheet }}" style="padding: 12px 22px; borderRadius: 999px; border: 3px solid #17C29A; background: #17C29A; color: #fff; font-weight: 800; font-size: 15px; cursor: pointer; boxShadow: 0 3px 0 rgba(23,194,154,.3);">取り込む <span style="font-size: 12px; color: #E6FFF7; marginLeft: 5px;">Import</span></button>
@@ -207,7 +208,7 @@
       </div>
       <div style="padding: 20px; background: #fff; border: 3px solid #E4EFE8; borderRadius: 18px; display: grid; gap: 14px;">
         <div style="font-size: 17px; font-weight: 800;">音源の差し替え</div>
-        <div style="font-size: 14px; font-weight: 500; color: #4A5A80;">初期状態はブラウザ内で合成した仮の音です。BGM.ogg／normal.ogg／rateReelMega.ogg などを読み込むと差し替わります（このセッション内で有効）。</div>
+        <div style="font-size: 14px; font-weight: 500; color: #4A5A80;">初期状態は assets/ の音（BGM.ogg／normal.ogg／fanfare_big.wav／fanfare_mega.ogg）。ここでファイルを読み込むと差し替わります（このセッション内で有効）。</div>
         <div style="display: grid; gap: 10px;">
           <label style="display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 700;"><span style="width: 150px;">BGM</span><input type="file" accept="audio/*" onChange="{{ onAudioBgm }}"></label>
           <label style="display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 700;"><span style="width: 150px;">リール音</span><input type="file" accept="audio/*" onChange="{{ onAudioReel }}"></label>
@@ -241,21 +242,23 @@
           <div style="display: flex; align-items: center; gap: 14px;">
             <span style="font-family: Bungee, sans-serif; font-size: 46px; color: #12245C;">No.{{ slideItem.no }}</span>
             <span style="{{ slideItem.rarityStyle }}">{{ slideItem.rarity }}</span>
+            <sc-if value="{{ slideItem.all }}" hint-placeholder-val="{{ false }}">
+              <span style="padding: 6px 18px; borderRadius: 999px; background: #F5A623; color: #fff; font-size: 20px; font-weight: 900; box-shadow: 0 3px 0 rgba(18,36,92,.15);">参加者全員に！</span>
+            </sc-if>
           </div>
-          <div style="width: 100%; maxWidth: 1180px; height: 62vh; minHeight: 320px; borderRadius: 24px; overflow: hidden; border: 6px solid #12245C; background: repeating-linear-gradient(45deg, #FFF9E8 0 14px, #FDF1D2 14px 28px); box-shadow: 0 10px 0 rgba(18,36,92,.14);">
+          <div style="width: 100%; maxWidth: 1180px; height: 48vh; minHeight: 280px; borderRadius: 24px; overflow: hidden; border: 6px solid #12245C; background: repeating-linear-gradient(45deg, #FFF9E8 0 14px, #FDF1D2 14px 28px); box-shadow: 0 10px 0 rgba(18,36,92,.14);">
             <sc-if value="{{ slideItem.image }}" hint-placeholder-val="{{ false }}">
               <div style="{{ slideItem.imageStyle }}"></div>
             </sc-if>
           </div>
-          <sc-if value="{{ showNames }}" hint-placeholder-val="{{ true }}">
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
-              <div style="font-size: 40px; font-weight: 900; text-align: center; lineHeight: 1.25; textWrap: pretty;">{{ slideItem.name }}</div>
-              <div style="font-size: 20px; font-weight: 700; color: #4A5A80; text-align: center;">{{ slideItem.note }}</div>
-            </div>
-          </sc-if>
-          <sc-if value="{{ slideItem.all }}" hint-placeholder-val="{{ false }}">
-            <div style="padding: 9px 24px; borderRadius: 999px; background: #F5A623; color: #fff; font-size: 22px; font-weight: 900; box-shadow: 0 4px 0 rgba(18,36,92,.15);">参加者全員に！</div>
-          </sc-if>
+          <div style="height: 250px; flexShrink: 0; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 14px; marginTop: -46px; position: relative; zIndex: 2;">
+            <sc-if value="{{ showNames }}" hint-placeholder-val="{{ true }}">
+              <div style="{{ slideItem.namePlateStyle }}">{{ slideItem.name }}</div>
+              <sc-if value="{{ slideItem.note }}" hint-placeholder-val="{{ true }}">
+                <div style="maxWidth: 1100px; padding: 8px 22px; borderRadius: 14px; background: #fff; border: 3px solid #12245C; font-size: 22px; font-weight: 800; color: #12245C; text-align: center; box-shadow: 0 4px 0 rgba(18,36,92,.15);">{{ slideItem.note }}</div>
+              </sc-if>
+            </sc-if>
+          </div>
           <div style="display: flex; align-items: center; gap: 22px; marginTop: 6px;">
             <button type="button" onClick="{{ prevSlide }}" style="width: 88px; height: 88px; borderRadius: 999px; border: 5px solid #12245C; background: #fff; color: #12245C; font-size: 34px; font-weight: 900; cursor: pointer; box-shadow: 0 5px 0 rgba(18,36,92,.18);">◀</button>
             <div style="font-family: Bungee, sans-serif; font-size: 26px; color: #4A5A80; minWidth: 120px; text-align: center;">{{ slidePos }}</div>
@@ -373,8 +376,17 @@ class Component extends DCLogic {
   constructor(props) {
     super(props);
     const init = this.load();
+    // 保存データに賞品名が1件も無いときは、default-prizes.js の既定リストで始める
+    const seed = Array.isArray(window.MAGNA_DEFAULT_PRIZES) ? window.MAGNA_DEFAULT_PRIZES.map(p => Object.assign({ image: null, won: false, at: null }, p)) : null;
+    let saved = (init.prizes || []).some(p => p && p.name) ? init.prizes : null;
+    // 保存データで画像が空の賞品は、既定リストの同じ番号の画像を補う
+    if (saved && seed) saved = saved.map(p => (p && !p.image) ? Object.assign({}, p, { image: (seed.find(x => x.no === p.no) || {}).image || null }) : p);
+    // 以前の取り込みで運営メモ（補足列）が画面用の文に入っていたら、既定のひとことに置き換える
+    const memo = /確認待ち|補充案|付与|在庫|確認）|単品案|セット案|制作予定/;
+    if (saved && seed) saved = saved.map(p => { const d = p && seed.find(x => x.no === p.no && x.name === p.name); return (d && (!p.note || memo.test(p.note) || /^\s*参加者全員に[！!]?\s*$/.test(p.note))) ? Object.assign({}, p, { note: d.note }) : p; });
     this.state = {
-      prizes: init.prizes || this.makePrizes(75),
+      prizes: saved || seed || this.makePrizes(75),
+      sheetUrl: window.MAGNA_DEFAULT_SHEET_URL || '',
       results: init.results || [],
       settings: Object.assign({ se: true, bgm: true, bgmVol: Math.round((this.props.bgmDefaultVolume ?? 30)), light: true }, init.settings || {}),
       showNames: init.showNames !== false,
@@ -397,7 +409,7 @@ class Component extends DCLogic {
     this.previewRef = React.createRef();
     this.offset = 0;
     this.speed = 0;
-    this.files = { bgm: 'assets/BGM.ogg', normal: 'assets/normal.ogg', big: 'assets/rateReelBig.mp3', mega: 'assets/rateReelMega.wav' };
+    this.files = { bgm: 'assets/BGM.ogg', normal: 'assets/normal.ogg', big: 'assets/fanfare_big.wav', mega: 'assets/fanfare_mega.ogg' };
     this.audioEls = {};
   }
 
@@ -841,7 +853,7 @@ class Component extends DCLogic {
     const norm = v => String(v || '').trim().toLowerCase().replace(/\s/g, '');
     const head = rows[0].map(norm);
     const find = keys => head.findIndex(h => keys.some(k => h.indexOf(k) !== -1));
-    let idx = { no: find(['番号', 'no', '#']), name: find(['賞品名', '商品名', 'name', 'prize']), note: find(['補足', 'メモ', 'note']), rarity: find(['レア', 'rarity', 'レート', 'rate']), enabled: find(['使う', '有効', 'enable', 'use']), all: find(['全員', 'everyone', 'all']), file: find(['画像ファイル', 'imagefile', 'image']) };
+    let idx = { no: find(['番号', 'no', '#']), name: find(['賞品名', '商品名', 'name', 'prize']), note: (find(['ひとこと', 'キャッチ', 'catch']) !== -1 ? find(['ひとこと', 'キャッチ', 'catch']) : find(['補足', 'メモ', 'note'])), rarity: find(['レア', 'rarity', 'レート', 'rate']), enabled: find(['使う', '有効', 'enable', 'use']), all: find(['全員', 'everyone', 'all']), file: find(['画像ファイル', 'imagefile', 'image']) };
     let body = rows.slice(1);
     if (idx.no === -1 && idx.name === -1) { idx = { no: 0, name: 1, note: 2, rarity: 3, enabled: 4, all: 5 }; body = rows; }
     const truthy = v => { const t = String(v || '').trim().toLowerCase(); return t !== '' && t !== 'false' && t !== '0' && t !== 'no' && t !== 'off' && t !== 'いいえ' && t !== '×' && t !== 'ｘ'; };
@@ -882,9 +894,38 @@ class Component extends DCLogic {
     const url = (this.state.sheetUrl || '').trim();
     const m = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
     if (!m) { this.sheetMsg('スプレッドシートのURLを貼ってください。', false); return; }
+    const id = m[1];
     const gid = (url.match(/[#&?]gid=(\d+)/) || [])[1];
-    const base = 'https://docs.google.com/spreadsheets/d/' + m[1] + '/gviz/tq?tqx=out:csv' + (gid ? '&gid=' + gid : '');
     this.sheetMsg('読み込み中…', true);
+    // 1) Claudeのアーティファクトで開いているとき：Google Sheets 連携で読む（共有設定の変更は不要）
+    const mcp = (window.claude && typeof window.claude.use === 'function') ? await window.claude.use('mcp').catch(() => null) : null;
+    if (mcp) {
+      try {
+        const meta = (await mcp.callTool('Google Sheets', 'get_spreadsheet', { spreadsheetId: id, fields: ['sheets.properties.sheetId', 'sheets.properties.title'] })).payload || {};
+        const sheets = (meta.sheets || []).map(x => x.properties || {});
+        const tab = sheets.find(x => gid != null && String(x.sheetId) === String(gid)) || sheets[0];
+        if (!tab || !tab.title) throw { code: 'no_tab' };
+        const vals = (await mcp.callTool('Google Sheets', 'get_values', { spreadsheetId: id, range: "'" + String(tab.title).replace(/'/g, "''") + "'!A1:Z1000" })).payload || {};
+        const rows = (vals.values || []).map(r => r.map(v => v == null ? '' : String(v)));
+        this.applySheetRows(rows);
+        return;
+      } catch (e) {
+        const code = e && e.code;
+        const msg = {
+          server_not_connected: 'Google Sheets がClaudeに連携されていません。claude.ai の 設定 → コネクタ で追加してください。',
+          needs_reauth: 'Google Sheets の連携が切れています。claude.ai の 設定 → コネクタ で再接続してください。',
+          not_in_manifest: 'このページで Google Sheets の利用が許可されていません。右上の権限設定から許可してください。',
+          approval_required: 'Google Sheets の読み取りを許可してから、もう一度「取り込む」を押してください。',
+          selection_required: 'Google Sheets の連携が複数あります。どれを使うか選んでから、もう一度押してください。',
+          no_tab: 'シートのタブが見つかりませんでした。URLを確認してください。',
+          tool_error: 'シートを読めませんでした。URLと、このアカウントで開けるシートかを確認してください。'
+        }[code];
+        if (msg) { this.sheetMsg(msg, false); return; }
+        // それ以外（一時的な失敗など）は下の公開URL方式で試す
+      }
+    }
+    // 2) それ以外の環境：「リンクを知っている全員が閲覧可」のシートを直接読む
+    const base = 'https://docs.google.com/spreadsheets/d/' + id + '/gviz/tq?tqx=out:csv' + (gid ? '&gid=' + gid : '');
     try {
       const res = await fetch(base);
       if (!res.ok) throw new Error(res.status);
@@ -895,6 +936,7 @@ class Component extends DCLogic {
       this.sheetMsg('読み込めませんでした。共有を「リンクを知っている全員が閲覧可」にするか、CSVを書き出して読み込んでください。', false);
     }
   }
+
   updatePrize(no, patch) {
     this.setState(s => ({ prizes: s.prizes.map(p => p.no === no ? Object.assign({}, p, patch) : p) }));
   }
@@ -914,6 +956,20 @@ class Component extends DCLogic {
   imgStyle(src, fit) {
     return { width: '100%', height: '100%', backgroundImage: src ? 'url(' + src + ')' : 'none', backgroundSize: fit || 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' };
   }
+  namePlate(r, name) {
+    const len = Math.max(...String(name || '').split('\n').map(t => t.length), 1);
+    const fs = len <= 12 ? 'clamp(40px, 5.4vw, 76px)' : len <= 18 ? 'clamp(34px, 4.2vw, 60px)' : 'clamp(28px, 3.2vw, 46px)';
+    const bg = { MEGA: 'linear-gradient(135deg, #FF5A5A 0%, #FF2E93 100%)', BIG: 'linear-gradient(135deg, #FFB800 0%, #FF7A00 100%)' }[r] || 'linear-gradient(135deg, #17C29A 0%, #0EA5E9 100%)';
+    const o = '#12245C';
+    return {
+      maxWidth: '1180px', padding: '14px 44px 18px', borderRadius: '28px', border: '6px solid ' + o, background: bg,
+      color: '#fff', fontSize: fs, fontWeight: 900, lineHeight: 1.2, textAlign: 'center', textWrap: 'balance', whiteSpace: 'pre-line', letterSpacing: '.02em',
+      textShadow: '4px 4px 0 ' + o + ', -3px 3px 0 ' + o + ', 3px -2px 0 ' + o + ', -3px -2px 0 ' + o + ', 0 7px 0 ' + o,
+      boxShadow: '0 10px 0 rgba(18,36,92,.28), inset 0 -8px 0 rgba(0,0,0,.12), inset 0 6px 0 rgba(255,255,255,.35)',
+      transform: 'rotate(-1.2deg)', animation: 'mg-pop .35s ease-out'
+    };
+  }
+
   rarityChip(r) {
     return { display: 'inline-block', padding: '4px 12px', borderRadius: '999px', background: RARITY[r] || RARITY.NORMAL, color: '#fff', fontFamily: 'Bungee, sans-serif', fontSize: '13px', letterSpacing: '.04em' };
   }
@@ -948,8 +1004,9 @@ class Component extends DCLogic {
     };
 
     const previewItems = active.map(p => ({
-      no: p.no, name: p.name || '（未設定）', note: p.note || '', rarity: p.rarity,
-      rarityStyle: this.rarityChip(p.rarity), image: p.image, imageStyle: this.imgStyle(p.image), all: p.all, wonMark: p.won
+      no: p.no, name: p.name || '（未設定）', note: (p.all && /^\s*参加者全員に[！!]?\s*$/.test(p.note || '')) ? '' : (p.note || ''), rarity: p.rarity,
+      rarityStyle: this.rarityChip(p.rarity), image: p.image, imageStyle: this.imgStyle(p.image), all: p.all, wonMark: p.won,
+      namePlateStyle: this.namePlate(p.rarity, p.name)
     }));
 
     const rows = s.prizes.map(p => ({
@@ -1008,7 +1065,7 @@ class Component extends DCLogic {
       isSlideMode: s.previewMode !== 'grid', isGridMode: s.previewMode === 'grid',
       modeLabel: s.previewMode === 'grid' ? 'スライドに戻る' : '一覧で見る',
       togglePreviewMode: () => this.setState(st => ({ previewMode: st.previewMode === 'grid' ? 'slide' : 'grid' })),
-      slideItem: previewItems[Math.min(s.slideIndex, Math.max(0, previewItems.length - 1))] || { no: '–', name: '賞品がありません', note: '', rarity: 'NORMAL', rarityStyle: this.rarityChip('NORMAL'), image: null, imageStyle: this.imgStyle(null), all: false },
+      slideItem: previewItems[Math.min(s.slideIndex, Math.max(0, previewItems.length - 1))] || { no: '–', name: '賞品がありません', note: '', rarity: 'NORMAL', rarityStyle: this.rarityChip('NORMAL'), namePlateStyle: this.namePlate('NORMAL'), image: null, imageStyle: this.imgStyle(null), all: false },
       slidePos: previewItems.length ? (Math.min(s.slideIndex, previewItems.length - 1) + 1) + ' / ' + previewItems.length : '0 / 0',
       prevSlide: () => this.moveSlide(-1), nextSlide: () => this.moveSlide(1),
       namesLabel: s.showNames ? '賞品名を隠す' : '賞品名を出す',
