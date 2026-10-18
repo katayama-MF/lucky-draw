@@ -66,3 +66,10 @@ Googleスプレッドシート「クイズ大会賞品リスト」の該当日�
 - `_ds/` … マグナスクール Design System のトークン・コンポーネント
 - `assets/` … ロゴ、BGM、効果音（開封SE：NORMAL `normal.ogg`／BIG `fanfare_big.wav`／MEGA `fanfare_mega.ogg`。いずれも旧版 LUCKY DRAW の音源）
 - `docs/spec-v3.md` … 仕様案 v3
+
+## レジェンズ3D（2026/10/16 追加）
+- 賞品名に「ドラキュラ／ハンニバル／クフ王／夏目漱石／テスラ／ネイスミス／天下人家康」が入っている賞品は、賞品スライドと開封画面で画像の上に3Dモデル（攻撃モーション）を重ねて表示する。
+- 判定は賞品名で行う（番号が変わっても崩れない）。対応表は `index.html` の `LEGEND_MODELS`。
+- モデルは `prize_models/zNN.glb.txt`（NN＝レジェンズ図鑑の番号、中身は GLB の base64。アーティファクトは .glb を配信できないため）。
+- 表示は model-viewer 3.5.0（jsDelivr から読み込み）。読み込めないときは今までの画像がそのまま出る。
+- 天下人家康は賞品画像に合わせて金色に着色している。
