@@ -397,7 +397,7 @@ class Component extends DCLogic {
     // 保存データで画像が空の賞品は、既定リストの同じ番号の画像を補う
     if (saved && seed) saved = saved.map(p => (p && !p.image) ? Object.assign({}, p, { image: (seed.find(x => x.no === p.no) || {}).image || null }) : p);
     // 以前の取り込みで運営メモ（補足列）が画面用の文に入っていたら、既定のひとことに置き換える
-    const memo = /確認待ち|補充案|付与|在庫|確認）|単品案|セット案|制作予定/;
+    const memo = /確認待ち|補充案|付与|在庫|確認）|単品案|セット案|制作予定|画像は制作中/;
     if (saved && seed) saved = saved.map(p => { const d = p && seed.find(x => x.no === p.no && x.name === p.name); return (d && (!p.note || memo.test(p.note) || /^\s*参加者全員に[！!]?\s*$/.test(p.note))) ? Object.assign({}, p, { note: d.note }) : p; });
     this.state = {
       prizes: saved || seed || this.makePrizes(75),
