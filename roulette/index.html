@@ -514,10 +514,10 @@ class Component extends DCLogic {
     const active = s.prizes.filter(p => p.enabled);
     const slideP = s.previewOpen && s.previewMode !== 'grid' ? active[Math.min(s.slideIndex, Math.max(0, active.length - 1))] : null;
     const openP = s.revealOpen && s.prizeVisible ? s.prizes.find(p => p.no === s.currentNo) : null;
-    this.mountModel(this.slideModelRef.current, slideP);
-    this.mountModel(this.openModelRef.current, openP);
+    this.mountModel(this.slideModelRef.current, slideP, '135%');
+    this.mountModel(this.openModelRef.current, openP, '110%');
   }
-  mountModel(slot, prize) {
+  mountModel(slot, prize, radius) {
     if (!slot) return;
     const want = this.modelFor(prize);
     const cur = slot._m3d;
@@ -536,7 +536,7 @@ class Component extends DCLogic {
       mv.setAttribute('exposure', '1.1');
       mv.setAttribute('interaction-prompt', 'none');
       mv.setAttribute('disable-zoom', '');
-      mv.setAttribute('camera-orbit', '0deg 78deg 135%');
+      mv.setAttribute('camera-orbit', '0deg 78deg ' + (radius || '135%'));
       mv.setAttribute('camera-target', 'auto auto auto');
       mv.style.cssText = 'width:100%;height:100%;background:transparent;--poster-color:transparent;--progress-bar-color:transparent;';
       mv.addEventListener('load', () => {
