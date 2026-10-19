@@ -220,8 +220,11 @@
       <div style="padding: 20px; background: #fff; border: 3px solid #E4EFE8; borderRadius: 18px; display: flex; gap: 12px; flex-wrap: wrap;">
         <button type="button" onClick="{{ exportJson }}" style="padding: 11px 20px; border-radius: 999px; border: 3px solid #12245C; background: #fff; font-weight: 800; font-size: 15px; cursor: pointer; color: #12245C;">JSON書き出し</button>
         <label style="padding: 11px 20px; border-radius: 999px; border: 3px solid #12245C; background: #fff; font-weight: 800; font-size: 15px; cursor: pointer; color: #12245C;">JSON読み込み<input type="file" accept=".json,application/json" onChange="{{ importJson }}" style="display: none;"></label>
-        <button type="button" onClick="{{ resetResults }}" style="padding: 11px 20px; border-radius: 999px; border: 3px solid #FF5A5A; background: #fff; color: #FF5A5A; font-weight: 800; font-size: 15px; cursor: pointer;">抽選結果をリセット</button>
+        <button type="button" onClick="{{ resetResults }}" style="padding: 11px 20px; border-radius: 999px; border: 3px solid #FF5A5A; background: #fff; color: #FF5A5A; font-weight: 800; font-size: 15px; cursor: pointer;">{{ resetLabel }}</button>
       </div>
+      <sc-if value="{{ settingsMsg }}" hint-placeholder-val="{{ false }}">
+        <div style="padding: 10px 16px; borderRadius: 12px; background: #F3FBF4; border: 2px solid #17C29A; font-size: 14px; font-weight: 700; color: #12245C;">{{ settingsMsg }}</div>
+      </sc-if>
       <div style="font-size: 13px; font-weight: 500; color: #7B88A4;">※賞品・画像・結果・設定はこの端末に自動保存されます。画像が多いと保存容量の上限に達する場合があります。</div>
     </main>
   </sc-if>
@@ -1034,12 +1037,38 @@ class Component extends DCLogic {
     const body = rows.map(r => r.map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',')).join('\r\n');
     this.download('\ufeff' + body, 'lottery-results.csv', 'text/csv');
   }
-  download(text, name, type) {
+  async download(text, name, type) {
+    // アーティファクトの中ではリンクでのダウンロードがブロックされるので、downloads 機能で保存する
+    const dl = (window.claude && typeof window.claude.use === 'function') ? await window.claude.use('downloads').catch(() => null) : null;
+    if (dl) {
+      try { await dl.save({ filename: name, data: text }); this.flash('保存しました：' + name); }
+      catch (e) { this.flash(e && e.code === 'declined' ? '保存をキャンセルしました' : '保存できませんでした（' + ((e && e.code) || 'error') + '）'); }
+      return;
+    }
     const b = new Blob([text], { type: type + ';charset=utf-8' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(b); a.download = name; a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 2000);
   }
+  flash(msg) {
+    clearTimeout(this._flTo);
+    this.setState({ settingsMsg: msg, saveMsg: msg });
+    this._flTo = setTimeout(() => this.setState({ settingsMsg: '', saveMsg: '' }), 4000);
+  }
+  // ブラウザの確認ダイアログはアーティファクトでは出ないので、2回押しで確定する
+  resetResults() {
+    if (!this.state.resetArmed) {
+      clearTimeout(this._rsTo);
+      this.setState({ resetArmed: true });
+      this._rsTo = setTimeout(() => this.setState({ resetArmed: false }), 4000);
+      return;
+    }
+    clearTimeout(this._rsTo);
+    this.setState(st => ({ resetArmed: false, results: [], prizes: st.prizes.map(p => Object.assign({}, p, { won: false, at: null })), phase: 'idle', currentNo: null }), () => this.saveNow());
+    this.offset = 0;
+    this.flash('抽選結果と当選済みをリセットしました');
+  }
+
 
   imgStyle(src, fit) {
     return { width: '100%', height: '100%', backgroundImage: src ? 'url(' + src + ')' : 'none', backgroundSize: fit || 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' };
@@ -1212,10 +1241,12 @@ class Component extends DCLogic {
       importJson: e => {
         const f = e.target.files && e.target.files[0]; if (!f) return;
         const r = new FileReader();
-        r.onload = () => { try { const d = JSON.parse(r.result); this.setState({ prizes: d.prizes || s.prizes, results: d.results || [], settings: Object.assign({}, s.settings, d.settings || {}), showNames: d.showNames !== false }); } catch (err) { alert('読み込めませんでした'); } };
+        r.onload = () => { try { const d = JSON.parse(r.result); this.setState({ prizes: d.prizes || s.prizes, results: d.results || [], settings: Object.assign({}, s.settings, d.settings || {}), showNames: d.showNames !== false }); } catch (err) { this.flash('JSONを読み込めませんでした'); } };
         r.readAsText(f);
       },
-      resetResults: () => { if (confirm('抽選結果と当選済みをリセットします。よろしいですか？')) { this.setState(st => ({ results: [], prizes: st.prizes.map(p => Object.assign({}, p, { won: false, at: null })), phase: 'idle', currentNo: null })); this.offset = 0; } },
+      resetResults: () => this.resetResults(),
+      resetLabel: s.resetArmed ? 'もう一度押すとリセット' : '抽選結果をリセット',
+      settingsMsg: s.settingsMsg || '',
 
       revealOpen: s.revealOpen, chestVisible: s.chestVisible, prizeVisible: s.prizeVisible,
       confetti: s.confetti,
